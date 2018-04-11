@@ -12,4 +12,6 @@ public class Countertop extends Tile {
 	public Ingredient get() {
 		return this.ingredient;
 	}
+	
+	public void process() {	}
 }

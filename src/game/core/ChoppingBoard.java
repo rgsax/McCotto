@@ -1,10 +1,10 @@
 package game.core;
 
-public final class ChoppingBoard extends Countertop implements Cutter {
+public final class ChoppingBoard extends Countertop {
 
 	@Override
-	public void cut() {
-		ingredient.remainingSecondsToCut--;
+	public void process() {
+		ingredient.cut(1);
 	}
 
 }

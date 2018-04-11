@@ -1,11 +1,11 @@
 package game.core;
 
-public abstract class CookingStation extends Countertop implements Cooker {
+public abstract class CookingStation extends Countertop {
 
 	public CookingStation() { }
 	
 	@Override
-	public void cook() {
-		ingredient.remainingSecondsToCook--;		
+	public void process() {
+		ingredient.cook(1);		
 	}
 }

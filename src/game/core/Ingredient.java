@@ -52,21 +52,24 @@ public abstract class Ingredient extends GameObject {
 	public void setRemainingSecondsToCook(int remainingSecondsToFry) {
 		this.remainingSecondsToCook = remainingSecondsToFry;
 	}
-
-	public void cook(int t) {
-		if (remainingSecondsToCook <= 0) {
+	
+	void cook(int t) {
+		if(this.isCutted())
 			remainingSecondsToCook -= t;
-		}
 	}
 
-	public void cut(int t) {
-		if (remainingSecondsToCut <= 0) {
+	void cut(int t) {
+		if (remainingSecondsToCut > 0) {
 			remainingSecondsToCut -= t;
 		}
 	}
 	
 	public boolean isCooked() {
 		return remainingSecondsToCook <= 0; 
+	}
+	
+	public boolean isOvercooked() {
+		return remainingSecondsToCook < -5;
 	}
 	
 	public boolean isCutted() {
