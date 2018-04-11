@@ -1,11 +1,10 @@
 package game.core;
 
-public final class Fryier extends Countertop implements Cooker{
+public final class Fryier extends CookingStation{
 
 	@Override
-	public void cook(Ingredient I) {
-		// TODO Auto-generated method stub
-		
+	public void cook() {
+				
 	}
 
 }
