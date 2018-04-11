@@ -1,5 +1,5 @@
 package game.core;
 
-public abstract class Pantry extends Countertop {
+public final class Pantry<I extends Ingredient> extends Countertop {
 
 }
