@@ -6,5 +6,8 @@ public final class Player extends Entity implements Playable {
 		super();
 	}
 	
-	public void move() {}
+	public void move() {
+		pos_x += dir_x;
+		pos_y += dir_y;
+	}
 }
