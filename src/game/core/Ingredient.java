@@ -10,8 +10,35 @@ public abstract class Ingredient extends GameObject {
 //		this.remainingSecondsToCook = remainingSecondsToCook;
 //	}
 
+	
+	
+	
 	public int getRemainingSecondsToCut() {
 		return remainingSecondsToCut;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + remainingSecondsToCook;
+		result = prime * result + remainingSecondsToCut;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Ingredient)) {
+			return false;
+		}
+		Ingredient other = (Ingredient) obj;
+		return this.getClass() == obj.getClass() && this.isCooked() == other.isCooked() && this.isCutted() && other.isCutted();
 	}
 
 	public void setRemainingSecondsToCut(int remainingSecondsToCut) {
