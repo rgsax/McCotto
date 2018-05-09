@@ -237,10 +237,7 @@ void initTimer() {
 				
 			}
 			
-			for(Object o : collision()) {
-				if(o instanceof Bullet)
-					mondo.esplodiProiettile((Bullet)o);
-			}
+			mondo.checkCollisions();
 			
 			if(count >= 30) {
 				count = 0;
@@ -253,35 +250,5 @@ void initTimer() {
 			repaint();			
 		}
 	});
-}
-
-ArrayList<Object> collision() {
-	ArrayList<Object> toDelete = new ArrayList<>();
-	for(Bullet b : mondo.getBullets()) {
-		if(b.getX() + b.getWidth() >= carroPlayer.getX() && b.getX() <= carroPlayer.getX() + carroPlayer.getMacchina().getWidth() 
-				&& b.getY() + b.getHeight() >= carroPlayer.getY() && b.getY() <= carroPlayer.getY() + carroPlayer.getMacchina().getHeight())
-		{
-			toDelete.add(carroPlayer);
-			toDelete.add(b);
-		}
-		
-		for(CarroArmato c : enemies) {
-			if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
-					&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
-			{
-				toDelete.add(carroPlayer);
-				toDelete.add(b);
-			}
-		}
-		
-		for(Bullet bullet : mondo.getBullets()) {
-			if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
-				&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
-			{
-				toDelete.add(bullet);
-			}
-		}
-	}
-	return toDelete;
 }
 }
