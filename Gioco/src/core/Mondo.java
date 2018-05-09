@@ -74,38 +74,48 @@ public class Mondo {
 	}
 	
 	public void checkCollisions() {
-		ArrayList<Object> toDelete = new ArrayList<>();
-		for(Bullet b : getBullets()) {
-			if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
-					&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
-			{
-				toDelete.add(carro);
-				toDelete.add(b);
-			}
-			
-			for(CarroArmato c : enemies) {
-				if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
-						&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
+		if(!bullets.isEmpty()) {
+			ArrayList<Object> toDelete = new ArrayList<>();
+			for(Bullet b : getBullets()) {
+				b.update();
+				if(b.getX() < 0 || b.getX() > 600 - b.getWidth()) {
+					b.rimbalzaX();
+				}
+				if(b.getY() < 0 || b.getY() > 600 - b.getHeight()) {
+					b.rimbalzaY();
+				}
+				
+				if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
+						&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
 				{
-					toDelete.add(c);
+					toDelete.add(carro);
 					toDelete.add(b);
 				}
-			}
-			
-			for(Bullet bullet : bullets) {
-				if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
-					&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
-				{
-					toDelete.add(bullet);
+				
+				for(CarroArmato c : enemies) {
+					if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
+							&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
+					{
+						toDelete.add(c);
+						toDelete.add(b);
+					}
+				}
+				
+				for(Bullet bullet : bullets) {
+					if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
+						&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
+					{
+						toDelete.add(bullet);
+					}
 				}
 			}
-		}
 		
-		if(!toDelete.isEmpty()) {
-			for(Object o : toDelete) {
-				if(o instanceof Bullet) {
-					System.out.println("BOOM!!");
-					esplodiProiettile((Bullet)o);
+			if(!toDelete.isEmpty()) {
+				for(Object o : toDelete) {
+					if(o instanceof Bullet) {
+						System.out.println("BOOM!!");
+						esplodiProiettile((Bullet)o);
+					}
 				}
 			}
 		}

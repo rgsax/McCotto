@@ -224,19 +224,6 @@ void initTimer() {
 				mondo.muoviPlayer(Direction.S);
 			}
 			
-			if(!mondo.getBullets().isEmpty()) {
-				for(Bullet b : mondo.getBullets()) {
-					b.update();
-					if(b.getX() < 0 || b.getX() > 600 - b.getWidth()) {
-						b.rimbalzaX();
-					}
-					if(b.getY() < 0 || b.getY() > 600 - b.getHeight()) {
-						b.rimbalzaY();
-					}
-				}
-				
-			}
-			
 			mondo.checkCollisions();
 			
 			if(count >= 30) {
