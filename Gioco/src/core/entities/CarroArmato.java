@@ -138,21 +138,57 @@ public class CarroArmato implements Entity {
 //METODO PER IL MOVIMENTO DEL NEMICO	
 	public void muovitiVerso(int x, int y) {
 			
+		boolean dirW = false;
+		boolean dirE = false;
+		boolean dirN = false;
+		boolean dirS = false;
+		
 		if (this.x < x) { 
 			this.x += 3;
 			cannone.setX(this.x);
+			dirE = true;
+			
 		}
 		else if (this.x > x) {
 			this.x -= 3;
 			cannone.setX(this.x);
+			dirW = true;
 		}
 		if (this.y < y) {
 			this.y += 3;
 			cannone.setY(this.y);
+			dirS = true;
 		}
 		else if (this.y > y) {
 			this.y -= 3;
 			cannone.setY(this.y);
+			dirN = true;
+		}
+		
+		if (dirW && dirN) {
+			direction = Direction.NW;
+		}
+		else if (dirE && dirN) {
+			direction = Direction.NE;
+		}
+		else if (dirW && dirS) {
+			direction = Direction.SW;
+		}
+		else if (dirE && dirS) {
+			direction = Direction.SE;
+		}
+		else if (dirN) {
+			direction = Direction.N;
+		}
+		else if (dirS) {
+			direction = Direction.S;
+		}
+		else if (dirE) {
+			direction = Direction.E;
+		}
+		else if (dirW) {
+			direction = Direction.W;
 		}
 	}
+
 }
