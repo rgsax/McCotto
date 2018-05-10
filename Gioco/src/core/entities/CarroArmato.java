@@ -133,4 +133,26 @@ public class CarroArmato implements Entity {
 		life -= damage;
 		return life <= 0;
 	}
+	
+	
+//METODO PER IL MOVIMENTO DEL NEMICO	
+	public void muovitiVerso(int x, int y) {
+			
+		if (this.x < x) { 
+			this.x += 3;
+			cannone.setX(this.x);
+		}
+		else if (this.x > x) {
+			this.x -= 3;
+			cannone.setX(this.x);
+		}
+		if (this.y < y) {
+			this.y += 3;
+			cannone.setY(this.y);
+		}
+		else if (this.y > y) {
+			this.y -= 3;
+			cannone.setY(this.y);
+		}
+	}
 }

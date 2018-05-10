@@ -225,11 +225,18 @@ void initTimer() {
 			}
 			
 			mondo.checkCollisions();
-			
+		
+		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
+			if (count >= 20) {
+				for(CarroArmato c : enemies)
+					mondo.muoviNemico(c, carroPlayer);
+			}
+						
 			if(count >= 30) {
 				count = 0;
 				for(CarroArmato c : enemies) {
 					mondo.spara(c);
+					
 				}
 			}
 			
