@@ -94,7 +94,7 @@ public class Mondo {
 				if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
 						&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
 				{
-					toDelete.add(carro);
+					//toDelete.add(carro);
 					toDelete.add(b);
 				}
 				
@@ -102,7 +102,8 @@ public class Mondo {
 					if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
 							&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
 					{
-						toDelete.add(c);
+						if(c.takeHit(b.getDamage()))
+							toDelete.add(c);
 						toDelete.add(b);
 					}
 				}
@@ -122,11 +123,8 @@ public class Mondo {
 						System.out.println("BOOM!!");
 						esplodiProiettile((Bullet)o);
 					}
-					if (o instanceof CarroArmato) {
-						if(((CarroArmato) o).takeHit()) {
-							esplodiNemico((CarroArmato) o);
-						}
-							
+					else if (o instanceof CarroArmato) {	
+						esplodiNemico((CarroArmato)o);
 					}
 				}
 			}

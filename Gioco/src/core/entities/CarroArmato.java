@@ -129,10 +129,8 @@ public class CarroArmato implements Entity {
 		this.shots = shots;
 	}
 	
-	public boolean takeHit() {
-		life--;
-		if (life <= 0)
-			return true;
-		return false;
+	public boolean takeHit(int damage) {
+		life -= damage;
+		return life > 0;
 	}
 }

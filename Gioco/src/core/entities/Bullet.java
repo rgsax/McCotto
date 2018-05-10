@@ -6,9 +6,14 @@ public class Bullet implements Entity {
 	int x, y;
 	int vX, vY;
 	double angle;
+	int damage = 1;
 	int width = 20;
 	int height = 10;
 	CarroArmato owner;
+	public int getDamage() {
+		return damage;
+	}
+	
 	public int getWidth() {
 		return width;
 	}
