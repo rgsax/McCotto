@@ -14,6 +14,7 @@ public class Mondo {
 	CarroArmato carro;
 	ArrayList<Bullet> bullets = new ArrayList<>();
 	ArrayList<CarroArmato> enemies = new ArrayList<>();
+	
 	public Mondo() {
 	}
 	
@@ -49,6 +50,10 @@ public class Mondo {
 	
 	public void esplodiProiettile(Bullet b) {
 		deleteBullet(b);
+	}
+	
+	public void esplodiNemico(CarroArmato c) {
+		enemies.remove(c);
 	}
 	
 	public void orientaCannone(CarroArmato c, int x, int y) {
@@ -116,6 +121,12 @@ public class Mondo {
 					if(o instanceof Bullet) {
 						System.out.println("BOOM!!");
 						esplodiProiettile((Bullet)o);
+					}
+					if (o instanceof CarroArmato) {
+						if(((CarroArmato) o).takeHit()) {
+							esplodiNemico((CarroArmato) o);
+						}
+							
 					}
 				}
 			}

@@ -7,10 +7,14 @@ public class CarroArmato implements Entity {
 	Cannon cannone;
 	Body macchina;
 	int speed = 10;
+	int life = 3;
+	
+
 	int x, y;
 	int shots = 3;
 	Direction direction = Direction.E;
 	Mondo mondo;
+	
 	public CarroArmato(int x, int y, Mondo mondo) {
 		this.mondo = mondo;
 		this.x = x;
@@ -40,6 +44,13 @@ public class CarroArmato implements Entity {
 	}
 	public Cannon getCannone() {
 		return cannone;
+	}
+	public int getLife() {
+		return life;
+	}
+
+	public void setLife(int life) {
+		this.life = life;
 	}
 	
 	
@@ -116,5 +127,12 @@ public class CarroArmato implements Entity {
 	
 	public void setShots(int shots) {
 		this.shots = shots;
+	}
+	
+	public boolean takeHit() {
+		life--;
+		if (life <= 0)
+			return true;
+		return false;
 	}
 }
