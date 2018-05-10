@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 
 import core.Mondo;
-import core.parts.Bullet;
+import core.entities.Bullet;
+import core.entities.CarroArmato;
 import core.parts.Direction;
-import core.tank.CarroArmato;
 
 import javax.swing.JPanel;
 

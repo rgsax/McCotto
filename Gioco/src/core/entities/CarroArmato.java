@@ -1,9 +1,9 @@
-package core.tank;
+package core.entities;
 
 import core.Mondo;
 import core.parts.*;
 
-public class CarroArmato {
+public class CarroArmato implements Entity {
 	Cannon cannone;
 	Body macchina;
 	int speed = 10;

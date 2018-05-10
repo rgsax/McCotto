@@ -2,10 +2,11 @@ package core;
 
 import java.util.ArrayList;
 
-import core.parts.Bullet;
+import core.entities.Bullet;
+import core.entities.CarroArmato;
+import core.entities.Entity;
 import core.parts.Cannon;
 import core.parts.Direction;
-import core.tank.CarroArmato;
 
 public class Mondo {
 	int width = 600;
@@ -75,7 +76,7 @@ public class Mondo {
 	
 	public void checkCollisions() {
 		if(!bullets.isEmpty()) {
-			ArrayList<Object> toDelete = new ArrayList<>();
+			ArrayList<Entity> toDelete = new ArrayList<>();
 			for(Bullet b : getBullets()) {
 				b.update();
 				if(b.getX() < 0 || b.getX() > 600 - b.getWidth()) {
@@ -111,7 +112,7 @@ public class Mondo {
 			}
 		
 			if(!toDelete.isEmpty()) {
-				for(Object o : toDelete) {
+				for(Entity o : toDelete) {
 					if(o instanceof Bullet) {
 						System.out.println("BOOM!!");
 						esplodiProiettile((Bullet)o);

@@ -1,8 +1,8 @@
-package core.parts;
+package core.entities;
 
-import core.tank.CarroArmato;
+import core.parts.Cannon;
 
-public class Bullet {
+public class Bullet implements Entity {
 	int x, y;
 	int vX, vY;
 	double angle;
@@ -22,8 +22,8 @@ public class Bullet {
 		this.angle = line.getAngle();
 		vX = (int) Math.round(Math.cos(angle) * 10);
 		vY = (int) Math.round(Math.sin(angle) * 10);
-		this.x = line.cX - width / 2 + 4 * vX;
-		this.y = line.cY - height / 2 + 4 * vY;
+		this.x = line.getcX() - width / 2 + 4 * vX;
+		this.y = line.getcY() - height / 2 + 4 * vY;
 	}
 	
 	public double getAngle() {
