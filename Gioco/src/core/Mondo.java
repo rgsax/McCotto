@@ -65,7 +65,7 @@ public class Mondo {
 	public void orientaCannone(CarroArmato c1, CarroArmato c2) {
 		orientaCannone(c1, c2.getCannone().getcX(), c2.getCannone().getcY());
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}

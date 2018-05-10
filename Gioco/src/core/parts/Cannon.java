@@ -66,4 +66,5 @@ public class Cannon{
 	public int getAngleY() {
 		return angleY;
 	}
+
 }

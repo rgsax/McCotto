@@ -131,6 +131,6 @@ public class CarroArmato implements Entity {
 	
 	public boolean takeHit(int damage) {
 		life -= damage;
-		return life > 0;
+		return life <= 0;
 	}
 }
