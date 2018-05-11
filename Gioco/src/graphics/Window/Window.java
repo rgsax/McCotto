@@ -31,8 +31,10 @@ public class Window extends JPanel {
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	Mondo mondo;
 	Timer timer;
-	Image imgCarro;
-	Image imgCannone;
+	Image imgCarroPlayer;
+	Image imgCannonePlayer;
+	Image imgNemico;
+	Image imgCannoneNemico;
 	Image imgBullet;
 	int rot = 0;
 	public Window() {
@@ -59,13 +61,17 @@ public class Window extends JPanel {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		MediaTracker mt = new MediaTracker(this);
 		
-		imgCarro = tk.getImage("./img/carro.png");
-		imgCannone = tk.getImage("./img/cannone.png");
+		imgCarroPlayer = tk.getImage("./img/carro.png");
+		imgCannonePlayer = tk.getImage("./img/cannone.png");
+		imgNemico = tk.getImage("./img/nemico.png");
+		imgCannoneNemico = tk.getImage("./img/cannone_nemico.png");
 		imgBullet = tk.getImage("./img/bullet.png");
 		
-		mt.addImage(imgCarro, 0);
-		mt.addImage(imgCannone, 1);
-		mt.addImage(imgBullet, 2);
+		mt.addImage(imgCarroPlayer, 0);
+		mt.addImage(imgCannonePlayer, 1);
+		mt.addImage(imgNemico, 2);
+		mt.addImage(imgCannoneNemico, 3);
+		mt.addImage(imgBullet, 4);
 		
 		try {
 			mt.waitForAll();
@@ -139,33 +145,33 @@ protected void paintComponent(Graphics g) {
 	super.paintComponent(g);
 	
 	for(CarroArmato c : enemies) {
-		disegnaMacchina(g, c);
-		disegnaCannone(g, c);
+		disegnaMacchina(g, c, imgNemico);
+		disegnaCannone(g, c, imgCannoneNemico);
 	}
 	
 	//macchina
-	disegnaMacchina(g, carroPlayer);
+	disegnaMacchina(g, carroPlayer, imgCarroPlayer);
 	
 	//Proiettili	
 	if(!mondo.getBullets().isEmpty())
 		disegnaProiettili(g);
 	
 	//Cannone
-	disegnaCannone(g, carroPlayer);
+	disegnaCannone(g, carroPlayer, imgCannonePlayer);
 	
 	//Area di gioco
 	g.drawRect(0, 0, 600, 600);
 	
 }
 
-void disegnaMacchina(Graphics g, CarroArmato c) {
+void disegnaMacchina(Graphics g, CarroArmato c, Image img) {
 	Graphics2D g2d = (Graphics2D)g;
 	AffineTransform tr = g2d.getTransform();
 	AffineTransform trOld = (AffineTransform)tr.clone();
 	
 	tr.rotate(Math.toRadians(c.getDirection().getAngle()), c.getX() + c.getMacchina().getWidth() / 2, c.getY() + c.getMacchina().getHeight() / 2);
 	g2d.setTransform(tr);
-	g2d.drawImage(imgCarro, c.getX(), c.getY(), null);
+	g2d.drawImage(img, c.getX(), c.getY(), null);
 	
 	g2d.setTransform(trOld);
 }
@@ -186,14 +192,14 @@ void disegnaProiettili(Graphics g) {
 	}
 }
 
-void disegnaCannone(Graphics g, CarroArmato c) {
+void disegnaCannone(Graphics g, CarroArmato c, Image img) {
 	Graphics2D g2d = (Graphics2D)g;
 	AffineTransform tr = g2d.getTransform();
 	AffineTransform trOld = (AffineTransform)tr.clone();	
 	
 	tr.rotate(c.getCannone().getAngle(), c.getCannone().getcX(), c.getCannone().getcY());
 	g2d.setTransform(tr);
-	g2d.drawImage(imgCannone, c.getCannone().getX(), c.getCannone().getY(), null);
+	g2d.drawImage(img, c.getCannone().getX(), c.getCannone().getY(), null);
 	g2d.setTransform(trOld);
 }
 
