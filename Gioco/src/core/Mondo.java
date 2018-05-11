@@ -67,8 +67,9 @@ public class Mondo {
 	}
 	
 //MOVIMENTO DEL NEMICO
-	public void muoviNemico (CarroArmato c1, CarroArmato c2) {
-		c1.muovitiVerso(c2.getCannone().getcX(), c2.getCannone().getcY());
+	public void muoviNemici() {
+		for(CarroArmato c : enemies)
+		c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
 	}
 
 	public int getWidth() {

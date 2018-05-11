@@ -228,8 +228,7 @@ void initTimer() {
 		
 		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
 			if (count >= 20) {
-				for(CarroArmato c : enemies)
-					mondo.muoviNemico(c, carroPlayer);
+					mondo.muoviNemici();
 			}
 						
 			if(count >= 30) {
