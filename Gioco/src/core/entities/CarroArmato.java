@@ -3,41 +3,25 @@ package core.entities;
 import core.Mondo;
 import core.parts.*;
 
-public class CarroArmato implements Entity {
+public class CarroArmato extends Entity {
 	Cannon cannone;
 	Body macchina;
 	int speed = 10;
 	int life = 3;
 	
-
-	int x, y;
 	int shots = 3;
 	Direction direction = Direction.E;
 	Mondo mondo;
 	
 	public CarroArmato(int x, int y, Mondo mondo) {
+		super(50, 50, x, y);
 		this.mondo = mondo;
-		this.x = x;
-		this.y = y;
 		macchina = new Body(x, y);
 		cannone = new Cannon(x, y, x + macchina.getWidth() / 2, y + macchina.getHeight() / 2);
 	}
 	
 	public int remainingShots() {
 		return shots;
-	}
-	
-	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
-	}
-	public int getY() {
-		return y;
-	}
-	public void setY(int y) {
-		this.y = y;
 	}
 	public Body getMacchina() {
 		return macchina;
@@ -132,5 +116,15 @@ public class CarroArmato implements Entity {
 	public boolean takeHit(int damage) {
 		life -= damage;
 		return life <= 0;
+	}
+
+	@Override
+	public int getWidth() {
+		return macchina.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		return macchina.getHeight();
 	}
 }

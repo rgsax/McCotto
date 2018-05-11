@@ -1,4 +1,4 @@
-package graphics.Window;
+package graphics.swingGraphics;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

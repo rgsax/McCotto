@@ -1,6 +1,6 @@
 import javax.swing.JFrame;
 
-import graphics.Window.Window;
+import graphics.swingGraphics.Window;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {

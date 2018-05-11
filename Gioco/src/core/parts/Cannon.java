@@ -1,30 +1,22 @@
 package core.parts;
 
-public class Cannon{
+import core.entities.Entity;
+
+public class Cannon extends Entity{
 	int cX, cY;
-	int x, y;
-	int angleX = 0;
-	int angleY = 0;
+	double angleX = 0;
+	double angleY = 0;
 	
 	public Cannon(int x, int y, int cX, int cY) {
+		super(50, 50, x, y);
 		this.cX = cX;
 		this.cY = cY;
-		this.x = x;
-		this.y = y;
-	}
-	
-	public int getX() {
-		return x;
 	}
 
 	public void setX(int x) {
 		cX = cX - this.x;
 		this.x = x;
 		cX += this.x;
-	}
-
-	public int getY() {
-		return y;
 	}
 
 	public void setY(int y) {
@@ -49,21 +41,21 @@ public class Cannon{
 	public int getcY() {
 		return cY;
 	}
-	public void setAngleX(int angleX) {
-		this.angleX = angleX;
+	public void setAngleX(double d) {
+		this.angleX = d;
 	}
-	public void setAngleY(int angleY) {
-		this.angleY = angleY;
+	public void setAngleY(double e) {
+		this.angleY = e;
 	}
 	public double getAngle() {
-		return(Math.acos((angleX - cX) / Math.hypot(angleX - cX, angleY - cY))) * (angleY - cY < 0 ? -1 : 1);
+		return Math.toDegrees((Math.acos((angleX - cX) / Math.hypot(angleX - cX, angleY - cY))) * (angleY - cY < 0 ? -1 : 1));
 	}
 
-	public int getAngleX() {
+	public double getAngleX() {
 		return angleX;
 	}
 
-	public int getAngleY() {
+	public double getAngleY() {
 		return angleY;
 	}
 

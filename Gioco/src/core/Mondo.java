@@ -57,10 +57,10 @@ public class Mondo {
 		enemies.remove(c);
 	}
 	
-	public void orientaCannone(CarroArmato c, int x, int y) {
+	public void orientaCannone(CarroArmato c, double d, double e) {
 		Cannon cannone = c.getCannone();
-		cannone.setAngleX(x);
-		cannone.setAngleY(y);
+		cannone.setAngleX(d);
+		cannone.setAngleY(e);
 	}
 	
 	public void orientaCannone(CarroArmato c1, CarroArmato c2) {
