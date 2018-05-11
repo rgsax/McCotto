@@ -143,52 +143,47 @@ public class CarroArmato implements Entity {
 		boolean dirN = false;
 		boolean dirS = false;
 		
+		Direction newDirection = this.direction;
+		
 		if (this.x < x) { 
-			this.x += 3;
-			cannone.setX(this.x);
-			dirE = true;
-			
+			dirE = true;			
 		}
 		else if (this.x > x) {
-			this.x -= 3;
-			cannone.setX(this.x);
 			dirW = true;
 		}
 		if (this.y < y) {
-			this.y += 3;
-			cannone.setY(this.y);
 			dirS = true;
 		}
 		else if (this.y > y) {
-			this.y -= 3;
-			cannone.setY(this.y);
 			dirN = true;
 		}
 		
 		if (dirW && dirN) {
-			direction = Direction.NW;
+			newDirection = Direction.NW;
 		}
 		else if (dirE && dirN) {
-			direction = Direction.NE;
+			newDirection = Direction.NE;
 		}
 		else if (dirW && dirS) {
-			direction = Direction.SW;
+			newDirection = Direction.SW;
 		}
 		else if (dirE && dirS) {
-			direction = Direction.SE;
+			newDirection = Direction.SE;
 		}
 		else if (dirN) {
-			direction = Direction.N;
+			newDirection = Direction.N;
 		}
 		else if (dirS) {
-			direction = Direction.S;
+			newDirection = Direction.S;
 		}
 		else if (dirE) {
-			direction = Direction.E;
+			newDirection = Direction.E;
 		}
 		else if (dirW) {
-			direction = Direction.W;
+			newDirection = Direction.W;
 		}
+		
+		muovi(newDirection);
 	}
 
 }
