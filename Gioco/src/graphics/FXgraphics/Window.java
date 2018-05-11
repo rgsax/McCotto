@@ -18,12 +18,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Window extends Application{
 	
@@ -199,6 +199,12 @@ public class Window extends Application{
                }
             }
         }.start();
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        	public void handle(WindowEvent event) {
+        		System.exit(0);
+        	};
+		});
         
         stage.show();
 	}
