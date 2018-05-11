@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import core.entities.Bullet;
 import core.entities.CarroArmato;
+import core.entities.Enemy;
 import core.entities.Entity;
 import core.parts.Cannon;
 import core.parts.Direction;
@@ -13,7 +14,7 @@ public class Mondo {
 	int height = 600;
 	CarroArmato carro;
 	ArrayList<Bullet> bullets = new ArrayList<>();
-	ArrayList<CarroArmato> enemies = new ArrayList<>();
+	ArrayList<Enemy> enemies = new ArrayList<>();
 	
 	public Mondo() {
 	}
@@ -33,7 +34,7 @@ public class Mondo {
 		this.carro = carro;
 	}
 	
-	public void setEnemiesList(ArrayList<CarroArmato> enemies) {
+	public void setEnemiesList(ArrayList<Enemy> enemies) {
 		this.enemies = enemies;
 	}
 	
@@ -68,7 +69,7 @@ public class Mondo {
 	
 //MOVIMENTO DEL NEMICO
 	public void muoviNemici() {
-		for(CarroArmato c : enemies) {
+		for(Enemy c : enemies) {
 			if(Math.abs(c.getCannone().getcX() - carro.getCannone().getcX()) > carro.getMacchina().getWidth() ||
 					Math.abs(c.getCannone().getcY() - carro.getCannone().getcY()) > carro.getMacchina().getHeight()) {
 				c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
@@ -109,7 +110,7 @@ public class Mondo {
 					toDelete.add(b);
 				}
 				
-				for(CarroArmato c : enemies) {
+				for(Enemy c : enemies) {
 					if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
 							&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
 					{

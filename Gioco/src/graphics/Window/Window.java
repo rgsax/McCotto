@@ -19,6 +19,7 @@ import javax.swing.Timer;
 import core.Mondo;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
+import core.entities.Enemy;
 import core.parts.Direction;
 
 import javax.swing.JPanel;
@@ -27,7 +28,7 @@ import javax.swing.JPanel;
 public class Window extends JPanel {
 	boolean up = false, down = false, right = false, left = false;
 	CarroArmato carroPlayer;
-	ArrayList<CarroArmato> enemies = new ArrayList<>();
+	ArrayList<Enemy> enemies = new ArrayList<>();
 	Mondo mondo;
 	Timer timer;
 	Image imgCarro;
@@ -39,7 +40,7 @@ public class Window extends JPanel {
 		carroPlayer = new CarroArmato(300, 300, mondo);
 		mondo.setPlayer(carroPlayer);
 		mondo.setEnemiesList(enemies);
-		CarroArmato enemy = new CarroArmato(100, 100, mondo);
+		Enemy enemy = new Enemy(100, 100, mondo);
 		enemies.add(enemy);
 		mondo.orientaCannone(enemy, carroPlayer);
 		
