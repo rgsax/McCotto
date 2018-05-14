@@ -41,7 +41,8 @@ public class Window extends Application{
 	Image imgNemico;
 	Image imgCannoneNemico;
 	Image imgBullet;
-	Image imgBox;
+	Image imgBouncyBox;
+	Image imgDestructibleBox;
 	
 	CarroArmato carroPlayer;
 	ArrayList<Enemy> enemies = new ArrayList<>();
@@ -53,8 +54,8 @@ public class Window extends Application{
 		carroPlayer = new CarroArmato(300, 300, mondo);
 		mondo.setPlayer(carroPlayer);
 		mondo.setEnemiesList(enemies);
-		Enemy enemy = new Enemy(100, 100, mondo);
-		//enemies.add(enemy);
+		Enemy enemy = new Enemy(600, 600, mondo);
+		enemies.add(enemy);
 		
 		BouncyBox box = new BouncyBox(40, 40, 200, 200);
 		DestructibleBox box2 = new DestructibleBox(40, 40, 100,100);
@@ -72,7 +73,8 @@ public class Window extends Application{
 		imgNemico = new Image("nemico.png");
 		imgCannoneNemico = new Image("cannone_nemico.png");
 		imgBullet = new Image("bullet.png");
-		imgBox = new Image("box.png");
+		imgBouncyBox = new Image("BouncyBox.png");
+		imgDestructibleBox = new Image("DestructibleBox.png");
 	}
 	
 	@Override
@@ -112,8 +114,13 @@ public class Window extends Application{
 					if(up)
 						up = false;
 				}
-				if(e.getCode() == KeyCode.SPACE)
-					mondo.spara(carroPlayer);				
+				if(e.getCode() == KeyCode.SPACE) {
+					mondo.spara(carroPlayer);		
+					/*
+					 * if(multiplayer)
+					 * 	send("USE " + ID + " BULLET");
+					 */
+				}
 			}
 		});
 		
@@ -155,28 +162,35 @@ public class Window extends Application{
 			public void run() {
 				while(true) {
 					count++;
-					
+					Direction direction = null;
 					if(up && right)
-						mondo.muoviPlayer(Direction.NE);
+						direction = Direction.NE;
 					else if(up && left)
-						mondo.muoviPlayer(Direction.NW);
+						direction = Direction.NW;
 					else if(down && right)
-						mondo.muoviPlayer(Direction.SE);
+						direction = Direction.SE;
 					else if(down && left)
-						mondo.muoviPlayer(Direction.SW);
+						direction = Direction.SW;
 					else if(right) {
-						mondo.muoviPlayer(Direction.E);
+						direction = Direction.E;
 					}
 					else if(left) {
-						mondo.muoviPlayer(Direction.W);
+						direction = Direction.W;
 					}
 					else if(up) {
-						mondo.muoviPlayer(Direction.N);
+						direction = Direction.N;
 					}
 					else if(down) {
-						mondo.muoviPlayer(Direction.S);
+						direction = Direction.S;
 					}
 					
+					if(direction != null) {
+						mondo.muoviPlayer(direction);
+						/*
+						 *if(multiplayer)
+						 *send("MOVE " + ID + direction.toString());
+						 */
+					}
 					mondo.checkCollisions();
 				
 				//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
@@ -213,7 +227,10 @@ public class Window extends Application{
                 gc.fillRect(0, 0, mondo.getWidth(), mondo.getHeight());
                 
                 for(AbstractBox box : boxes) {
-                	gc.drawImage(imgBox, box.getX(), box.getY());
+                	if(box instanceof BouncyBox)
+                		gc.drawImage(imgBouncyBox, box.getX(), box.getY());
+                	else if(box instanceof DestructibleBox)
+                		gc.drawImage(imgDestructibleBox, box.getX(), box.getY());
                 }
                 
                 for(Enemy c : enemies) {
