@@ -13,7 +13,7 @@ public class CarroArmato extends Entity {
 	Direction direction = Direction.E;
 	Mondo mondo;
 	
-	public CarroArmato(int x, int y, Mondo mondo) {
+	public CarroArmato(double x, double y, Mondo mondo) {
 		super(50, 50, x, y);
 		this.mondo = mondo;
 		macchina = new Body(x, y);
@@ -38,62 +38,89 @@ public class CarroArmato extends Entity {
 	}
 	
 	
-	public void muovi(Direction d) {		
+	public void muovi(Direction d) {
+		double oldX = x;
+		double oldY = y;
+		double newX = x;
+		double newY = y;
 		if(d == Direction.W) {
 			if(x > 0) {
-				x -= speed;
-				cannone.setX(x);
-				direction = d;
+				newX -= speed;
+				//cannone.setX(x);
+				//direction = d;
 			}
 		}
 		else if(d == Direction.E) {
 			if(x < mondo.getWidth() - macchina.getWidth()) {
-				x += speed;
-				cannone.setX(x);
-				direction = d;
+				newX += speed;
+				//cannone.setX(x);
+				//direction = d;
 			}
 		}
 		else if(d == Direction.N) {
 			if(y > 0) {
-				y -= speed;
-				cannone.setY(y);
-				direction = d;
+				newY -= speed;
+				//cannone.setY(y);
+				//direction = d;
 			}
 		}
 		else if(d == Direction.S) {
 			if(y < mondo.getHeight() - macchina.getHeight()) {
-				y += speed;
-				cannone.setY(y);	
-				direction = d;	
+				newY += speed;
+				//cannone.setY(y);	
+				//direction = d;	
 			}
 		}
 		else if(d == Direction.NE) {
 			if(y > 0 && x < mondo.getWidth() - macchina.getWidth()) {
-				muovi(Direction.N);
-				muovi(Direction.E);
-				direction = d;
+				newY -= speed;
+				newX += speed;
+				//muovi(Direction.N);
+				//muovi(Direction.E);
+				//direction = d;
 			}
 		}
 		else if(d == Direction.NW) {
 			if(y > 0 && x > 0) {
-				muovi(Direction.N);
-				muovi(Direction.W);
-				direction = d;
+				newY -= speed;
+				newX -= speed;
+				//muovi(Direction.N);
+				//muovi(Direction.W);
+				//direction = d;
 			}
 		}
 		else if(d == Direction.SE) {
 			if(y < mondo.getHeight() - macchina.getHeight() && x < mondo.getWidth() - macchina.getWidth()) {
-				muovi(Direction.S);
-				muovi(Direction.E);
-				direction = d;
+				newY += speed;
+				newX += speed;
+				//muovi(Direction.S);
+				//muovi(Direction.E);
+				//direction = d;
 			}
 		}
 		else if(d == Direction.SW) {
 			if(y < mondo.getHeight() - macchina.getHeight() && x > 0) {
-				muovi(Direction.S);
-				muovi(Direction.W);
-				direction = d;
+				newY += speed;
+				newX -= speed;
+				//muovi(Direction.S);
+				//muovi(Direction.W);
+				//direction = d;
 			}
+		}
+		
+		boolean collision = false;
+		for(AbstractBox box : mondo.getBoxes()) {
+			if(newX + width >= box.getX() && newX <= box.getX() + box.getWidth() &&
+					newY + height >= box.getY() && newY <= box.getY() + box.getHeight())
+				collision = true;
+		}
+		
+		if(!collision) {
+			direction = d;
+			x = newX;
+			y = newY;
+			cannone.setX(newX);
+			cannone.setY(newY);
 		}
 	}
 	

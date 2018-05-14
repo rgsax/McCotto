@@ -2,7 +2,7 @@ package core.entities;
 
 public class DestructibleBox extends AbstractBox {
 	int health; 
-	public DestructibleBox(int width, int height, int x, int y) {
+	public DestructibleBox(int width, int height, double x, double y) {
 		super(width, height, x, y);
 		this.health = 1; 
 		// TODO Auto-generated constructor stub
@@ -13,12 +13,12 @@ public class DestructibleBox extends AbstractBox {
 	}
 
 	@Override
-	boolean deflect(Bullet b) {
+	public boolean deflect(Bullet b) {
 		if (bulletHasCollidedWithBox(b)) {
-			this.health -= 1; // forse vogliamo muri più resistenti?
+			this.health -= b.getDamage(); // forse vogliamo muri più resistenti?
 			
 			// il proiettile va distrutto
-			return true;
+			return health <= 0;
 		}
 		
 		return false;

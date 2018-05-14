@@ -2,8 +2,13 @@ package core;
 
 import java.util.ArrayList;
 
+import javax.swing.border.AbstractBorder;
+
+import core.entities.AbstractBox;
+import core.entities.BouncyBox;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
+import core.entities.DestructibleBox;
 import core.entities.Enemy;
 import core.entities.Entity;
 import core.parts.Cannon;
@@ -15,6 +20,7 @@ public class Mondo {
 	CarroArmato carro;
 	ArrayList<Bullet> bullets = new ArrayList<>();
 	ArrayList<Enemy> enemies = new ArrayList<>();
+	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	
 	public Mondo() {
 	}
@@ -24,6 +30,14 @@ public class Mondo {
 			bullets.add(new Bullet(c, c.getCannone()));
 			c.decreaseShots();
 		}
+	}
+	
+	public void setBoxes(ArrayList<AbstractBox> boxes) {
+		this.boxes = boxes;
+	}
+	
+	public ArrayList<AbstractBox> getBoxes() {
+		return boxes;
 	}
 	
 	public ArrayList<Bullet> getBullets() {
@@ -70,11 +84,8 @@ public class Mondo {
 //MOVIMENTO DEL NEMICO
 	public void muoviNemici() {
 		for(Enemy c : enemies) {
-			if(Math.abs(c.getCannone().getcX() - carro.getCannone().getcX()) > carro.getMacchina().getWidth() ||
-					Math.abs(c.getCannone().getcY() - carro.getCannone().getcY()) > carro.getMacchina().getHeight()) {
-				c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
-				orientaCannone(c, carro);
-			}
+			c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
+			orientaCannone(c, carro);
 		}
 	}
 
@@ -91,6 +102,10 @@ public class Mondo {
 		bullets.remove(b);
 	}
 	
+	public void deletBox(DestructibleBox box) {
+		boxes.remove(box);
+	}
+	
 	public void checkCollisions() {
 		if(!bullets.isEmpty()) {
 			ArrayList<Entity> toDelete = new ArrayList<>();
@@ -101,6 +116,13 @@ public class Mondo {
 				}
 				if(b.getY() < 0 || b.getY() > 600 - b.getHeight()) {
 					b.rimbalzaY();
+				}
+				
+				for(AbstractBox box : boxes) {
+						if(box.deflect(b)) {
+							toDelete.add(b);
+							toDelete.add(box);
+						}
 				}
 				
 				if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
@@ -138,6 +160,8 @@ public class Mondo {
 					else if (o instanceof CarroArmato) {	
 						esplodiNemico((CarroArmato)o);
 					}
+					else if(o instanceof DestructibleBox)
+						deletBox((DestructibleBox)o); 
 				}
 			}
 		}

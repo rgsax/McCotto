@@ -1,25 +1,25 @@
 package core.parts;
 
 public class Body {
-	int x, y;
+	double x, y;
 	int width = 50;
 	int height = 50;
 	
-	public Body(int x, int y) {
+	public Body(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public int getX() {
+	public double getX() {
 		return x;
 	}
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
-	public int getY() {
+	public double getY() {
 		return y;
 	}
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	public int getWidth() {

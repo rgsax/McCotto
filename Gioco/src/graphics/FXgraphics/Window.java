@@ -3,8 +3,11 @@ package graphics.FXgraphics;
 import java.util.ArrayList;
 
 import core.Mondo;
+import core.entities.AbstractBox;
+import core.entities.BouncyBox;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
+import core.entities.DestructibleBox;
 import core.entities.Enemy;
 import core.entities.Entity;
 import core.parts.Cannon;
@@ -14,6 +17,7 @@ import javafx.application.*;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -37,9 +41,11 @@ public class Window extends Application{
 	Image imgNemico;
 	Image imgCannoneNemico;
 	Image imgBullet;
+	Image imgBox;
 	
 	CarroArmato carroPlayer;
 	ArrayList<Enemy> enemies = new ArrayList<>();
+	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	Mondo mondo;
 	
 	public Window() {
@@ -48,7 +54,15 @@ public class Window extends Application{
 		mondo.setPlayer(carroPlayer);
 		mondo.setEnemiesList(enemies);
 		Enemy enemy = new Enemy(100, 100, mondo);
-		enemies.add(enemy);
+		//enemies.add(enemy);
+		
+		BouncyBox box = new BouncyBox(40, 40, 200, 200);
+		DestructibleBox box2 = new DestructibleBox(40, 40, 100,100);
+		boxes.add(box);
+		boxes.add(box2);
+		
+		mondo.setBoxes(boxes);
+		
 		mondo.orientaCannone(enemy, carroPlayer);
 	}
 	
@@ -58,6 +72,7 @@ public class Window extends Application{
 		imgNemico = new Image("nemico.png");
 		imgCannoneNemico = new Image("cannone_nemico.png");
 		imgBullet = new Image("bullet.png");
+		imgBox = new Image("box.png");
 	}
 	
 	@Override
@@ -116,6 +131,17 @@ public class Window extends Application{
 			}
 		});
 		
+		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if(event.getButton() == MouseButton.PRIMARY)	{
+					boxes.add(new DestructibleBox(40, 40, event.getX() - 20, event.getY() - 20));
+				}
+				else if(event.getButton() == MouseButton.SECONDARY) {
+					boxes.add(new BouncyBox(40, 40, event.getX() - 20, event.getY() - 20));
+				}
+			}
+		});
 
 		Canvas canvas = new Canvas(800, 800);
 		root.add(canvas, 0, 0);
@@ -154,7 +180,7 @@ public class Window extends Application{
 					mondo.checkCollisions();
 				
 				//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
-					if (count >= 20) {
+					if (count >= 10) {
 							mondo.muoviNemici();
 					}
 								
@@ -185,6 +211,10 @@ public class Window extends Application{
                 gc.clearRect(0, 0, 800, 800);
                 gc.setFill(Color.BISQUE);
                 gc.fillRect(0, 0, mondo.getWidth(), mondo.getHeight());
+                
+                for(AbstractBox box : boxes) {
+                	gc.drawImage(imgBox, box.getX(), box.getY());
+                }
                 
                 for(Enemy c : enemies) {
                 	disegnaCarro(gc, c, imgNemico);

@@ -3,42 +3,42 @@ package core.parts;
 import core.entities.Entity;
 
 public class Cannon extends Entity{
-	int cX, cY;
+	double cX, cY;
 	double angleX = 0;
 	double angleY = 0;
 	
-	public Cannon(int x, int y, int cX, int cY) {
+	public Cannon(double x, double y, double cX, double cY) {
 		super(50, 50, x, y);
 		this.cX = cX;
 		this.cY = cY;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		cX = cX - this.x;
 		this.x = x;
 		cX += this.x;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		cY = cY - this.y;
 		this.y = y;
 		cY += this.y;
 	}
 
-	public void setcX(int cX) {
+	public void setcX(double cX) {
 		this.cX = cX;
 	}
 
-	public void setcY(int cY) {
+	public void setcY(double cY) {
 		this.cY = cY;
 	}
 
 	
-	public int getcX() {
+	public double getcX() {
 		return cX;
 	}
 
-	public int getcY() {
+	public double getcY() {
 		return cY;
 	}
 	public void setAngleX(double d) {
