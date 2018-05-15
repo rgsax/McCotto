@@ -1,6 +1,9 @@
-/core/
-/box.png
-/graphics/
 /BouncyBox.png
-/DestructileBox.png
 /DestructibleBox.png
+/bullet.png
+/cannone.png
+/cannone_nemico.png
+/carro.png
+/core/
+/graphics/
+/nemico.png

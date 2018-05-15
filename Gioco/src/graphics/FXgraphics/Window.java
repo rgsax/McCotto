@@ -46,7 +46,7 @@ public class Window extends Application{
 	
 	CarroArmato carroPlayer;
 	ArrayList<Enemy> enemies = new ArrayList<>();
-	ArrayList<AbstractBox> boxes = new ArrayList<>();
+	//ArrayList<AbstractBox> boxes = new ArrayList<>();
 	Mondo mondo;
 	
 	public Window() {
@@ -59,10 +59,10 @@ public class Window extends Application{
 		
 		BouncyBox box = new BouncyBox(40, 40, 200, 200);
 		DestructibleBox box2 = new DestructibleBox(40, 40, 100,100);
-		boxes.add(box);
-		boxes.add(box2);
+		mondo.addBox(box);
+		mondo.addBox(box2);
 		
-		mondo.setBoxes(boxes);
+		//mondo.setBoxes(boxes);
 		
 		mondo.orientaCannone(enemy, carroPlayer);
 	}
@@ -142,10 +142,10 @@ public class Window extends Application{
 			@Override
 			public void handle(MouseEvent event) {
 				if(event.getButton() == MouseButton.PRIMARY)	{
-					boxes.add(new DestructibleBox(40, 40, event.getX() - 20, event.getY() - 20));
+					mondo.addBox(new DestructibleBox(40, 40, event.getX() - 20, event.getY() - 20));
 				}
 				else if(event.getButton() == MouseButton.SECONDARY) {
-					boxes.add(new BouncyBox(40, 40, event.getX() - 20, event.getY() - 20));
+					mondo.addBox(new BouncyBox(40, 40, event.getX() - 20, event.getY() - 20));
 				}
 			}
 		});
@@ -226,7 +226,7 @@ public class Window extends Application{
                 gc.setFill(Color.BISQUE);
                 gc.fillRect(0, 0, mondo.getWidth(), mondo.getHeight());
                 
-                for(AbstractBox box : boxes) {
+                for(AbstractBox box : mondo.getBoxes()) {
                 	if(box instanceof BouncyBox)
                 		gc.drawImage(imgBouncyBox, box.getX(), box.getY());
                 	else if(box instanceof DestructibleBox)

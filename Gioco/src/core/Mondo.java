@@ -18,11 +18,15 @@ public class Mondo {
 	int width = 600;
 	int height = 600;
 	CarroArmato carro;
+	
+	// (40, 40) sono le dimensioni delle casse
+	boolean[][] worldMatrix = new boolean[width/40][height/40];
 	ArrayList<Bullet> bullets = new ArrayList<>();
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	
 	public Mondo() {
+		
 	}
 	
 	public void spara(CarroArmato c) {
@@ -30,6 +34,12 @@ public class Mondo {
 			bullets.add(new Bullet(c, c.getCannone()));
 			c.decreaseShots();
 		}
+	}
+	
+	public void addBox(AbstractBox ab) {
+		boxes.add(ab);
+		worldMatrix[(int) ab.getX()/40][(int) ab.getY()/40] = true;
+		System.out.println("Aggiunta cassa @ " + (int) ab.getX()/40 + ", " + (int) ab.getY()/40);
 	}
 	
 	public void setBoxes(ArrayList<AbstractBox> boxes) {
@@ -154,14 +164,16 @@ public class Mondo {
 			if(!toDelete.isEmpty()) {
 				for(Entity o : toDelete) {
 					if(o instanceof Bullet) {
-						System.out.println("BOOM!!");
 						esplodiProiettile((Bullet)o);
 					}
 					else if (o instanceof CarroArmato) {	
 						esplodiNemico((CarroArmato)o);
 					}
-					else if(o instanceof DestructibleBox)
+					else if(o instanceof DestructibleBox) {
+						System.out.println("Casse @ " + (int) o.getX()/40 + ", " + (int) o.getY()/40 + " distrutta");
 						deletBox((DestructibleBox)o); 
+						worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
+					}
 				}
 			}
 		}
