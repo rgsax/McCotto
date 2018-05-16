@@ -13,8 +13,12 @@ import core.entities.Entity;
 import core.parts.Cannon;
 import core.parts.Direction;
 import javafx.animation.AnimationTimer;
-import javafx.application.*;
+import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -22,10 +26,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -55,7 +55,7 @@ public class Window extends Application{
 		mondo.setPlayer(carroPlayer);
 		mondo.setEnemiesList(enemies);
 		Enemy enemy = new Enemy(600, 600, mondo);
-		enemies.add(enemy);
+		//enemies.add(enemy);
 		
 		BouncyBox box = new BouncyBox(40, 40, 200, 200);
 		DestructibleBox box2 = new DestructibleBox(40, 40, 100,100);
@@ -115,7 +115,7 @@ public class Window extends Application{
 						up = false;
 				}
 				if(e.getCode() == KeyCode.SPACE) {
-					mondo.spara(carroPlayer);		
+					mondo.sparaPlayer();		
 					/*
 					 * if(multiplayer)
 					 * 	send("USE " + ID + " BULLET");
@@ -161,7 +161,10 @@ public class Window extends Application{
 			@Override
 			public void run() {
 				while(true) {
-					count++;
+					count++;					
+
+					mondo.update();
+					
 					Direction direction = null;
 					if(up && right)
 						direction = Direction.NE;
@@ -191,8 +194,7 @@ public class Window extends Application{
 						 *send("MOVE " + ID + direction.toString());
 						 */
 					}
-					mondo.checkCollisions();
-				
+					
 				//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
 					if (count >= 10) {
 							mondo.muoviNemici();
@@ -206,11 +208,9 @@ public class Window extends Application{
 						}
 					}
 					
-					
 					try {
 						sleep(50);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

@@ -1,11 +1,7 @@
 package core;
 
 import java.util.ArrayList;
-
-import javax.swing.border.AbstractBorder;
-
 import core.entities.AbstractBox;
-import core.entities.BouncyBox;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
 import core.entities.DestructibleBox;
@@ -30,7 +26,7 @@ public class Mondo {
 	}
 	
 	public void spara(CarroArmato c) {
-boolean scatolaInMezzo = false;
+		boolean scatolaInMezzo = false;
 		
 		if (c instanceof Enemy) {
 			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
@@ -41,13 +37,14 @@ boolean scatolaInMezzo = false;
 									Math.sqrt(Math.pow(c.getCannone().getcX() - AB.getX(), 2) 
 											+ Math.pow(c.getCannone().getcY() - AB.getY(), 2)))
 					  scatolaInMezzo = true;
-		}
+			}
 		}	
 		if(!scatolaInMezzo && c.remainingShots() > 0) {
 			bullets.add(new Bullet(c, c.getCannone()));
 			c.decreaseShots();
 		}
 
+		System.out.println(bullets.size());
 	}
 	
 	public void addBox(AbstractBox ab) {
@@ -130,72 +127,104 @@ boolean scatolaInMezzo = false;
 		boxes.remove(box);
 	}
 	
-	public void checkCollisions() {
-		if(!bullets.isEmpty()) {
+	public void update() {
 			ArrayList<Entity> toDelete = new ArrayList<>();
 			for(Bullet b : getBullets()) {
 				b.update();
-				if(b.getX() < 0 || b.getX() > 600 - b.getWidth()) {
-					b.rimbalzaX();
-				}
-				if(b.getY() < 0 || b.getY() > 600 - b.getHeight()) {
-					b.rimbalzaY();
-				}
 				
-				for(AbstractBox box : boxes) {
-						if(box.deflect(b)) {
-							b.setReadyToExplode(true);
-							toDelete.add(box);
-						}
-				}
+				checkBorderCollision(b);
+				checkBulletsCollision(b);
 				
-				if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
-						&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
-				{
-					//toDelete.add(carro);
-					b.setReadyToExplode(true);
-				}
-				
-				for(Enemy c : enemies) {
-					if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
-							&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
-					{
-						if(c.takeHit(b.getDamage()))
-							toDelete.add(c);
-						b.setReadyToExplode(true);
-					}
-				}
-				
-				for(Bullet bullet : bullets) {
-					if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
-						&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
-					{
-						bullet.setReadyToExplode(true);
-					}
-				}
+				toDelete.addAll(checkBoxesCollision(b));
+				toDelete.addAll(checkPlayerCollision(b));
+				toDelete.addAll(checkEnemiesCollision(b));				
 			}
+
+			toDelete.addAll(checkExplodibleBullets());
 			
-			for(Bullet bullet : bullets) {
-				if(bullet.isReadyToExplode())
-					toDelete.add(bullet);
+			destroyEntities(toDelete);
+	}
+	
+	void checkBorderCollision(Bullet b) {
+		if(b.getX() < 0 || b.getX() > 600 - b.getWidth()) {
+			b.rimbalzaX();
+		}
+		if(b.getY() < 0 || b.getY() > 600 - b.getHeight()) {
+			b.rimbalzaY();
+		}
+	}
+	
+	ArrayList<Entity> checkEnemiesCollision(Bullet b) {
+		ArrayList<Entity> toDelete = new ArrayList<>();
+		for(Enemy c : enemies) {
+			if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
+					&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
+			{
+				if(c.takeHit(b.getDamage()))
+					toDelete.add(c);
+				b.setReadyToExplode(true);
 			}
-			
-			if(!toDelete.isEmpty()) {
-				for(Entity o : toDelete) {
-					if(o instanceof Bullet) {
-						esplodiProiettile((Bullet)o);
-					}
-					else if (o instanceof CarroArmato) {	
-						esplodiNemico((CarroArmato)o);
-					}
-					else if(o instanceof DestructibleBox) {
-						System.out.println("Casse @ " + (int) o.getX()/40 + ", " + (int) o.getY()/40 + " distrutta");
-						deletBox((DestructibleBox)o); 
-						worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
-					}
-				}
+		}
+		
+		return toDelete;
+	}
+	
+	ArrayList<Entity> checkBoxesCollision(Bullet b) {
+		ArrayList<Entity> toDelete = new ArrayList<>();
+		for(AbstractBox box : boxes) {
+			if(box.deflect(b)) {
+				b.setReadyToExplode(true);
+				toDelete.add(box);
+			}
+		}
+		
+		return toDelete;
+	}
+		
+	ArrayList<Entity> checkPlayerCollision(Bullet b) {
+		ArrayList<Entity> toDelete = new ArrayList<>();
+		if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
+				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
+		{
+			//toDelete.add(carro);
+			b.setReadyToExplode(true);
+		}
+		
+		return toDelete;
+	}
+	
+	void checkBulletsCollision(Bullet b) {
+		for(Bullet bullet : bullets) {
+			if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
+				&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
+			{
+				bullet.setReadyToExplode(true);
 			}
 		}
 	}
 	
+	ArrayList<Entity> checkExplodibleBullets() {
+		ArrayList<Entity> toDelete = new ArrayList<>();
+		for(Bullet bullet : bullets) {
+			if(bullet.isReadyToExplode())
+				toDelete.add(bullet);
+		}
+		
+		return toDelete;
+	}
+	
+	void destroyEntities(ArrayList<Entity> toDelete) {
+		for(Entity o : toDelete) {
+			if(o instanceof Bullet) {
+				esplodiProiettile((Bullet)o);
+			}
+			else if (o instanceof CarroArmato) {	
+				esplodiNemico((CarroArmato)o);
+			}
+			else if(o instanceof DestructibleBox) {
+				deletBox((DestructibleBox)o); 
+				worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
+			}
+		}
+	}
 }
