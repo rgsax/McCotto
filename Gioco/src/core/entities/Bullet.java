@@ -3,6 +3,8 @@ package core.entities;
 import core.parts.Cannon;
 
 public class Bullet extends Entity {
+	boolean readyToExplode = false;
+	int timer = 45;
 	int vX, vY;
 	double angle;
 	int damage = 1;
@@ -25,9 +27,14 @@ public class Bullet extends Entity {
 		return angle;
 	}
 	
-	public void update() {		
-		x += vX;
-		y += vY;
+	public void update() {
+		--timer;
+		if(timer == 0)
+			readyToExplode = true;
+		else {
+			x += vX;
+			y += vY;
+		}
 	}
 	
 	public void rimbalzaY() {
@@ -43,5 +50,11 @@ public class Bullet extends Entity {
 	}
 	public CarroArmato getOwner() {
 		return owner;
+	}
+	public boolean isReadyToExplode() {
+		return readyToExplode;
+	}
+	public void setReadyToExplode(boolean readyToExplode) {
+		this.readyToExplode = readyToExplode;
 	}
 }

@@ -144,7 +144,7 @@ boolean scatolaInMezzo = false;
 				
 				for(AbstractBox box : boxes) {
 						if(box.deflect(b)) {
-							toDelete.add(b);
+							b.setReadyToExplode(true);
 							toDelete.add(box);
 						}
 				}
@@ -153,7 +153,7 @@ boolean scatolaInMezzo = false;
 						&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
 				{
 					//toDelete.add(carro);
-					toDelete.add(b);
+					b.setReadyToExplode(true);
 				}
 				
 				for(Enemy c : enemies) {
@@ -162,7 +162,7 @@ boolean scatolaInMezzo = false;
 					{
 						if(c.takeHit(b.getDamage()))
 							toDelete.add(c);
-						toDelete.add(b);
+						b.setReadyToExplode(true);
 					}
 				}
 				
@@ -170,11 +170,16 @@ boolean scatolaInMezzo = false;
 					if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
 						&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
 					{
-						toDelete.add(bullet);
+						bullet.setReadyToExplode(true);
 					}
 				}
 			}
-		
+			
+			for(Bullet bullet : bullets) {
+				if(bullet.isReadyToExplode())
+					toDelete.add(bullet);
+			}
+			
 			if(!toDelete.isEmpty()) {
 				for(Entity o : toDelete) {
 					if(o instanceof Bullet) {
