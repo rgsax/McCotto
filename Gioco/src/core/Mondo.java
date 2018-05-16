@@ -30,10 +30,24 @@ public class Mondo {
 	}
 	
 	public void spara(CarroArmato c) {
-		if(c.remainingShots() > 0) {
+boolean scatolaInMezzo = false;
+		
+		if (c instanceof Enemy) {
+			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
+				  if (Math.sqrt(Math.pow(carro.getCannone().getcX() - c.getCannone().getcX(), 2) 
+									+ Math.pow(carro.getCannone().getcY() - c.getCannone().getcY(), 2)) + 15 >=
+									Math.sqrt(Math.pow(carro.getCannone().getcX() - AB.getX(), 2) 
+											+ Math.pow(carro.getCannone().getcY() - AB.getY(), 2)) + 
+									Math.sqrt(Math.pow(c.getCannone().getcX() - AB.getX(), 2) 
+											+ Math.pow(c.getCannone().getcY() - AB.getY(), 2)))
+					  scatolaInMezzo = true;
+		}
+		}	
+		if(!scatolaInMezzo && c.remainingShots() > 0) {
 			bullets.add(new Bullet(c, c.getCannone()));
 			c.decreaseShots();
 		}
+
 	}
 	
 	public void addBox(AbstractBox ab) {
