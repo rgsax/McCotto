@@ -4,7 +4,7 @@ import core.Mondo;
 import core.parts.Direction;
 
 public class Enemy extends CarroArmato {
-	double chaseRangeMax = 300.0;
+	double chaseRangeMax = 200.0;
 	double chaseRangeMin = 150.0;
 	
 	public Enemy(int x, int y, Mondo mondo) {
