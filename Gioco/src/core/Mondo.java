@@ -43,8 +43,6 @@ public class Mondo {
 			bullets.add(new Bullet(c, c.getCannone()));
 			c.decreaseShots();
 		}
-
-		System.out.println(bullets.size());
 	}
 	
 	public void addBox(AbstractBox ab) {
