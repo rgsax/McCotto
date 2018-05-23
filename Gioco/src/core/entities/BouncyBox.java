@@ -10,7 +10,7 @@ public class BouncyBox extends AbstractBox {
 
 	@Override
 	public boolean deflect(Bullet b) {
-		if(b.getX() > x && b.getX() < x + width && b.getY() > y && b.getY() < y + height) {
+		if(b.getX() > x && b.getX() + b.getWidth() < x + width && b.getY() > y && b.getY() + b.getHeight() < y + height) {
 			b.setReadyToExplode(true);
 		}
 		else if(bulletHasCollidedWithBox(b)) {
