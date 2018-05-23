@@ -145,10 +145,10 @@ public class Mondo {
 	}
 	
 	void checkBorderCollision(Bullet b) {
-		if(b.getX() < 0 || b.getX() > 600 - b.getWidth()) {
+		if(b.getX() < 0 || b.getX() > width - b.getWidth()) {
 			b.rimbalzaX();
 		}
-		if(b.getY() < 0 || b.getY() > 600 - b.getHeight()) {
+		if(b.getY() < 0 || b.getY() > height - b.getHeight()) {
 			b.rimbalzaY();
 		}
 	}
