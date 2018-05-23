@@ -74,24 +74,20 @@ public class Window extends Application{
 			
 			int numBBoxes = fileIn.nextInt();
 			for(int i = 0 ; i < numBBoxes ; i++) {
-				int bWidth = fileIn.nextInt();
-				int bHeight = fileIn.nextInt();
 				
 				double x = fileIn.nextDouble();
 				double y = fileIn.nextDouble();
 				
-				boxes.add(new BouncyBox(bWidth, bHeight, x, y));				
+				boxes.add(new BouncyBox(x, y));				
 			}
 			
 			int numDBoxes = fileIn.nextInt();
 			for(int i = 0 ; i < numDBoxes ; i++) {
-				int dWidth = fileIn.nextInt();
-				int dHeight = fileIn.nextInt();
 				
 				double x = fileIn.nextDouble();
 				double y = fileIn.nextDouble();
 				
-				boxes.add(new DestructibleBox(dWidth, dHeight, x, y));				
+				boxes.add(new DestructibleBox(x, y));				
 			}
 			
 			mondo.setBoxes(boxes);
@@ -194,10 +190,10 @@ public class Window extends Application{
 			@Override
 			public void handle(MouseEvent event) {
 				if(event.getButton() == MouseButton.PRIMARY)	{
-					mondo.addBox(new DestructibleBox(40, 40, event.getX() - 20, event.getY() - 20));
+					mondo.addBox(new DestructibleBox(event.getX() - 20, event.getY() - 20));
 				}
 				else if(event.getButton() == MouseButton.SECONDARY) {
-					mondo.addBox(new BouncyBox(40, 40, event.getX() - 20, event.getY() - 20));
+					mondo.addBox(new BouncyBox(event.getX() - 20, event.getY() - 20));
 				}
 			}
 		});
