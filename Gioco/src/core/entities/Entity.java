@@ -32,15 +32,15 @@ public abstract class Entity {
 		return height;
 	}
 	
-	public void setX(int x) {
-		this.x = x;
+	public void setX(double d) {
+		this.x = d;
 	}
 	
 	public double getX() {
 		return x;
 	}
 	
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 	

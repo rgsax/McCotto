@@ -7,7 +7,7 @@ public class Enemy extends CarroArmato {
 	double chaseRangeMax = 200.0;
 	double chaseRangeMin = 150.0;
 	
-	public Enemy(int x, int y, Mondo mondo) {
+	public Enemy(double x, double y, Mondo mondo) {
 		super(x, y, mondo);
 	}
 	

@@ -11,8 +11,8 @@ import core.parts.Cannon;
 import core.parts.Direction;
 
 public class Mondo {
-	int width = 600;
-	int height = 600;
+	int width;
+	int height;
 	CarroArmato carro;
 	
 	// (40, 40) sono le dimensioni delle casse
@@ -21,8 +21,9 @@ public class Mondo {
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	
-	public Mondo() {
-		
+	public Mondo(int width, int height) {
+		this.width = width;
+		this.height = height;
 	}
 	
 	public void spara(CarroArmato c) {
@@ -221,7 +222,7 @@ public class Mondo {
 			}
 			else if(o instanceof DestructibleBox) {
 				deletBox((DestructibleBox)o); 
-				worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
+				//worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
 			}
 		}
 	}

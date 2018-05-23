@@ -1,6 +1,7 @@
 package graphics.FXgraphics;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import core.Mondo;
 import core.entities.AbstractBox;
@@ -29,6 +30,16 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Window extends Application{
 	
 	public static void main(String[] args) {
@@ -46,25 +57,64 @@ public class Window extends Application{
 	
 	CarroArmato carroPlayer;
 	ArrayList<Enemy> enemies = new ArrayList<>();
-	//ArrayList<AbstractBox> boxes = new ArrayList<>();
+	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	Mondo mondo;
 	
 	public Window() {
-		mondo = new Mondo();
-		carroPlayer = new CarroArmato(300, 300, mondo);
-		mondo.setPlayer(carroPlayer);
-		mondo.setEnemiesList(enemies);
-		Enemy enemy = new Enemy(600, 600, mondo);
-		//enemies.add(enemy);
-		
-		BouncyBox box = new BouncyBox(40, 40, 200, 200);
-		DestructibleBox box2 = new DestructibleBox(40, 40, 100,100);
-		mondo.addBox(box);
-		mondo.addBox(box2);
-		
-		//mondo.setBoxes(boxes);
-		
-		mondo.orientaCannone(enemy, carroPlayer);
+	}
+	
+	void caricaMappa() {
+		String level = "levels/level1.dat";
+		try {
+			Scanner fileIn = new Scanner(new FileReader(level));
+			int width = fileIn.nextInt();
+			int height = fileIn.nextInt();
+			
+			mondo = new Mondo(width, height);
+			
+			int numBBoxes = fileIn.nextInt();
+			for(int i = 0 ; i < numBBoxes ; i++) {
+				int bWidth = fileIn.nextInt();
+				int bHeight = fileIn.nextInt();
+				
+				double x = fileIn.nextDouble();
+				double y = fileIn.nextDouble();
+				
+				boxes.add(new BouncyBox(bWidth, bHeight, x, y));				
+			}
+			
+			int numDBoxes = fileIn.nextInt();
+			for(int i = 0 ; i < numDBoxes ; i++) {
+				int dWidth = fileIn.nextInt();
+				int dHeight = fileIn.nextInt();
+				
+				double x = fileIn.nextDouble();
+				double y = fileIn.nextDouble();
+				
+				boxes.add(new DestructibleBox(dWidth, dHeight, x, y));				
+			}
+			
+			mondo.setBoxes(boxes);
+			
+			int nEnemies = fileIn.nextInt();
+			for(int i = 0 ; i < nEnemies ; i++) {
+				double x = fileIn.nextDouble();
+				double y = fileIn.nextDouble();
+				
+				enemies.add(new Enemy(x, y, mondo));
+			}
+			
+			mondo.setEnemiesList(enemies);
+			
+			double playerX = fileIn.nextDouble();
+			double playerY = fileIn.nextDouble();
+			
+			carroPlayer = new CarroArmato(playerX, playerY, mondo);
+			mondo.setPlayer(carroPlayer);
+			fileIn.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	void loadImages() {
@@ -79,6 +129,8 @@ public class Window extends Application{
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		caricaMappa();
+		
 		GridPane root = new GridPane();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
@@ -241,8 +293,9 @@ public class Window extends Application{
                disegnaCarro(gc, carroPlayer, imgCarroPlayer);
                disegnaCannone(gc, carroPlayer.getCannone(), imgCannonePlayer);
                
+               gc.setFill(Color.RED);
                for(Bullet b : mondo.getBullets()) {
-            	   drawRotatedImage(gc, imgBullet, b, b.getAngle());
+            	   gc.fillOval(b.getX(), b.getY(), b.getWidth(), b.getHeight());
                }
             }
         }.start();
