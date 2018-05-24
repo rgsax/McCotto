@@ -2,8 +2,13 @@ package core.entities;
 
 public class DestructibleBox extends AbstractBox {
 	int health; 
+	
+	public DestructibleBox(int width, int height, double x, double y) {
+		super(width, height, x, y);
+	}
+	
 	public DestructibleBox(double x, double y) {
-		super(x, y);
+		super(minWidth, minHeight, x, y);
 		this.health = 1; 
 		// TODO Auto-generated constructor stub
 	}

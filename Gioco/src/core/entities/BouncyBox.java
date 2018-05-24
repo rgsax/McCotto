@@ -3,9 +3,12 @@ package core.entities;
 import sun.security.util.Length;
 
 public class BouncyBox extends AbstractBox {
+	public BouncyBox(int width, int height, double x, double y) {
+		super(width, height, x, y);
+	}
+	
 	public BouncyBox(double x, double y) {
-		super(x, y);
-		// TODO Auto-generated constructor stub
+		super(minWidth, minHeight, x, y);
 	}
 
 	@Override

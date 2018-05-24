@@ -1,6 +1,7 @@
 package graphics.FXgraphics;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import core.Mondo;
@@ -74,20 +75,24 @@ public class Window extends Application{
 			
 			int numBBoxes = fileIn.nextInt();
 			for(int i = 0 ; i < numBBoxes ; i++) {
+				int bWidth = fileIn.nextInt();
+				int bHeight = fileIn.nextInt();
 				
 				double x = fileIn.nextDouble();
 				double y = fileIn.nextDouble();
 				
-				boxes.add(new BouncyBox(x, y));				
+				boxes.add(new BouncyBox(bWidth, bHeight, x, y));				
 			}
 			
 			int numDBoxes = fileIn.nextInt();
 			for(int i = 0 ; i < numDBoxes ; i++) {
+				int dWidth = fileIn.nextInt();
+				int dHeight = fileIn.nextInt();
 				
 				double x = fileIn.nextDouble();
 				double y = fileIn.nextDouble();
 				
-				boxes.add(new DestructibleBox(x, y));				
+				boxes.add(new DestructibleBox(dWidth, dHeight, x, y));				
 			}
 			
 			mondo.setBoxes(boxes);
@@ -108,8 +113,13 @@ public class Window extends Application{
 			carroPlayer = new CarroArmato(playerX, playerY, mondo);
 			mondo.setPlayer(carroPlayer);
 			fileIn.close();
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+		catch(InputMismatchException e) {
+			System.out.println("Invalid map format");
+			System.exit(0);
 		}
 	}
 	
@@ -276,9 +286,9 @@ public class Window extends Application{
                 
                 for(AbstractBox box : mondo.getBoxes()) {
                 	if(box instanceof BouncyBox)
-                		gc.drawImage(imgBouncyBox, box.getX(), box.getY());
+                		disegnaBox(gc, box, imgBouncyBox);
                 	else if(box instanceof DestructibleBox)
-                		gc.drawImage(imgDestructibleBox, box.getX(), box.getY());
+                		disegnaBox(gc, box, imgDestructibleBox);
                 }
                 
                 for(Enemy c : enemies) {
@@ -303,6 +313,13 @@ public class Window extends Application{
 		});
         
         stage.show();
+	}
+	
+	void disegnaBox(GraphicsContext gc, AbstractBox box, Image img) {
+		for(int i = 0 ; i < box.getWidth() / AbstractBox.minWidth ; i++) {
+			for(int j = 0 ; j< box.getHeight() / AbstractBox.minHeight ; j++)
+				gc.drawImage(img, box.getX() + i * AbstractBox.minWidth, box.getY() + j * AbstractBox.minHeight);
+		}
 	}
 	
 	void disegnaCarro(GraphicsContext gc, CarroArmato c, Image img) {
