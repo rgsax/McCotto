@@ -79,6 +79,15 @@ public class LevelEditor extends Application {
 					S = true;
 				
 				if(ctrl && S) {
+					createLevelFile();					
+				}
+				
+			}
+
+			void createLevelFile() {
+				if(player == null)
+					System.out.println("Player must be placed");
+				else {
 					File level = new File("levels/level1.dat");
 					try {
 						level.createNewFile();
@@ -106,10 +115,8 @@ public class LevelEditor extends Application {
 						System.out.println("file salvato con successo");
 					} catch (IOException e) {
 						e.printStackTrace();
-					}
-					
+					}				
 				}
-				
 			}
 		});
 		
