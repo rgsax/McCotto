@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class LevelEditor extends Application {
@@ -161,16 +162,24 @@ public class LevelEditor extends Application {
 			public void handle(MouseEvent event) {
 				if(cursor != null) {
 					if(cursor == imgBouncyBox) {
-						bouncyBoxes.add(new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY));
+						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
+						if(!findCollision(o))
+							bouncyBoxes.add(o);
 					}
 					else if(cursor == imgDestructibleBox) {
-						destructibleBoxes.add(new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY));
+						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
+						if(!findCollision(o))
+							destructibleBoxes.add(o);
 					}
 					else if(cursor == imgEnemy) {
-						enemies.add(new ObjectInfo(mouseX, mouseY));						
+						ObjectInfo o = new ObjectInfo(mouseX, mouseY);
+						if(!findCollision(o))
+							enemies.add(o);						
 					}
 					else if(cursor == imgPlayer) {
-						player = new ObjectInfo(mouseX, mouseY);
+						ObjectInfo o = new ObjectInfo(mouseX, mouseY);
+						if(!findCollision(o))
+						player = o;
 					}
 				}
 			}
@@ -183,6 +192,8 @@ public class LevelEditor extends Application {
 			@Override
 			public void handle(long now) {
 				gc.clearRect(0,  0, 800, 800);
+				gc.setFill(Color.BISQUE);
+                gc.fillRect(0, 0, 800, 800);
 				
 				for(ObjectInfo bBox : bouncyBoxes) {
 					drawBox(gc, bBox, imgBouncyBox);
@@ -226,6 +237,34 @@ public class LevelEditor extends Application {
 		for(int i = 0 ; i < box.width / AbstractBox.minWidth ; i++)
 			for(int j = 0 ; j < box.height / AbstractBox.minHeight ; j++)
 				gc.drawImage(img, box.x + i * AbstractBox.minWidth, box.y + j * AbstractBox.minHeight);
+	}
+	
+	boolean findCollision(ObjectInfo o) {
+		for(ObjectInfo bBox : bouncyBoxes) {
+			if(collided(o, bBox))
+				return true;
+		}
+		
+		for(ObjectInfo dBox : destructibleBoxes) {
+			if(collided(o, dBox))
+				return true;
+		}
+		
+		for(ObjectInfo enemy : enemies) {
+			if(collided(o, enemy))
+				return true;
+		}
+		
+		if(player != null && collided(o, player))
+			return true;
+		
+		return false;
+	}
+	
+	boolean collided(ObjectInfo o1, ObjectInfo o2) {
+		return !o1.equals(o2) && 
+				(o1.x + o1.width >= o2.x && o1.x <= o2.x + o2.width) &&
+				(o1.y + o1.height >= o2.y && o1.y <= o2.y + o2.height);
 	}
 
 }

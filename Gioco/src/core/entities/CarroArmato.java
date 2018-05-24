@@ -4,6 +4,9 @@ import core.Mondo;
 import core.parts.*;
 
 public class CarroArmato extends Entity {
+	public static int baseWidth = 50;
+	public static int baseHeight = 50;
+	
 	Cannon cannone;
 	Body macchina;
 	int speed = 10;
@@ -14,7 +17,7 @@ public class CarroArmato extends Entity {
 	Mondo mondo;
 	
 	public CarroArmato(double x, double y, Mondo mondo) {
-		super(50, 50, x, y);
+		super(baseWidth, baseHeight, x, y);
 		this.mondo = mondo;
 		macchina = new Body(x, y);
 		cannone = new Cannon(x, y, x + macchina.getWidth() / 2, y + macchina.getHeight() / 2);
