@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import core.entities.AbstractBox;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -39,6 +40,8 @@ public class LevelEditor extends Application {
 	ArrayList<ObjectInfo> destructibleBoxes = new ArrayList<>();
 	ArrayList<ObjectInfo> enemies = new ArrayList<>();
 	ObjectInfo player = null;
+	int currentBoxWidth = AbstractBox.minWidth;
+	int currentBoxHeight = AbstractBox.minHeight;
 	
 
 	@Override
@@ -60,7 +63,7 @@ public class LevelEditor extends Application {
 		
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
-			public void handle(KeyEvent event) {
+			public void handle(KeyEvent event) {				
 				if(event.getCode() == KeyCode.B) {
 					cursor = imgBouncyBox;
 				}
@@ -77,6 +80,28 @@ public class LevelEditor extends Application {
 					ctrl = true;
 				else if(event.getCode() == KeyCode.S)
 					S = true;
+				else if(event.getCode() == KeyCode.UP &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					if(currentBoxHeight > AbstractBox.minHeight)
+						currentBoxHeight -= AbstractBox.minHeight;
+				}
+				else if(event.getCode() == KeyCode.DOWN &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					currentBoxHeight += AbstractBox.minHeight;
+				}
+				else if(event.getCode() == KeyCode.LEFT &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					if(currentBoxWidth > AbstractBox.minWidth)
+						currentBoxWidth -= AbstractBox.minWidth;
+				}
+				else if(event.getCode() == KeyCode.RIGHT &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					currentBoxWidth += AbstractBox.minWidth;
+				}
+				else if(event.getCode() == KeyCode.R) {
+					currentBoxHeight = AbstractBox.minHeight;
+					currentBoxWidth = AbstractBox.minWidth;
+				}
 				
 				if(ctrl && S) {
 					createLevelFile();					
@@ -136,10 +161,10 @@ public class LevelEditor extends Application {
 			public void handle(MouseEvent event) {
 				if(cursor != null) {
 					if(cursor == imgBouncyBox) {
-						bouncyBoxes.add(new ObjectInfo(40, 40, mouseX, mouseY));
+						bouncyBoxes.add(new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY));
 					}
 					else if(cursor == imgDestructibleBox) {
-						destructibleBoxes.add(new ObjectInfo(40, 40, mouseX, mouseY));
+						destructibleBoxes.add(new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY));
 					}
 					else if(cursor == imgEnemy) {
 						enemies.add(new ObjectInfo(mouseX, mouseY));						
@@ -160,11 +185,11 @@ public class LevelEditor extends Application {
 				gc.clearRect(0,  0, 800, 800);
 				
 				for(ObjectInfo bBox : bouncyBoxes) {
-					gc.drawImage(imgBouncyBox, bBox.x, bBox.y);
+					drawBox(gc, bBox, imgBouncyBox);
 				}
 				
 				for(ObjectInfo dBox : destructibleBoxes) {
-					gc.drawImage(imgDestructibleBox, dBox.x, dBox.y);
+					drawBox(gc, dBox, imgDestructibleBox);
 				}
 				
 				for(ObjectInfo enemy : enemies) {
@@ -174,8 +199,13 @@ public class LevelEditor extends Application {
 				if(player != null)
 					gc.drawImage(imgPlayer, player.x, player.y);
 				
-				if(cursor != null)
-					gc.drawImage(cursor, mouseX, mouseY);
+				if(cursor != null) {
+					if(cursor == imgBouncyBox || cursor == imgDestructibleBox) {
+						drawBox(gc, new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY), cursor);
+					}
+					else
+						gc.drawImage(cursor, mouseX, mouseY);
+				}
 				
 			}
 		}.start();
@@ -190,6 +220,12 @@ public class LevelEditor extends Application {
 		imgEnemy = new Image("nemico.png");
 		imgPlayer = new Image("carro.png");
 		cursor = null;
+	}
+	
+	void drawBox(GraphicsContext gc, ObjectInfo box, Image img) {
+		for(int i = 0 ; i < box.width / AbstractBox.minWidth ; i++)
+			for(int j = 0 ; j < box.height / AbstractBox.minHeight ; j++)
+				gc.drawImage(img, box.x + i * AbstractBox.minWidth, box.y + j * AbstractBox.minHeight);
 	}
 
 }
