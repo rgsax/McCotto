@@ -1,13 +1,22 @@
 package graphics.FXgraphics;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Scanner;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import core.Mondo;
 import core.entities.AbstractBox;
+import core.entities.BouncyBox;
+import core.entities.CarroArmato;
+import core.entities.DestructibleBox;
+import core.entities.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -28,6 +37,7 @@ public class LevelEditor extends Application {
 		launch(args);
 	}
 	
+	int width, height;
 	double mouseX, mouseY;
 	Image cursor;
 	Image imgEnemy;
@@ -40,18 +50,19 @@ public class LevelEditor extends Application {
 	ArrayList<ObjectInfo> bouncyBoxes = new ArrayList<>();
 	ArrayList<ObjectInfo> destructibleBoxes = new ArrayList<>();
 	ArrayList<ObjectInfo> enemies = new ArrayList<>();
-	ObjectInfo player = null;
+	ObjectInfo player;
 	int currentBoxWidth = AbstractBox.minWidth;
 	int currentBoxHeight = AbstractBox.minHeight;
 	
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		loadTemplate();
 		loadImages();
 		GridPane root = new GridPane();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
-		Canvas canvas = new Canvas(800, 800);
+		Canvas canvas = new Canvas(width, height);
 		root.getChildren().add(canvas);
 		
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -172,14 +183,14 @@ public class LevelEditor extends Application {
 							destructibleBoxes.add(o);
 					}
 					else if(cursor == imgEnemy) {
-						ObjectInfo o = new ObjectInfo(mouseX, mouseY);
+						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
 						if(!findCollision(o))
 							enemies.add(o);						
 					}
 					else if(cursor == imgPlayer) {
-						ObjectInfo o = new ObjectInfo(mouseX, mouseY);
+						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
 						if(!findCollision(o))
-						player = o;
+							player = o;
 					}
 				}
 			}
@@ -265,6 +276,55 @@ public class LevelEditor extends Application {
 		return !o1.equals(o2) && 
 				(o1.x + o1.width >= o2.x && o1.x <= o2.x + o2.width) &&
 				(o1.y + o1.height >= o2.y && o1.y <= o2.y + o2.height);
+	}
+	
+	void loadTemplate() {
+		String level = "levels/template.dat";
+		try {
+			Scanner fileIn = new Scanner(new FileReader(level));
+			fileIn.useLocale(Locale.US);
+			width = fileIn.nextInt();
+			height = fileIn.nextInt();
+			
+			int numBBoxes = fileIn.nextInt();
+			for(int i = 0 ; i < numBBoxes ; i++) {
+				int bWidth = fileIn.nextInt();
+				int bHeight = fileIn.nextInt();
+				
+				double x = fileIn.nextDouble();
+				double y = fileIn.nextDouble();
+				
+				bouncyBoxes.add(new ObjectInfo(bWidth, bHeight, x, y));				
+			}
+			
+			int numDBoxes = fileIn.nextInt();
+			for(int i = 0 ; i < numDBoxes ; i++) {
+				int dWidth = fileIn.nextInt();
+				int dHeight = fileIn.nextInt();
+				
+				double x = fileIn.nextDouble();
+				double y = fileIn.nextDouble();
+				
+				destructibleBoxes.add(new ObjectInfo(dWidth, dHeight, x, y));				
+			}
+			
+			int nEnemies = fileIn.nextInt();
+			for(int i = 0 ; i < nEnemies ; i++) {
+				double x = fileIn.nextDouble();
+				double y = fileIn.nextDouble();
+				
+				enemies.add(new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, x, y));
+			}
+			
+			double playerX = fileIn.nextDouble();
+			double playerY = fileIn.nextDouble();
+			
+			player = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, playerX, playerY);
+			fileIn.close();
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
