@@ -2,6 +2,7 @@ package graphics.FXgraphics;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
 
 import core.Mondo;
@@ -68,6 +69,7 @@ public class Window extends Application{
 		String level = "levels/level1.dat";
 		try {
 			Scanner fileIn = new Scanner(new FileReader(level));
+			fileIn.useLocale(Locale.US);
 			int width = fileIn.nextInt();
 			int height = fileIn.nextInt();
 			
@@ -208,7 +210,7 @@ public class Window extends Application{
 			}
 		});
 
-		Canvas canvas = new Canvas(800, 800);
+		Canvas canvas = new Canvas(mondo.getWidth(), mondo.getHeight());
 		root.add(canvas, 0, 0);
 		
 		loadImages();
@@ -280,7 +282,7 @@ public class Window extends Application{
             public void handle(long currentNanoTime)
             {
                 // Clear the canvas
-                gc.clearRect(0, 0, 800, 800);
+                gc.clearRect(0, 0, mondo.getWidth(), mondo.getHeight());
                 gc.setFill(Color.BISQUE);
                 gc.fillRect(0, 0, mondo.getWidth(), mondo.getHeight());
                 
