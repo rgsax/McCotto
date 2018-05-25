@@ -179,8 +179,11 @@ public class LevelEditor extends Application {
 					}
 					else if(cursor == imgDestructibleBox) {
 						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
-						if(!findCollision(o))
-							destructibleBoxes.add(o);
+						if(!findCollision(o)) {
+							for(int i = 0 ; i < currentBoxWidth / AbstractBox.minWidth ; i++)
+								for(int j = 0 ; j < currentBoxHeight / AbstractBox.minHeight ; j++)
+									destructibleBoxes.add(new ObjectInfo(AbstractBox.minWidth, AbstractBox.minHeight, mouseX + i * AbstractBox.minWidth, mouseY + j * AbstractBox.minHeight));
+						}
 					}
 					else if(cursor == imgEnemy) {
 						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
@@ -211,7 +214,7 @@ public class LevelEditor extends Application {
 				}
 				
 				for(ObjectInfo dBox : destructibleBoxes) {
-					drawBox(gc, dBox, imgDestructibleBox);
+					gc.drawImage(imgDestructibleBox, dBox.x, dBox.y);
 				}
 				
 				for(ObjectInfo enemy : enemies) {

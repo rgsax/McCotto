@@ -101,6 +101,9 @@ public class Window extends Application{
 			
 			int nEnemies = fileIn.nextInt();
 			for(int i = 0 ; i < nEnemies ; i++) {
+				int cWidth = fileIn.nextInt();
+				int cHeight = fileIn.nextInt();
+				
 				double x = fileIn.nextDouble();
 				double y = fileIn.nextDouble();
 				
@@ -108,6 +111,9 @@ public class Window extends Application{
 			}
 			
 			mondo.setEnemiesList(enemies);
+			
+			int cWidth = fileIn.nextInt();
+			int cHeight = fileIn.nextInt();
 			
 			double playerX = fileIn.nextDouble();
 			double playerY = fileIn.nextDouble();

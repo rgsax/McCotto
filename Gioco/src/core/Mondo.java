@@ -31,12 +31,12 @@ public class Mondo {
 		
 		if (c instanceof Enemy) {
 			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
-				  if (Math.sqrt(Math.pow(carro.getCannone().getcX() - c.getCannone().getcX(), 2) 
-									+ Math.pow(carro.getCannone().getcY() - c.getCannone().getcY(), 2)) + 15 >=
-									Math.sqrt(Math.pow(carro.getCannone().getcX() - AB.getX(), 2) 
-											+ Math.pow(carro.getCannone().getcY() - AB.getY(), 2)) + 
-									Math.sqrt(Math.pow(c.getCannone().getcX() - AB.getX(), 2) 
-											+ Math.pow(c.getCannone().getcY() - AB.getY(), 2)))
+				  if (Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
+						  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
+									Math.hypot(carro.getCannone().getcX() - AB.getX(), 
+											carro.getCannone().getcY() - AB.getY()) + 
+									Math.hypot(c.getCannone().getcX() - AB.getX(),  
+											c.getCannone().getcY() - AB.getY()))
 					  scatolaInMezzo = true;
 			}
 		}	
