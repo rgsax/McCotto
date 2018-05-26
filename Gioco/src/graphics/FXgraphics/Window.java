@@ -203,18 +203,6 @@ public class Window extends Application{
 					down = false;				
 			}
 		});
-		
-		scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				if(event.getButton() == MouseButton.PRIMARY)	{
-					mondo.addBox(new DestructibleBox(event.getX() - 20, event.getY() - 20));
-				}
-				else if(event.getButton() == MouseButton.SECONDARY) {
-					mondo.addBox(new BouncyBox(event.getX() - 20, event.getY() - 20));
-				}
-			}
-		});
 
 		Canvas canvas = new Canvas(mondo.getWidth(), mondo.getHeight());
 		root.add(canvas, 0, 0);
@@ -340,7 +328,11 @@ public class Window extends Application{
 	
 	void drawRotatedImage(GraphicsContext gc, Image img, Entity e, double angle) {
 		gc.save();
-		Rotate rotate = new Rotate(angle, e.getX() + e.getWidth() / 2, e.getY() + e.getHeight() / 2);
+		double pivotX = e.getX() + e.getWidth() / 2;
+		double pivotY = e.getY() + e.getHeight() / 2;
+		if(e instanceof Cannon)
+			pivotX = e.getX() + e.getHeight() / 2;
+		Rotate rotate = new Rotate(angle, pivotX, pivotY);
 		gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
 		gc.drawImage(img, e.getX(), e.getY());
 		gc.restore();

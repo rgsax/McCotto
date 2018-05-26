@@ -13,14 +13,14 @@ public class Bullet extends Entity {
 		return damage;
 	}
 
-	public Bullet(CarroArmato owner, Cannon line) {
+	public Bullet(CarroArmato owner, Cannon cannon) {
 		super(13, 13);
 		this.owner = owner;
-		this.angle = line.getAngle();
+		this.angle = cannon.getAngle();
 		vX = (int) Math.round(Math.cos(Math.toRadians(angle)) * 10);
 		vY = (int) Math.round(Math.sin(Math.toRadians(angle)) * 10);
-		x = line.getcX() - width / 2 + 4 * vX;
-		y = line.getcY() - height / 2 + 4 * vY;
+		x = cannon.getcX() + vX * 10;
+		y = cannon.getcY() + vY * 10;
 	}
 	
 	public double getAngle() {
