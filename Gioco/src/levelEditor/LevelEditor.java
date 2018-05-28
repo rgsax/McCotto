@@ -1,4 +1,4 @@
-package graphics.FXgraphics;
+package levelEditor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
+
+import javax.swing.Scrollable;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
@@ -27,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -59,11 +62,28 @@ public class LevelEditor extends Application {
 	public void start(Stage stage) throws Exception {
 		loadTemplate();
 		loadImages();
+		Image[] imgs = {	
+				imgEnemy,
+				imgBouncyBox,
+				imgDestructibleBox,
+				imgPlayer
+		};
+		ObjectSelector selector = new ObjectSelector(imgs);
 		GridPane root = new GridPane();
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		Canvas canvas = new Canvas(width, height);
 		root.getChildren().add(canvas);
+			
+		scene.setOnScroll(new EventHandler<ScrollEvent>() {
+			@Override
+			public void handle(ScrollEvent event) {
+				if(event.getDeltaY() >= 0)
+					cursor = selector.nextItem();
+				else
+					cursor = selector.previousItem();
+			}
+		});
 		
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
