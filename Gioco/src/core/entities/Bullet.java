@@ -19,8 +19,8 @@ public class Bullet extends Entity {
 		this.angle = cannon.getAngle();
 		vX = (int) Math.round(Math.cos(Math.toRadians(angle)) * 10);
 		vY = (int) Math.round(Math.sin(Math.toRadians(angle)) * 10);
-		x = cannon.getcX() + vX * 10;
-		y = cannon.getcY() + vY * 10;
+		x = cannon.getcX() + vX * 7;
+		y = cannon.getcY() + vY * 7;
 	}
 	
 	public double getAngle() {

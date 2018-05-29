@@ -7,7 +7,7 @@ public class Cannon extends Entity{
 	double angleX = 0;
 	double angleY = 0;
 	
-	public static int baseWidth = 100;
+	public static int baseWidth = 75;
 	public static int baseHeight = 50;
 	
 	public Cannon(double x, double y, double cX, double cY) {
