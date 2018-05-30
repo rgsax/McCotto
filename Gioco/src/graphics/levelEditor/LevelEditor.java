@@ -278,7 +278,7 @@ public class LevelEditor extends GridPane {
 			public void handle(KeyEvent event) {
 				if(event.getCode() == KeyCode.CONTROL)
 					ctrl = false;
-				if(event.getCode() == KeyCode.S)
+				else if(event.getCode() == KeyCode.S)
 					S = false;
 				
 			}
