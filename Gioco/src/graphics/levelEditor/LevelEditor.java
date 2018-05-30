@@ -1,4 +1,4 @@
-package levelEditor;
+package graphics.levelEditor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,20 +9,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
-import javax.swing.Scrollable;
-
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import core.Mondo;
 import core.entities.AbstractBox;
-import core.entities.BouncyBox;
 import core.entities.CarroArmato;
-import core.entities.DestructibleBox;
-import core.entities.Enemy;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -32,13 +22,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
-public class LevelEditor extends Application {
+public class LevelEditor extends GridPane {
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		launch(args);
-	}
+	}*/
 	
 	int width, height;
 	double mouseX, mouseY;
@@ -47,6 +36,11 @@ public class LevelEditor extends Application {
 	Image imgBouncyBox;
 	Image imgDestructibleBox;
 	Image imgPlayer;
+	
+	Canvas canvas;
+	GraphicsContext gc;
+	
+	ObjectSelector selector;
 	
 	boolean ctrl = false, S = false;
 	
@@ -58,204 +52,14 @@ public class LevelEditor extends Application {
 	int currentBoxHeight = AbstractBox.minHeight;
 	
 
-	@Override
-	public void start(Stage stage) throws Exception {
+	public LevelEditor() {
+		super();
+		
 		loadTemplate();
-		loadImages();
-		Image[] imgs = {	
-				imgEnemy,
-				imgBouncyBox,
-				imgDestructibleBox,
-				imgPlayer
-		};
-		ObjectSelector selector = new ObjectSelector(imgs);
-		GridPane root = new GridPane();
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
-		Canvas canvas = new Canvas(width, height);
-		root.getChildren().add(canvas);
-			
-		scene.setOnScroll(new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent event) {
-				if(event.getDeltaY() >= 0)
-					cursor = selector.nextItem();
-				else
-					cursor = selector.previousItem();
-			}
-		});
+		initGUI();
 		
-		scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				mouseX = event.getX();
-				mouseY = event.getY();
-			}
-		});
-		
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {				
-				if(event.getCode() == KeyCode.B) {
-					cursor = imgBouncyBox;
-				}
-				else if(event.getCode() == KeyCode.D) {
-					cursor = imgDestructibleBox;
-				}
-				else if(event.getCode() == KeyCode.P) {
-					cursor = imgPlayer;
-				}
-				else if(event.getCode() == KeyCode.E) {
-					cursor = imgEnemy;
-				}
-				else if(event.getCode() == KeyCode.CONTROL)
-					ctrl = true;
-				else if(event.getCode() == KeyCode.S)
-					S = true;
-				else if(event.getCode() == KeyCode.UP &&
-						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
-					if(currentBoxHeight > AbstractBox.minHeight)
-						currentBoxHeight -= AbstractBox.minHeight;
-				}
-				else if(event.getCode() == KeyCode.DOWN &&
-						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
-					currentBoxHeight += AbstractBox.minHeight;
-				}
-				else if(event.getCode() == KeyCode.LEFT &&
-						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
-					if(currentBoxWidth > AbstractBox.minWidth)
-						currentBoxWidth -= AbstractBox.minWidth;
-				}
-				else if(event.getCode() == KeyCode.RIGHT &&
-						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
-					currentBoxWidth += AbstractBox.minWidth;
-				}
-				else if(event.getCode() == KeyCode.R) {
-					currentBoxHeight = AbstractBox.minHeight;
-					currentBoxWidth = AbstractBox.minWidth;
-				}
-				
-				if(ctrl && S) {
-					createLevelFile();					
-				}
-				
-			}
-
-			void createLevelFile() {
-				if(player == null)
-					System.out.println("Player must be placed");
-				else {
-					File level = new File("levels/level1.dat");
-					try {
-						level.createNewFile();
-						PrintWriter levelOut = new PrintWriter(level);
-						
-						levelOut.println("800 800");
-						
-						levelOut.println(bouncyBoxes.size());
-						for(ObjectInfo bBox : bouncyBoxes)
-							levelOut.println(bBox.toString());
-						
-						levelOut.println(destructibleBoxes.size());
-						for(ObjectInfo dBox : destructibleBoxes)
-							levelOut.println(dBox.toString());
-						
-						levelOut.println(enemies.size());
-						for(ObjectInfo enemy : enemies) 
-							levelOut.println(enemy.toString());
-						
-						
-						levelOut.println("\n" + player.toString());
-						
-						levelOut.close();
-						
-						System.out.println("file salvato con successo");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}				
-				}
-			}
-		});
-		
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if(event.getCode() == KeyCode.CONTROL)
-					ctrl = false;
-				else if(event.getCode() == KeyCode.S)
-					S = false;
-				
-			}
-		});
-		
-		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				if(cursor != null) {
-					if(cursor == imgBouncyBox) {
-						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
-						if(!findCollision(o))
-							bouncyBoxes.add(o);
-					}
-					else if(cursor == imgDestructibleBox) {
-						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
-						if(!findCollision(o)) {
-							for(int i = 0 ; i < currentBoxWidth / AbstractBox.minWidth ; i++)
-								for(int j = 0 ; j < currentBoxHeight / AbstractBox.minHeight ; j++)
-									destructibleBoxes.add(new ObjectInfo(AbstractBox.minWidth, AbstractBox.minHeight, mouseX + i * AbstractBox.minWidth, mouseY + j * AbstractBox.minHeight));
-						}
-					}
-					else if(cursor == imgEnemy) {
-						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
-						if(!findCollision(o))
-							enemies.add(o);						
-					}
-					else if(cursor == imgPlayer) {
-						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
-						if(!findCollision(o))
-							player = o;
-					}
-				}
-			}
-		});
-		
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		
-		new AnimationTimer() {
-			
-			@Override
-			public void handle(long now) {
-				gc.clearRect(0,  0, 800, 800);
-				gc.setFill(Color.BISQUE);
-                gc.fillRect(0, 0, 800, 800);
-				
-				for(ObjectInfo bBox : bouncyBoxes) {
-					drawBox(gc, bBox, imgBouncyBox);
-				}
-				
-				for(ObjectInfo dBox : destructibleBoxes) {
-					gc.drawImage(imgDestructibleBox, dBox.x, dBox.y);
-				}
-				
-				for(ObjectInfo enemy : enemies) {
-					gc.drawImage(imgEnemy, enemy.x, enemy.y);
-				}
-				
-				if(player != null)
-					gc.drawImage(imgPlayer, player.x, player.y);
-				
-				if(cursor != null) {
-					if(cursor == imgBouncyBox || cursor == imgDestructibleBox) {
-						drawBox(gc, new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY), cursor);
-					}
-					else
-						gc.drawImage(cursor, mouseX, mouseY);
-				}
-				
-			}
-		}.start();
-		
-		stage.show();
+		initEH();		
+		initTimers();
 	}
 	
 	
@@ -349,30 +153,201 @@ public class LevelEditor extends Application {
 			e.printStackTrace();
 		}
 	}
-
-}
-
-
-class ObjectInfo {
-	Integer width = null, height = null;
-	Double x, y;
-	public ObjectInfo(double x, double y) {
-		this.x = new Double(x);
-		this.y = new Double(y);
+	
+	void initGUI() {
+		loadImages();
+		Image[] imgs = {	
+				imgEnemy,
+				imgBouncyBox,
+				imgDestructibleBox,
+				imgPlayer
+		};
+		selector = new ObjectSelector(imgs);
+		
+		canvas = new Canvas(width, height);
+		this.getChildren().add(canvas);
+		
+		gc = canvas.getGraphicsContext2D();
 	}
 	
-	public ObjectInfo(int width, int height, double x, double y) {
-		this.width = new Integer(width);
-		this.height = new Integer(height);
-		this.x = new Double(x);
-		this.y = new Double(y);
+	public void initEH() {
+		this.setOnScroll(new EventHandler<ScrollEvent>() {
+			@Override
+			public void handle(ScrollEvent event) {
+				if(event.getDeltaY() >= 0)
+					cursor = selector.nextItem();
+				else
+					cursor = selector.previousItem();
+			}
+		});
+		
+		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				mouseX = event.getX();
+				mouseY = event.getY();
+			}
+		});
+		
+		this.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {				
+				if(event.getCode() == KeyCode.B) {
+					cursor = imgBouncyBox;
+				}
+				else if(event.getCode() == KeyCode.D) {
+					cursor = imgDestructibleBox;
+				}
+				else if(event.getCode() == KeyCode.P) {
+					cursor = imgPlayer;
+				}
+				else if(event.getCode() == KeyCode.E) {
+					cursor = imgEnemy;
+				}
+				else if(event.getCode() == KeyCode.CONTROL)
+					ctrl = true;
+				else if(event.getCode() == KeyCode.S)
+					S = true;
+				else if(event.getCode() == KeyCode.UP &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					if(currentBoxHeight > AbstractBox.minHeight)
+						currentBoxHeight -= AbstractBox.minHeight;
+				}
+				else if(event.getCode() == KeyCode.DOWN &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					currentBoxHeight += AbstractBox.minHeight;
+				}
+				else if(event.getCode() == KeyCode.LEFT &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					if(currentBoxWidth > AbstractBox.minWidth)
+						currentBoxWidth -= AbstractBox.minWidth;
+				}
+				else if(event.getCode() == KeyCode.RIGHT &&
+						(cursor == imgBouncyBox || cursor == imgDestructibleBox)) {
+					currentBoxWidth += AbstractBox.minWidth;
+				}
+				else if(event.getCode() == KeyCode.R) {
+					currentBoxHeight = AbstractBox.minHeight;
+					currentBoxWidth = AbstractBox.minWidth;
+				}
+				
+				if(ctrl && S) {
+					createLevelFile();					
+				}
+				
+			}
+
+			void createLevelFile() {
+				if(player == null)
+					System.out.println("Player must be placed");
+				else {
+					File level = new File("levels/level1.dat");
+					try {
+						level.createNewFile();
+						PrintWriter levelOut = new PrintWriter(level);
+						
+						levelOut.println("800 800");
+						
+						levelOut.println(bouncyBoxes.size());
+						for(ObjectInfo bBox : bouncyBoxes)
+							levelOut.println(bBox.toString());
+						
+						levelOut.println(destructibleBoxes.size());
+						for(ObjectInfo dBox : destructibleBoxes)
+							levelOut.println(dBox.toString());
+						
+						levelOut.println(enemies.size());
+						for(ObjectInfo enemy : enemies) 
+							levelOut.println(enemy.toString());
+						
+						
+						levelOut.println("\n" + player.toString());
+						
+						levelOut.close();
+						
+						System.out.println("file salvato con successo");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}				
+				}
+			}
+		});
+		
+		this.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode() == KeyCode.CONTROL)
+					ctrl = false;
+				if(event.getCode() == KeyCode.S)
+					S = false;
+				
+			}
+		});
+		
+		canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if(cursor != null) {
+					if(cursor == imgBouncyBox) {
+						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
+						if(!findCollision(o))
+							bouncyBoxes.add(o);
+					}
+					else if(cursor == imgDestructibleBox) {
+						ObjectInfo o = new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY);
+						if(!findCollision(o)) {
+							for(int i = 0 ; i < currentBoxWidth / AbstractBox.minWidth ; i++)
+								for(int j = 0 ; j < currentBoxHeight / AbstractBox.minHeight ; j++)
+									destructibleBoxes.add(new ObjectInfo(AbstractBox.minWidth, AbstractBox.minHeight, mouseX + i * AbstractBox.minWidth, mouseY + j * AbstractBox.minHeight));
+						}
+					}
+					else if(cursor == imgEnemy) {
+						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
+						if(!findCollision(o))
+							enemies.add(o);						
+					}
+					else if(cursor == imgPlayer) {
+						ObjectInfo o = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
+						if(!findCollision(o))
+							player = o;
+					}
+				}
+			}
+		});
 	}
 	
-	@Override
-	public String toString() {
-		String dims = "";
-		if(width != null)
-			dims = width.toString() + " " + height.toString() + " ";
-		return dims + x.toString() + " " + y.toString();
+	void initTimers() {
+		new AnimationTimer() {			
+			@Override
+			public void handle(long now) {
+				gc.clearRect(0,  0, 800, 800);
+				gc.setFill(Color.BISQUE);
+                gc.fillRect(0, 0, 800, 800);
+				
+				for(ObjectInfo bBox : bouncyBoxes) {
+					drawBox(gc, bBox, imgBouncyBox);
+				}
+				
+				for(ObjectInfo dBox : destructibleBoxes) {
+					gc.drawImage(imgDestructibleBox, dBox.x, dBox.y);
+				}
+				
+				for(ObjectInfo enemy : enemies) {
+					gc.drawImage(imgEnemy, enemy.x, enemy.y);
+				}
+				
+				if(player != null)
+					gc.drawImage(imgPlayer, player.x, player.y);
+				
+				if(cursor != null) {
+					if(cursor == imgBouncyBox || cursor == imgDestructibleBox) {
+						drawBox(gc, new ObjectInfo(currentBoxWidth, currentBoxHeight, mouseX, mouseY), cursor);
+					}
+					else
+						gc.drawImage(cursor, mouseX, mouseY);
+				}
+				
+			}
+		}.start();
 	}
 }

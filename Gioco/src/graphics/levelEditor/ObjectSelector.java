@@ -1,6 +1,4 @@
-package levelEditor;
-
-import java.util.ArrayList;
+package graphics.levelEditor;
 
 import javafx.scene.image.Image;
 

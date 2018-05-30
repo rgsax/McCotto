@@ -1,7 +1,5 @@
 package core.entities;
 
-import sun.security.util.Length;
-
 public class BouncyBox extends AbstractBox {
 	public BouncyBox(int width, int height, double x, double y) {
 		super(width, height, x, y);

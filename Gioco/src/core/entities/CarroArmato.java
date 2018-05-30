@@ -42,8 +42,6 @@ public class CarroArmato extends Entity {
 	
 	
 	public void muovi(Direction d) {
-		double oldX = x;
-		double oldY = y;
 		double newX = x;
 		double newY = y;
 		if(d == Direction.W) {

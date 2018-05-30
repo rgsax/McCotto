@@ -198,6 +198,7 @@ public class Mondo {
 				&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
 			{
 				bullet.setReadyToExplode(true);
+				b.setReadyToExplode(true);
 			}
 		}
 	}

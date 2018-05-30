@@ -1,5 +1,7 @@
 package graphics.FXgraphics;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -16,37 +18,22 @@ import core.entities.Entity;
 import core.parts.Cannon;
 import core.parts.Direction;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-public class Window extends Application{
+public class GameWindow extends GridPane{
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		launch(args);
-	}
+	}*/
 
 	boolean up = false, down = false, left = false, right = false;
 	Image imgCarroPlayer;
@@ -62,9 +49,20 @@ public class Window extends Application{
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	Mondo mondo;
 	
-	public Window() {
+	Canvas canvas;
+	GraphicsContext gc;
+	
+	public GameWindow() {
+		super();
+		caricaMappa();
+		
+		initGUI();
+		initEH();
+		initTimers();
 	}
 	
+
+	@SuppressWarnings("unused")
 	void caricaMappa() {
 		String level = "levels/level1.dat";
 		try {
@@ -141,22 +139,50 @@ public class Window extends Application{
 		imgDestructibleBox = new Image("DestructibleBox.png");
 	}
 	
-	@Override
-	public void start(Stage stage) throws Exception {
-		caricaMappa();
-		
-		GridPane root = new GridPane();
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
-		
-		scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
+	void disegnaBox(GraphicsContext gc, AbstractBox box, Image img) {
+		for(int i = 0 ; i < box.getWidth() / AbstractBox.minWidth ; i++) {
+			for(int j = 0 ; j< box.getHeight() / AbstractBox.minHeight ; j++)
+				gc.drawImage(img, box.getX() + i * AbstractBox.minWidth, box.getY() + j * AbstractBox.minHeight);
+		}
+	}
+	
+	void disegnaCarro(GraphicsContext gc, CarroArmato c, Image img) {
+		drawRotatedImage(gc, img, c, c.getDirection().getAngle());
+	}
+	
+	void disegnaCannone(GraphicsContext gc, Cannon c, Image img) {
+		drawRotatedImage(gc, img, c, c.getAngle());
+	}
+	
+	void drawRotatedImage(GraphicsContext gc, Image img, Entity e, double angle) {
+		gc.save();
+		double pivotX = e.getX() + e.getWidth() / 2;
+		double pivotY = e.getY() + e.getHeight() / 2;
+		if(e instanceof Cannon)
+			pivotX = e.getX() + e.getHeight() / 2;
+		Rotate rotate = new Rotate(angle, pivotX, pivotY);
+		gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
+		gc.drawImage(img, e.getX(), e.getY());
+		gc.restore();
+	}
+	
+	void initGUI() {
+		loadImages();
+		canvas = new Canvas(mondo.getWidth(), mondo.getHeight());
+		this.add(canvas, 0, 0);		
+		gc = canvas.getGraphicsContext2D();
+	}
+	
+	void initEH() {
+		this.setFocused(true);
+		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				mondo.orientaCannone(carroPlayer, e.getX(), e.getY());				
 			}
 		});
 		
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		this.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent e) {
@@ -190,7 +216,7 @@ public class Window extends Application{
 			}
 		});
 		
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		this.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
 				if(e.getCode() == KeyCode.D)
@@ -203,13 +229,9 @@ public class Window extends Application{
 					down = false;				
 			}
 		});
-
-		Canvas canvas = new Canvas(mondo.getWidth(), mondo.getHeight());
-		root.add(canvas, 0, 0);
-		
-		loadImages();
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		
+	}
+	
+	void initTimers() {
 		new Thread() {
 			int count = 0;
 			@Override
@@ -218,6 +240,11 @@ public class Window extends Application{
 					count++;					
 
 					mondo.update();
+					
+					if(enemies.isEmpty()) {
+						System.out.println("Bravo, hai vinto!!!");
+						System.exit(0 );
+					}
 					
 					Direction direction = null;
 					if(up && right)
@@ -301,41 +328,6 @@ public class Window extends Application{
                }
             }
         }.start();
-        
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-        	public void handle(WindowEvent event) {
-        		System.exit(0);
-        	};
-		});
-        
-        stage.show();
-	}
-	
-	void disegnaBox(GraphicsContext gc, AbstractBox box, Image img) {
-		for(int i = 0 ; i < box.getWidth() / AbstractBox.minWidth ; i++) {
-			for(int j = 0 ; j< box.getHeight() / AbstractBox.minHeight ; j++)
-				gc.drawImage(img, box.getX() + i * AbstractBox.minWidth, box.getY() + j * AbstractBox.minHeight);
-		}
-	}
-	
-	void disegnaCarro(GraphicsContext gc, CarroArmato c, Image img) {
-		drawRotatedImage(gc, img, c, c.getDirection().getAngle());
-	}
-	
-	void disegnaCannone(GraphicsContext gc, Cannon c, Image img) {
-		drawRotatedImage(gc, img, c, c.getAngle());
-	}
-	
-	void drawRotatedImage(GraphicsContext gc, Image img, Entity e, double angle) {
-		gc.save();
-		double pivotX = e.getX() + e.getWidth() / 2;
-		double pivotY = e.getY() + e.getHeight() / 2;
-		if(e instanceof Cannon)
-			pivotX = e.getX() + e.getHeight() / 2;
-		Rotate rotate = new Rotate(angle, pivotX, pivotY);
-		gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
-		gc.drawImage(img, e.getX(), e.getY());
-		gc.restore();
 	}
 
 }
