@@ -21,6 +21,7 @@ public class Menu extends GridPane {
 		this.windowManager = windowManager;
 		this.add(playButton, 0, 0);
 		this.add(levelEditorButton, 0, 2);
+		this.setStyle("-fx-background-color: purple;");
 		
 
 		playButton.getStyleClass().add("menuButton");
