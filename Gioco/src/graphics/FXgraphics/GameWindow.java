@@ -174,7 +174,6 @@ public class GameWindow extends GridPane{
 	}
 	
 	void initEH() {
-		this.setFocused(true);
 		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {

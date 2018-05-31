@@ -3,6 +3,7 @@ package graphics;
 import graphics.FXgraphics.GameWindow;
 import graphics.levelEditor.LevelEditor;
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -30,7 +31,7 @@ public class WindowManager extends Application {
 	}
 	
 	void initGUI() {
-		scene = new Scene(new LevelEditor());
+		scene = new Scene(new Menu(this));
 		stage.setScene(scene);
 	}
 	
@@ -45,13 +46,20 @@ public class WindowManager extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				scene.getRoot().getOnKeyPressed().handle(event);
+				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyPressed();
+				if(paneEventHandler != null)
+					paneEventHandler.handle(event);
 				if(event.getCode() == KeyCode.CONTROL)
 					ctrl = true;
 				else if(event.getCode() == KeyCode.R)
 					R = true;
 				else if(event.getCode() == KeyCode.L)
 					L = true;
+				else if(event.getCode() == KeyCode.ESCAPE) {
+					scene = new Scene(new Menu(WindowManager.this));
+					initEH();
+					stage.setScene(scene);
+				}
 				
 				if(ctrl && R) {
 					scene = new Scene(new GameWindow());
@@ -69,7 +77,9 @@ public class WindowManager extends Application {
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				scene.getRoot().getOnKeyReleased().handle(event);
+				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyReleased();
+				if(paneEventHandler != null)
+					paneEventHandler.handle(event);
 				if(event.getCode() == KeyCode.CONTROL)
 					ctrl = false;
 				else if(event.getCode() == KeyCode.R)
