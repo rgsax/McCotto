@@ -41,12 +41,10 @@ public class Bullet extends Entity {
 	
 	public void rimbalzaY() {
 		vY = -vY;
-		update();
 		updateAngle();
 	}
 	public void rimbalzaX() {
 		vX = -vX;
-		update();
 		updateAngle();
 	}
 	public void updateAngle() {

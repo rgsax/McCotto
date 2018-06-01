@@ -3,7 +3,6 @@ package graphics;
 import graphics.FXgraphics.GameWindow;
 import graphics.levelEditor.LevelEditor;
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -46,6 +45,7 @@ public class WindowManager extends Application {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
+				@SuppressWarnings("unchecked")
 				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyPressed();
 				if(paneEventHandler != null)
 					paneEventHandler.handle(event);
@@ -77,6 +77,7 @@ public class WindowManager extends Application {
 		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
+				@SuppressWarnings("unchecked")
 				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyReleased();
 				if(paneEventHandler != null)
 					paneEventHandler.handle(event);

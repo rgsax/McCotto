@@ -8,7 +8,7 @@
 	-fx-background-radius: 20px;
 }
 
-.menuButton:hover {
+.menuButton:focused {
     -fx-border-style: solid;
     -fx-border-color: #ffff00;
 	-fx-border-width: 5px;

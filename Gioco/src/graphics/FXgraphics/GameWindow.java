@@ -240,10 +240,12 @@ public class GameWindow extends GridPane{
 
 					mondo.update();
 					
+					/*
 					if(enemies.isEmpty()) {
 						System.out.println("Bravo, hai vinto!!!");
-						System.exit(0 );
+						System.exit(0);
 					}
+					*/
 					
 					Direction direction = null;
 					if(up && right)
@@ -288,6 +290,8 @@ public class GameWindow extends GridPane{
 						}
 					}
 					
+					drawAll();
+					
 					try {
 						sleep(50);
 					} catch (InterruptedException e) {
@@ -296,37 +300,33 @@ public class GameWindow extends GridPane{
 				}
 			}
 		}.start();
-		
-		new AnimationTimer()
-        {
-            public void handle(long currentNanoTime)
-            {
-                // Clear the canvas
-                gc.clearRect(0, 0, mondo.getWidth(), mondo.getHeight());
-                gc.setFill(Color.BISQUE);
-                gc.fillRect(0, 0, mondo.getWidth(), mondo.getHeight());
-                
-                for(AbstractBox box : mondo.getBoxes()) {
-                	if(box instanceof BouncyBox)
-                		disegnaBox(gc, box, imgBouncyBox);
-                	else if(box instanceof DestructibleBox)
-                		disegnaBox(gc, box, imgDestructibleBox);
-                }
-                
-                for(Enemy c : enemies) {
-                	disegnaCarro(gc, c, imgNemico);
-                	disegnaCannone(gc, c.getCannone(), imgCannoneNemico);
-                }
-                
-               disegnaCarro(gc, carroPlayer, imgCarroPlayer);
-               disegnaCannone(gc, carroPlayer.getCannone(), imgCannonePlayer);
-               
-               gc.setFill(Color.RED);
-               for(Bullet b : mondo.getBullets()) {
-            	   gc.fillOval(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-               }
-            }
-        }.start();
+	}
+	
+	void drawAll() {
+		// Clear the canvas
+        gc.clearRect(0, 0, mondo.getWidth(), mondo.getHeight());
+        gc.setFill(Color.BISQUE);
+        gc.fillRect(0, 0, mondo.getWidth(), mondo.getHeight());
+        
+        for(AbstractBox box : mondo.getBoxes()) {
+        	if(box instanceof BouncyBox)
+        		disegnaBox(gc, box, imgBouncyBox);
+        	else if(box instanceof DestructibleBox)
+        		disegnaBox(gc, box, imgDestructibleBox);
+        }
+        
+        for(Enemy c : enemies) {
+        	disegnaCarro(gc, c, imgNemico);
+        	disegnaCannone(gc, c.getCannone(), imgCannoneNemico);
+        }
+        
+       disegnaCarro(gc, carroPlayer, imgCarroPlayer);
+       disegnaCannone(gc, carroPlayer.getCannone(), imgCannonePlayer);
+       
+       gc.setFill(Color.RED);
+       for(Bullet b : mondo.getBullets()) {
+    	   gc.fillOval(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+       }
 	}
 
 }

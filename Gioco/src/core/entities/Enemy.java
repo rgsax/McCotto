@@ -9,6 +9,7 @@ public class Enemy extends CarroArmato {
 	
 	public Enemy(double x, double y, Mondo mondo) {
 		super(x, y, mondo);
+		speed = 5;
 	}
 	
 	//METODO PER IL MOVIMENTO DEL NEMICO	

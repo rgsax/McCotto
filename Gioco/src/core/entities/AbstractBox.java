@@ -10,8 +10,8 @@ public abstract class AbstractBox extends Entity {
 	}
 	
 	boolean bulletHasCollidedWithBox(Bullet b) {
-		double dist = Math.hypot(x + width / 2 - (b.getX() + b.getWidth() / 2), y + height / 2 - (b.getY() + b.getHeight() / 2));
-		return dist <= (width + b.getWidth()) / 2 || dist <= (height + b.getHeight()) / 2;
+		return (b.getX() + b.getVX() <= x + width && b.getX() + b.getVX() + b.getWidth() >= x) &&
+				(b.getY() + b.getVY() <= y + height && b.getY() + b.getVY() + b.getHeight() >= y);
 	}
 	
 	// restituisce True se b va distrutto, False altrimenti

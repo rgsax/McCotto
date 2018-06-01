@@ -14,16 +14,20 @@ public class BouncyBox extends AbstractBox {
 		if(b.getX() > x && b.getX() + b.getWidth() < x + width && b.getY() > y && b.getY() + b.getHeight() < y + height) {
 			b.setReadyToExplode(true);
 		}
-		else if(bulletHasCollidedWithBox(b)) {
-			if((b.getX() < x && b.getX() + b.getWidth() > x) || (b.getX() < x + width && b.getX() + b.getWidth() > x + width)) {
+		else if(bulletHasCollidedWithBox(b)){
+			if(Math.abs(b.getVX()) > Math.abs(b.getVY()) && b.getX() > x + width || b.getX() + b.getWidth() < x) {
 				b.rimbalzaX();
 			}
-			
-			if((b.getY() < y && b.getY() + b.getHeight() > y) || (b.getY() < y + height && b.getY() + b.getHeight() > y + height)) {
+			else if(Math.abs(b.getVX()) < Math.abs(b.getVY()) && b.getY() > y + height || b.getY() + b.getHeight() < y) {
 				b.rimbalzaY();
 			}
+			else if(Math.abs(b.getVX()) == Math.abs(b.getVX())) {
+				if(b.getX() + b.getWidth() < x + width || b.getX() > x + width)
+					b.rimbalzaY();
+				else if(b.getY() + b.getHeight() < y && b.getY() > y + height)
+					b.rimbalzaX();
+			}
 		}
-		
 		// il proiettile non va mai distrutto dopo un rimbalzo
 		return false;
 	}
