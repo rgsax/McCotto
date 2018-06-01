@@ -17,7 +17,6 @@ import core.entities.Enemy;
 import core.entities.Entity;
 import core.parts.Cannon;
 import core.parts.Direction;
-import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

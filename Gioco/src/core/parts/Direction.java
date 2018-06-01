@@ -10,4 +10,36 @@ public enum Direction {
 	public double getAngle() {
 		return angle;
 	}
+	
+	public Direction opposite() {
+		Direction d = null;
+		switch(this) {
+		case E:
+			d = W;
+			break;
+		case W:
+			d = E;
+			break;
+		case N:
+			d = S;
+			break;
+		case S:
+			d = N;
+			break;
+		case NW:
+			d = SE;
+			break;
+		case SE:
+			d = NW;
+			break;
+		case NE:
+			d = SW;
+			break;
+		case SW:
+			d = NE;
+			break;
+		}
+		
+		return d;
+	}
 }

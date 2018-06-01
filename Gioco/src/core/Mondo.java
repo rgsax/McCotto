@@ -105,6 +105,11 @@ public class Mondo {
 	public void muoviNemici() {
 		for(Enemy c : enemies) {
 			c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
+			for(Enemy e : enemies)
+				if(!e.equals(c) && 
+						(c.getX() + c.getWidth() >= e.getX() && c.getX() <= e.getX() + e.getWidth()) &&
+						(c.getY() + c.getHeight() >= e.getY() && c.getY() <= e.getY() + e.getHeight()))
+					c.undo();
 			orientaCannone(c, carro);
 		}
 	}

@@ -114,4 +114,10 @@ public class Enemy extends CarroArmato {
 			muovi(newDirection);
 		}
 	}
+	
+	public void undo() {
+		Direction currentDirection = direction;
+		muovi(direction.opposite());
+		direction = currentDirection;
+	}
 }
