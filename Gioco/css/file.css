@@ -1,6 +1,5 @@
 .menuButton{
 	-fx-font-size: 50pt;
-    -fx-font-family: "Courier New";
     -fx-background-color: #0000ff;
 	-fx-text-fill: #ffff00;
     -fx-padding: 3 6 6 6;
@@ -13,4 +12,9 @@
     -fx-border-color: #ffff00;
 	-fx-border-width: 5px;
 	-fx-border-radius: 15px;
+}
+
+.title {
+	-fx-font-size: 72pt;
+	-fx-fill: #ffff00;
 }

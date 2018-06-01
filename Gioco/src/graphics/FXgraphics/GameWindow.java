@@ -238,13 +238,11 @@ public class GameWindow extends GridPane{
 					count++;					
 
 					mondo.update();
-					
-					/*
+
 					if(enemies.isEmpty()) {
 						System.out.println("Bravo, hai vinto!!!");
 						System.exit(0);
 					}
-					*/
 					
 					Direction direction = null;
 					if(up && right)

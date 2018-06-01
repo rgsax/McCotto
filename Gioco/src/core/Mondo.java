@@ -31,7 +31,7 @@ public class Mondo {
 		
 		if (c instanceof Enemy) {
 			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
-				  if (Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
+				  if (!(AB instanceof DestructibleBox) && Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
 						  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
 									Math.hypot(carro.getCannone().getcX() - AB.getX(), 
 											carro.getCannone().getcY() - AB.getY()) + 
@@ -190,7 +190,10 @@ public class Mondo {
 		if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
 				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
 		{
-			//toDelete.add(carro);
+			if(carro.takeHit(b.getDamage())) {
+				System.out.println("Hai perso!");
+				System.exit(0);
+			}
 			b.setReadyToExplode(true);
 		}
 		

@@ -8,6 +8,9 @@ public class Bullet extends Entity {
 	double vX, vY;
 	double angle;
 	int damage = 1;
+	
+	public static int baseSpeed = 15;
+	
 	CarroArmato owner;
 	public int getDamage() {
 		return damage;
@@ -17,10 +20,10 @@ public class Bullet extends Entity {
 		super(13, 13);
 		this.owner = owner;
 		this.angle = cannon.getAngle();
-		vX = (int) Math.round(Math.cos(Math.toRadians(angle)) * 10);
-		vY = (int) Math.round(Math.sin(Math.toRadians(angle)) * 10);
-		x = cannon.getcX() + vX * 7;
-		y = cannon.getcY() + vY * 7;
+		vX = (int) Math.round(Math.cos(Math.toRadians(angle)) * baseSpeed);
+		vY = (int) Math.round(Math.sin(Math.toRadians(angle)) * baseSpeed);
+		x = cannon.getcX() + vX * 2.5;
+		y = cannon.getcY() + vY * 2.5;
 	}
 	
 	public double getAngle() {

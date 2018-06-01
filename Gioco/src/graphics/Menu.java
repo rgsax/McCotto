@@ -8,10 +8,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 public class Menu extends GridPane {
 	Button playButton = new Button("PLAY");
 	Button levelEditorButton = new Button("LEVEL EDITOR");
+	Text title = new Text("Tiny Tanks");
 	WindowManager windowManager;
 	
 	public Menu(WindowManager windowManager) {
@@ -25,12 +27,14 @@ public class Menu extends GridPane {
 		this.setMinSize(800,  800);
 		this.setPadding(new Insets(100, 100, 100, 100));
 		this.setVgap(50);
-		this.add(playButton, 0, 0);
-		this.add(levelEditorButton, 0, 2);
+		this.add(title, 0, 0);
+		this.add(playButton, 0, 1);
+		this.add(levelEditorButton, 0, 3);
 		this.setStyle("-fx-background-color: purple;");
 		this.getStylesheets().add("file.css");
 		playButton.getStyleClass().add("menuButton");
 		levelEditorButton.getStyleClass().add("menuButton");
+		title.getStyleClass().add("title");
 	}
 	
 	void initEH() {
