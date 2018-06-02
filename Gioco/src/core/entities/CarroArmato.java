@@ -6,6 +6,7 @@ import core.parts.*;
 public class CarroArmato extends Entity {
 	public static int baseWidth = 50;
 	public static int baseHeight = 50;
+	boolean collision = false;
 	
 	Cannon cannone;
 	Body macchina;
@@ -109,7 +110,8 @@ public class CarroArmato extends Entity {
 			}
 		}
 		
-		boolean collision = false;
+		//boolean collision = false;
+		collision = false;
 		for(AbstractBox box : mondo.getBoxes()) {
 			if(newX + width >= box.getX() && newX <= box.getX() + box.getWidth() &&
 					newY + height >= box.getY() && newY <= box.getY() + box.getHeight())

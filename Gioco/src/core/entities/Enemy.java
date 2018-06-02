@@ -1,11 +1,14 @@
 package core.entities;
 
+import java.util.Random;
+
 import core.Mondo;
 import core.parts.Direction;
 
 public class Enemy extends CarroArmato {
 	double chaseRangeMax = 200.0;
 	double chaseRangeMin = 150.0;
+	boolean randomMoving = false;
 	
 	public Enemy(double x, double y, Mondo mondo) {
 		super(x, y, mondo);
@@ -14,6 +17,8 @@ public class Enemy extends CarroArmato {
 	
 	//METODO PER IL MOVIMENTO DEL NEMICO	
 	public void muovitiVerso(double x, double y) {
+		randomMoving = false;
+		
 		double cannoneX = cannone.getX();
 		double cannoneY = cannone.getY();
 		
@@ -113,6 +118,28 @@ public class Enemy extends CarroArmato {
 			
 			muovi(newDirection);
 		}
+	}
+	
+	public void pickRandomDirection() {
+		if (randomMoving && !collision) {
+			muovi(this.direction);
+		}
+		else {
+		Random random = new Random();
+		int newDir = random.nextInt(4);
+		
+		switch(newDir) {
+		case 1 : muovi(Direction.N);
+			     break;
+		case 2 : muovi(Direction.E);
+				 break;
+		case 3 : muovi(Direction.S);
+				 break;
+		default : muovi(Direction.W);
+				 break;
+		}
+	}
+		randomMoving = true;
 	}
 	
 	public void undo() {

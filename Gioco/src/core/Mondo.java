@@ -26,17 +26,24 @@ public class Mondo {
 		this.height = height;
 	}
 	
+	public boolean checkBoxes (CarroArmato c) {
+	  for (AbstractBox AB : boxes)	
+		if (Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
+				  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
+							Math.hypot(carro.getCannone().getcX() - AB.getX(), 
+									carro.getCannone().getcY() - AB.getY()) + 
+							Math.hypot(c.getCannone().getcX() - AB.getX(),  
+									c.getCannone().getcY() - AB.getY()))
+			return true;
+		return false;
+	}
+	
 	public void spara(CarroArmato c) {
 		boolean scatolaInMezzo = false;
 		
 		if (c instanceof Enemy) {
 			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
-				  if (!(AB instanceof DestructibleBox) && Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
-						  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
-									Math.hypot(carro.getCannone().getcX() - AB.getX(), 
-											carro.getCannone().getcY() - AB.getY()) + 
-									Math.hypot(c.getCannone().getcX() - AB.getX(),  
-											c.getCannone().getcY() - AB.getY()))
+				  if (!(AB instanceof DestructibleBox) && checkBoxes(c))
 					  scatolaInMezzo = true;
 			}
 		}	
@@ -104,7 +111,12 @@ public class Mondo {
 //MOVIMENTO DEL NEMICO
 	public void muoviNemici() {
 		for(Enemy c : enemies) {
+		  if (!checkBoxes(c)) {	
 			c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
+			System.out.println("Non mi muovo in modo random");
+		  }
+		  else
+			c.pickRandomDirection();  
 			for(Enemy e : enemies)
 				if(!e.equals(c) && 
 						(c.getX() + c.getWidth() >= e.getX() && c.getX() <= e.getX() + e.getWidth()) &&
