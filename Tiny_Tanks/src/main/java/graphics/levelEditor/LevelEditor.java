@@ -106,7 +106,8 @@ public class LevelEditor extends GridPane {
 	}
 	
 	void loadTemplate() {
-		String level = "levels/template.dat";
+		String level = "src/main/resources/template.dat";
+		System.out.println(level);
 		try {
 			Scanner fileIn = new Scanner(new FileReader(level));
 			fileIn.useLocale(Locale.US);
@@ -241,7 +242,7 @@ public class LevelEditor extends GridPane {
 				if(player == null)
 					System.out.println("Player must be placed");
 				else {
-					File level = new File("levels/level1.dat");
+					File level = new File("src/main/resources/level1.dat");
 					try {
 						level.createNewFile();
 						PrintWriter levelOut = new PrintWriter(level);

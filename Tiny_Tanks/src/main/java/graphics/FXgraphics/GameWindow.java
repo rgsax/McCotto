@@ -63,7 +63,7 @@ public class GameWindow extends GridPane{
 
 	@SuppressWarnings("unused")
 	void caricaMappa() {
-		String level = "levels/level1.dat";
+		String level = "src/main/resources/level1.dat";
 		try {
 			Scanner fileIn = new Scanner(new FileReader(level));
 			fileIn.useLocale(Locale.US);
