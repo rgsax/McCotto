@@ -1,6 +1,8 @@
 package core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import core.entities.AbstractBox;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
@@ -20,10 +22,17 @@ public class Mondo {
 	ArrayList<Bullet> bullets = new ArrayList<>();
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
+	ArrayList<CarroArmato> players = new ArrayList<>();
 	
 	public Mondo(int width, int height) {
 		this.width = width;
 		this.height = height;
+	}
+	
+	public void setPlayers(HashMap<Integer, CarroArmato> players) {
+		for(CarroArmato c : players.values())
+			this.players.add(c);
+		carro = this.players.get(0);
 	}
 	
 	public boolean checkBoxes (CarroArmato c) {
@@ -113,7 +122,6 @@ public class Mondo {
 		for(Enemy c : enemies) {
 		  if (!checkBoxes(c)) {	
 			c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
-			System.out.println("Non mi muovo in modo random");
 		  }
 		  else
 			c.pickRandomDirection();  
@@ -152,7 +160,7 @@ public class Mondo {
 				checkBulletsCollision(b);
 				
 				toDelete.addAll(checkBoxesCollision(b));
-				toDelete.addAll(checkPlayerCollision(b));
+				toDelete.addAll(checkPlayersCollision(b));
 				toDelete.addAll(checkEnemiesCollision(b));				
 			}
 
@@ -197,16 +205,19 @@ public class Mondo {
 		return toDelete;
 	}
 		
-	ArrayList<Entity> checkPlayerCollision(Bullet b) {
+	ArrayList<Entity> checkPlayersCollision(Bullet b) {
 		ArrayList<Entity> toDelete = new ArrayList<>();
 		if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
 				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
 		{
-			if(carro.takeHit(b.getDamage())) {
-				System.out.println("Hai perso!");
-				System.exit(0);
+			for(CarroArmato player : players) {
+				/*
+				if(player.takeHit(b.getDamage())) {
+					System.out.println("Hai perso!");
+					System.exit(0);
+				}*/
+				b.setReadyToExplode(true);
 			}
-			b.setReadyToExplode(true);
 		}
 		
 		return toDelete;

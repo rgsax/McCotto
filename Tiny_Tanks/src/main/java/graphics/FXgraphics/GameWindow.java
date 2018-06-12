@@ -3,6 +3,7 @@ package graphics.FXgraphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
@@ -17,6 +18,7 @@ import core.entities.Enemy;
 import core.entities.Entity;
 import core.parts.Cannon;
 import core.parts.Direction;
+import graphics.Server;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -46,10 +48,13 @@ public class GameWindow extends GridPane{
 	CarroArmato carroPlayer;
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
+	HashMap<Integer, CarroArmato> players = new HashMap<>();
 	Mondo mondo;
 	
 	Canvas canvas;
 	GraphicsContext gc;
+	
+	Server server = new Server(8182);
 	
 	public GameWindow() {
 		super();
@@ -57,6 +62,12 @@ public class GameWindow extends GridPane{
 		
 		initGUI();
 		initEH();
+		
+		server.init(players, mondo);
+		
+		mondo.setPlayers(players);
+		carroPlayer = players.get(new Integer(0));
+		
 		initTimers();
 	}
 	
@@ -115,8 +126,6 @@ public class GameWindow extends GridPane{
 			double playerX = fileIn.nextDouble();
 			double playerY = fileIn.nextDouble();
 			
-			carroPlayer = new CarroArmato(playerX, playerY, mondo);
-			mondo.setPlayer(carroPlayer);
 			fileIn.close();
 		} 
 		catch (FileNotFoundException e) {
@@ -147,6 +156,7 @@ public class GameWindow extends GridPane{
 	
 	void disegnaCarro(GraphicsContext gc, CarroArmato c, Image img) {
 		drawRotatedImage(gc, img, c, c.getDirection().getAngle());
+	      disegnaCannone(gc, c.getCannone(), imgCannonePlayer);
 	}
 	
 	void disegnaCannone(GraphicsContext gc, Cannon c, Image img) {
@@ -159,6 +169,10 @@ public class GameWindow extends GridPane{
 		double pivotY = e.getY() + e.getHeight() / 2;
 		if(e instanceof Cannon)
 			pivotX = e.getX() + e.getHeight() / 2;
+		//if(img.equals(imgCarroPlayer))
+			//System.out.println("S " + e.getX() + " " + e.getY() + " " + pivotX + " " + pivotY+ " " + angle);
+		//700.0 700.0 725.0 725.0 -150.80251395393555
+		
 		Rotate rotate = new Rotate(angle, pivotX, pivotY);
 		gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
 		gc.drawImage(img, e.getX(), e.getY());
@@ -234,7 +248,10 @@ public class GameWindow extends GridPane{
 			int count = 0;
 			@Override
 			public void run() {
+				sendBouncyBoxes();
 				while(true) {
+					elabora(server.receiveCommand());
+					
 					count++;					
 
 					mondo.update();
@@ -287,6 +304,8 @@ public class GameWindow extends GridPane{
 						}
 					}
 					
+					server.send(getMap());
+					
 					drawAll();
 					
 					try {
@@ -297,6 +316,35 @@ public class GameWindow extends GridPane{
 				}
 			}
 		}.start();
+	}
+	
+	void elabora(String command) {
+		if(command.equals("NO_CLIENTS"))
+			System.exit(0);
+		String[] in = command.split("\\n");
+		for(String cmd : in) {
+			if(!cmd.equals("null")) {
+				String[] objs = cmd.split("_");
+				CarroArmato player = players.get(new Integer(Integer.parseInt(objs[0])));
+				if(objs[1].equals("CLOSE")) {
+					players.remove(new Integer(Integer.parseInt(objs[0])));
+					server.removeClient(Integer.parseInt(objs[0]));
+				}
+				else if(objs[1].equals("SHOOT")) {
+					mondo.spara(player);
+				}
+				else if(objs[1].equals("ROTATE")) {
+						double mouseX = Double.parseDouble(objs[2]);
+						double mouseY = Double.parseDouble(objs[3]);
+						
+						mondo.orientaCannone(player, mouseX, mouseY);
+				}
+				else if(objs[1].equals("MOVE")){
+						Direction d = Direction.valueOf(objs[2]);
+						player.muovi(d);
+				}
+			}
+		}
 	}
 	
 	void drawAll() {
@@ -317,13 +365,78 @@ public class GameWindow extends GridPane{
         	disegnaCannone(gc, c.getCannone(), imgCannoneNemico);
         }
         
-       disegnaCarro(gc, carroPlayer, imgCarroPlayer);
-       disegnaCannone(gc, carroPlayer.getCannone(), imgCannonePlayer);
+        for(CarroArmato carro : players.values())
+        	disegnaCarro(gc, carro, imgCarroPlayer);
        
        gc.setFill(Color.RED);
        for(Bullet b : mondo.getBullets()) {
     	   gc.fillOval(b.getX(), b.getY(), b.getWidth(), b.getHeight());
        }
+	}
+	
+	public void closeServer() {
+		server.close();
+	}
+	
+	String getMap() {
+		String map = new String();
+		
+		map = map.concat(enemies.size() + "\n");
+		for(Enemy enemy : enemies) {
+			map = map.concat(enemy.getX() + " " + enemy.getY() + " " + 
+					(enemy.getX() + enemy.getWidth() / 2.0) + " " + (enemy.getY() + enemy.getHeight() / 2.0) + " " + 
+					enemy.getDirection().getAngle() +"\n");
+			Cannon cannone = enemy.getCannone();
+			map = map.concat(cannone.getX() + " " + cannone.getY() + " " + 
+					(cannone.getX() + cannone.getHeight() / 2.0) + " " + (cannone.getY() + cannone.getHeight() / 2.0) + " " +
+					cannone.getAngle() + "\n");
+		}
+		
+		map = map.concat(players.size() + "\n");
+		for(CarroArmato player : players.values()) {
+			map = map.concat(player.getX() + " " + player.getY() + " " + 
+					(player.getX() + player.getWidth() / 2.0) + " " + (player.getY() + player.getHeight() / 2.0) + " " + 
+					player.getDirection().getAngle() +"\n");
+			Cannon cannone = player.getCannone();
+			map = map.concat(cannone.getX() + " " + cannone.getY() + " " + 
+					(cannone.getX() + cannone.getHeight() / 2.0) + " " + (cannone.getY() + cannone.getHeight() / 2.0) + " " +
+					cannone.getAngle() + "\n");
+		}
+
+		ArrayList<DestructibleBox> dBoxes = new ArrayList<>();
+		for(AbstractBox box : boxes) {
+			if(box instanceof DestructibleBox)
+				dBoxes.add((DestructibleBox)box);
+		}
+		
+		map = map.concat(dBoxes.size() + "\n");
+		for(DestructibleBox box : dBoxes) {
+			map = map.concat(box.getX() + " " + box.getY() + "\n");
+		}
+		
+		map = map.concat(mondo.getBullets().size() + "\n");
+		for(Bullet bullet : mondo.getBullets()) {
+			map = map.concat(bullet.getX() + " " + bullet.getY() + " " + bullet.getWidth() + " " + bullet.getHeight() + "\n");
+		}
+	
+		
+		return map;
+		
+	}
+	
+	void sendBouncyBoxes() {
+		ArrayList<BouncyBox> bBoxes = new ArrayList<>();
+		for(AbstractBox box : boxes) {
+			if(box instanceof BouncyBox)
+				bBoxes.add((BouncyBox)box);
+		}
+		
+		String map = bBoxes.size() + "\n";
+		
+		for(BouncyBox box : bBoxes)
+			map = map.concat(box.getWidth() + " " + box.getHeight() + " " +  box.getX() + " " + box.getY() + "\n");
+		
+		server.send(map);
 	}
 
 }

@@ -41,7 +41,7 @@ public class Menu extends GridPane {
 		playButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				windowManager.scene = new Scene(new GameWindow());
+				windowManager.scene = new Scene(new Client("127.0.0.1", 8182));
 				windowManager.initEH();
 				windowManager.stage.setScene(windowManager.scene);
 			}

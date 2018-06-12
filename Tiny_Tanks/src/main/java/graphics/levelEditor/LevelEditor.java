@@ -72,9 +72,9 @@ public class LevelEditor extends GridPane {
 	}
 	
 	void drawBox(GraphicsContext gc, ObjectInfo box, Image img) {
-		for(int i = 0 ; i < box.width / AbstractBox.minWidth ; i++)
-			for(int j = 0 ; j < box.height / AbstractBox.minHeight ; j++)
-				gc.drawImage(img, box.x + i * AbstractBox.minWidth, box.y + j * AbstractBox.minHeight);
+		for(int i = 0 ; i < box.getWidth() / AbstractBox.minWidth ; i++)
+			for(int j = 0 ; j < box.getHeight() / AbstractBox.minHeight ; j++)
+				gc.drawImage(img, box.getX() + i * AbstractBox.minWidth, box.getY() + j * AbstractBox.minHeight);
 	}
 	
 	boolean findCollision(ObjectInfo o) {
@@ -101,8 +101,8 @@ public class LevelEditor extends GridPane {
 	
 	boolean collided(ObjectInfo o1, ObjectInfo o2) {
 		return !o1.equals(o2) && 
-				(o1.x + o1.width >= o2.x && o1.x <= o2.x + o2.width) &&
-				(o1.y + o1.height >= o2.y && o1.y <= o2.y + o2.height);
+				(o1.getX() + o1.getWidth() >= o2.getX() && o1.getX() <= o2.getX() + o2.getWidth()) &&
+				(o1.getY() + o1.getHeight() >= o2.getY() && o1.getY() <= o2.getY() + o2.getHeight());
 	}
 	
 	void loadTemplate() {
@@ -330,15 +330,15 @@ public class LevelEditor extends GridPane {
 				}
 				
 				for(ObjectInfo dBox : destructibleBoxes) {
-					gc.drawImage(imgDestructibleBox, dBox.x, dBox.y);
+					gc.drawImage(imgDestructibleBox, dBox.getX(), dBox.getY());
 				}
 				
 				for(ObjectInfo enemy : enemies) {
-					gc.drawImage(imgEnemy, enemy.x, enemy.y);
+					gc.drawImage(imgEnemy, enemy.getX(), enemy.getY());
 				}
 				
 				if(player != null)
-					gc.drawImage(imgPlayer, player.x, player.y);
+					gc.drawImage(imgPlayer, player.getX(), player.getY());
 				
 				if(cursor != null) {
 					if(cursor == imgBouncyBox || cursor == imgDestructibleBox) {

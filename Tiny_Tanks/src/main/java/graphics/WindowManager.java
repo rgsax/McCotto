@@ -30,6 +30,7 @@ public class WindowManager extends Application {
 	}
 	
 	void initGUI() {
+		stage.setTitle("CLIENT");
 		scene = new Scene(new Menu(this));
 		stage.setScene(scene);
 	}
@@ -38,6 +39,9 @@ public class WindowManager extends Application {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {			
 			@Override
 			public void handle(WindowEvent event) {
+				if(scene.getRoot() instanceof Client) {
+					((Client)scene.getRoot()).sendCloseRequest();
+				}
 				System.exit(0);				
 			}
 		});
