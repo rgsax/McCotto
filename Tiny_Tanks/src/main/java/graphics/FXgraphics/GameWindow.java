@@ -342,7 +342,6 @@ public class GameWindow extends GridPane{
 				}
 				else if(objs[1].equals("MOVE")){
 						Direction d = Direction.valueOf(objs[2]);
-						System.out.println(d);
 						player.muovi(d);
 				}
 			}
