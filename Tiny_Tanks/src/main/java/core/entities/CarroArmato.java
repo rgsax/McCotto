@@ -8,6 +8,8 @@ public class CarroArmato extends Entity {
 	public static int baseHeight = 50;
 	boolean collision = false;
 	
+	Integer id = null;
+	
 	Cannon cannone;
 	Body macchina;
 	int speed = 10;
@@ -17,11 +19,23 @@ public class CarroArmato extends Entity {
 	Direction direction = Direction.E;
 	Mondo mondo;
 	
+	public CarroArmato(double x, double y, Mondo mondo, Integer id) {
+		super(baseWidth, baseHeight, x, y);
+		this.mondo = mondo;
+		macchina = new Body(x, y);
+		cannone = new Cannon(x, y, x + macchina.getWidth() / 2, y + macchina.getHeight() / 2);
+		this.id = id;
+	}
+	
 	public CarroArmato(double x, double y, Mondo mondo) {
 		super(baseWidth, baseHeight, x, y);
 		this.mondo = mondo;
 		macchina = new Body(x, y);
 		cannone = new Cannon(x, y, x + macchina.getWidth() / 2, y + macchina.getHeight() / 2);
+	}
+	
+	public Integer getId() {
+		return id;
 	}
 	
 	public int remainingShots() {

@@ -26,7 +26,7 @@ public class Server {
 	
 	public void init(HashMap<Integer, CarroArmato> players, Mondo mondo) {
 		
-		while(clients.size() < 2) { //Mi metto in ascolto e accetto le richieste di connessione
+		while(clients.size() < 1) { //Mi metto in ascolto e accetto le richieste di connessione
 			Socket incoming = null;
 			try {
 				incoming = server.accept();
@@ -45,7 +45,9 @@ public class Server {
 				e.printStackTrace();
 			}
 			
-			players.put(new Integer(clients.indexOf(incoming)), new CarroArmato(550, 550, mondo));
+			Integer id = new Integer(clients.indexOf(incoming));
+			
+			players.put(id, new CarroArmato(550, 550, mondo, id));
 			
 			out.println(clients.indexOf(incoming)); //Assegno e mando l'id al giocatore
 			out.flush();
@@ -109,15 +111,12 @@ public class Server {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				
-				String received;
 				try {
-					received = in.readLine();
-					if(s.contains("CLOSE")) {
-						toDelete.add(client);
-					}
-					else
-						s += received + "\n";
+					int cmds = Integer.parseInt(in.readLine());
+					if(cmds == 0)
+						s = s.concat("null\n");
+					for(int i = 0 ; i < cmds ; ++i)
+						s = s.concat(in.readLine() + "\n");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -135,6 +134,8 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
+		
+		System.out.println("sending " + s);
 		
 		return s;
 	}	

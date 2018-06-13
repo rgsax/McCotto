@@ -25,7 +25,7 @@ public class Mondo {
 	ArrayList<Bullet> bullets = new ArrayList<>();
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
-	ArrayList<CarroArmato> players = new ArrayList<>();
+	HashMap<Integer, CarroArmato> players = new HashMap<>();
 	
 	public Mondo(int width, int height) {
 		this.width = width;
@@ -33,8 +33,7 @@ public class Mondo {
 	}
 	
 	public void setPlayers(HashMap<Integer, CarroArmato> players) {
-		for(CarroArmato c : players.values())
-			this.players.add(c);
+		this.players = players;
 		carro = this.players.get(0);
 	}
 	
@@ -225,12 +224,11 @@ public class Mondo {
 				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())*/
 		if (b.envelope().intersects(carro.envelope()))
 		{
-			for(CarroArmato player : players) {
-				/*
+			for(CarroArmato player : players.values()) {
 				if(player.takeHit(b.getDamage())) {
-					System.out.println("Hai perso!");
-					System.exit(0);
-				}*/
+					System.out.println("qualcuno ha perso!");
+					//System.exit(0);
+				}
 				b.setReadyToExplode(true);
 			}
 		}
@@ -265,12 +263,15 @@ public class Mondo {
 			if(o instanceof Bullet) {
 				esplodiProiettile((Bullet)o);
 			}
-			else if (o instanceof CarroArmato) {	
+			else if (o instanceof Enemy) {	
 				esplodiNemico((CarroArmato)o);
 			}
 			else if(o instanceof DestructibleBox) {
 				deletBox((DestructibleBox)o); 
 				//worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
+			}
+			else if(o instanceof CarroArmato) {
+				players.remove(players.remove((CarroArmato)o).getId());
 			}
 		}
 	}

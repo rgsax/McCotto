@@ -262,6 +262,12 @@ public class GameWindow extends GridPane{
 						System.exit(0);
 					}
 					
+					if(players.size() <= 0) {
+						System.out.println("Qualcuno ha vinto!!!");
+						server.send("WIN");
+						System.exit(0);
+					}
+					
 					Direction direction = null;
 					if(up && right)
 						direction = Direction.NE;
@@ -322,6 +328,7 @@ public class GameWindow extends GridPane{
 	void elabora(String command) {
 		if(command.equals("NO_CLIENTS"))
 			System.exit(0);
+		System.out.println(command);
 		String[] in = command.split("\\n");
 		for(String cmd : in) {
 			if(!cmd.equals("null")) {
