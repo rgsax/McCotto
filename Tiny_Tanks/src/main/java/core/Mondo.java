@@ -3,6 +3,9 @@ package core;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.vividsolutions.jts.algorithm.RectangleLineIntersector;
+import com.vividsolutions.jts.geom.Coordinate;
+
 import core.entities.AbstractBox;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
@@ -36,15 +39,24 @@ public class Mondo {
 	}
 	
 	public boolean checkBoxes (CarroArmato c) {
-	  for (AbstractBox AB : boxes)	
-		if (Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
-				  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
-							Math.hypot(carro.getCannone().getcX() - AB.getX(), 
-									carro.getCannone().getcY() - AB.getY()) + 
-							Math.hypot(c.getCannone().getcX() - AB.getX(),  
-									c.getCannone().getcY() - AB.getY()))
-			return true;
-		return false;
+		Coordinate playerCenter = new Coordinate(carro.getX()+carro.getWidth()/2, carro.getY()+carro.getHeight()/2);
+		Coordinate enemyCenter =  new Coordinate(c.getX()+c.getHeight()/2, c.getY()+c.getWidth()/2);
+		
+		for (AbstractBox AB : boxes) {
+			RectangleLineIntersector r = new RectangleLineIntersector(AB.envelope());
+			if (r.intersects(playerCenter, enemyCenter)) return true;
+		  
+		  /*if (Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
+					  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
+								Math.hypot(carro.getCannone().getcX() - AB.getX(), 
+										carro.getCannone().getcY() - AB.getY()) + 
+								Math.hypot(c.getCannone().getcX() - AB.getX(),  
+			
+		  
+										c.getCannone().getcY() - AB.getY()))*/
+		  }
+	  
+	  return false;
 	}
 	
 	public void spara(CarroArmato c) {
@@ -52,7 +64,7 @@ public class Mondo {
 		
 		if (c instanceof Enemy) {
 			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
-				  if (!(AB instanceof DestructibleBox) && checkBoxes(c))
+				  if ((AB instanceof DestructibleBox) && checkBoxes(c))
 					  scatolaInMezzo = true;
 			}
 		}	
@@ -126,9 +138,10 @@ public class Mondo {
 		  else
 			c.pickRandomDirection();  
 			for(Enemy e : enemies)
-				if(!e.equals(c) && 
+				/*if(!e.equals(c) && 
 						(c.getX() + c.getWidth() >= e.getX() && c.getX() <= e.getX() + e.getWidth()) &&
-						(c.getY() + c.getHeight() >= e.getY() && c.getY() <= e.getY() + e.getHeight()))
+						(c.getY() + c.getHeight() >= e.getY() && c.getY() <= e.getY() + e.getHeight()))*/
+				if (c.intersects(e))
 					c.undo();
 			orientaCannone(c, carro);
 		}
@@ -181,8 +194,9 @@ public class Mondo {
 	ArrayList<Entity> checkEnemiesCollision(Bullet b) {
 		ArrayList<Entity> toDelete = new ArrayList<>();
 		for(Enemy c : enemies) {
-			if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
-					&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())
+			/*if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
+					&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())*/
+			if (b.intersects(c))
 			{
 				if(c.takeHit(b.getDamage()))
 					toDelete.add(c);
@@ -207,8 +221,9 @@ public class Mondo {
 		
 	ArrayList<Entity> checkPlayersCollision(Bullet b) {
 		ArrayList<Entity> toDelete = new ArrayList<>();
-		if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
-				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())
+		/*if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
+				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())*/
+		if (b.envelope().intersects(carro.envelope()))
 		{
 			for(CarroArmato player : players) {
 				/*
@@ -225,8 +240,9 @@ public class Mondo {
 	
 	void checkBulletsCollision(Bullet b) {
 		for(Bullet bullet : bullets) {
-			if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
-				&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())
+			/*if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
+				&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())*/
+			if (b.intersects(bullet))
 			{
 				bullet.setReadyToExplode(true);
 				b.setReadyToExplode(true);

@@ -15,6 +15,20 @@ public class Bullet extends Entity {
 	public int getDamage() {
 		return damage;
 	}
+	
+	public Bullet(Bullet b) {
+		super(10, 10); 
+		this.readyToExplode = b.readyToExplode;
+		this.timer = b.timer;
+		this.owner = b.owner;
+		this.angle = b.angle; 
+		this.vX = b.vX; 
+		this.vY = b.vY; 
+		this.baseSpeed = b.baseSpeed;
+		this.damage = b.damage;
+		x = b.x;
+		y = b.y; 
+	}
 
 	public Bullet(CarroArmato owner, Cannon cannon) {
 		super(13, 13);
@@ -33,13 +47,31 @@ public class Bullet extends Entity {
 	public void update() {
 		if(!readyToExplode) {
 			--timer;
-			if(timer == 0)
+			if(timer <= 0)
 				readyToExplode = true;
 			else {
 				x += vX;
 				y += vY;
 			}
 		}
+	}
+	
+	public void update(double i) {
+		if(!readyToExplode) {
+			timer -= i;
+			if(timer <= 0)
+				readyToExplode = true;
+			else {
+				x += i*vX;
+				y += i*vY;
+			}
+		}
+	}
+	
+	public void undo(double n) {
+		x -= n*vX;
+		y -= n*vY;
+		timer += (int) n; 
 	}
 	
 	public void rimbalzaY() {

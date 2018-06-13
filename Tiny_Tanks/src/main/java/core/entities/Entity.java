@@ -1,5 +1,8 @@
 package core.entities;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+
 public abstract class Entity {
 	protected int width, height;
 	protected double x, y;
@@ -20,8 +23,16 @@ public abstract class Entity {
 		this.width = width;
 	}
 	
+	public Envelope envelope() {
+		return new Envelope(new Coordinate(x, y), new Coordinate(x+width+5, y+height+5)); 
+	}
+	
 	public int getWidth() {
 		return width;
+	}
+	
+	public boolean intersects(Entity other) {
+		return this.envelope().intersects(other.envelope()) && !this.equals(other);
 	}
 	
 	public void setHeight(int height) {

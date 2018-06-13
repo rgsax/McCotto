@@ -1,0 +1,24 @@
+.menuButton{
+	-fx-font-size: 50pt;
+    -fx-background-color: #0000ff;
+	-fx-text-fill: #ffff00;
+    -fx-padding: 3 6 6 6;
+    -fx-border: none;
+	-fx-background-radius: 20px;
+}
+
+.menuButton:focused {
+    -fx-border-style: solid;
+    -fx-border-color: #ffff00;
+	-fx-border-width: 5px;
+	-fx-border-radius: 15px;
+}
+
+.menuButton:pressed {
+	-fx-background-color: #aaaaff;
+}
+
+.title {
+	-fx-font-size: 72pt;
+	-fx-fill: #ffff00;
+}

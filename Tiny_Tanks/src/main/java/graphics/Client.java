@@ -8,9 +8,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import core.entities.AbstractBox;
-import core.entities.Bullet;
 import core.parts.Direction;
 import graphics.levelEditor.ObjectInfo;
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -90,6 +90,39 @@ public class Client extends GridPane{
 		loadImages();
 	}
 	
+	private void generateCmd() {
+		if(up || down || left || right) {
+			if(cmd.equals(defaultCmd))
+				cmd = "";
+			
+			Direction direction = null;
+			
+			if(up && right)
+				direction = Direction.NE;
+			else if(up && left)
+				direction = Direction.NW;
+			else if(down && right)
+				direction = Direction.SE;
+			else if(down && left)
+				direction = Direction.SW;
+			else if(right) {
+				direction = Direction.E;
+			}
+			else if(left) {
+				direction = Direction.W;
+			}
+			else if(up) {
+				direction = Direction.N;
+			}
+			else if(down) {
+				direction = Direction.S;
+			}
+			
+			cmd = cmd.concat(id + "_MOVE_" + direction.toString() + "\n");
+			
+		}
+	}
+	
 	void initEH() {
 		this.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
@@ -120,37 +153,9 @@ public class Client extends GridPane{
 					cmd = cmd.concat(id + "_SHOOT\n");
 				}
 				
-				if(up || down || left || right) {
-					if(cmd.equals(defaultCmd))
-						cmd = "";
-					
-					Direction direction = null;
-					
-					if(up && right)
-						direction = Direction.NE;
-					else if(up && left)
-						direction = Direction.NW;
-					else if(down && right)
-						direction = Direction.SE;
-					else if(down && left)
-						direction = Direction.SW;
-					else if(right) {
-						direction = Direction.E;
-					}
-					else if(left) {
-						direction = Direction.W;
-					}
-					else if(up) {
-						direction = Direction.N;
-					}
-					else if(down) {
-						direction = Direction.S;
-					}
-					
-					cmd = cmd.concat(id + "_MOVE_" + direction.toString() + "\n");
-					
-				}
 			}
+
+			
 		});
 		
 		this.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -238,7 +243,103 @@ public class Client extends GridPane{
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+				}			
+				
+			}
+			
+			void disegnaCarri(GraphicsContext gc, Image imgCarro, Image imgCannone, int N) {
+				for(int i = 0 ; i < N ; i++) {
+					String[] carro = receive().split(" ");
+					String[] cannone = receive().split(" ");
+					
+					double carroX = Double.parseDouble(carro[0]);
+					double carroY = Double.parseDouble(carro[1]);
+					double pivotXCarro = Double.parseDouble(carro[2]);
+					double pivotYCarro = Double.parseDouble(carro[3]);
+					double angoloCarro = Double.parseDouble(carro[4]);
+					
+					double cannoneX = Double.parseDouble(cannone[0]);
+					double cannoneY = Double.parseDouble(cannone[1]);
+					double pivotXCannone = Double.parseDouble(cannone[2]);
+					double pivotYCannone = Double.parseDouble(cannone[3]);
+					double angoloCannone = Double.parseDouble(cannone[4]);
+					
+					drawRotatedImage(gc, imgCarro, carroX, carroY, pivotXCarro, pivotYCarro, angoloCarro);
+					drawRotatedImage(gc, imgCannone, cannoneX, cannoneY, pivotXCannone, pivotYCannone, angoloCannone);
 				}
+			}
+			
+			void drawRotatedImage(GraphicsContext gc, Image img, double x, double y, double pivotX, double pivotY, double angle) {
+				gc.save();
+				Rotate rotate = new Rotate(angle, pivotX, pivotY);
+				gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
+				gc.drawImage(img, x, y);
+				gc.restore();				
+			}
+		};
+		
+		receiveBouncyBoxes();
+		
+		new AnimationTimer() {
+			
+			@Override
+			public void handle(long now) {
+
+				generateCmd();
+					send(cmd);
+					cmd = defaultCmd;
+					
+					gc.clearRect(0, 0, 800, 800);
+					gc.setFill(Color.BISQUE);
+					gc.fillRect(0,  0,  800, 800);					
+
+					for(ObjectInfo box : bouncyBoxes)
+						disegnaBox(gc, box, imgBouncyBox);
+					
+					String signal = receive();
+					if(signal.equals("EXIT")) {
+						try {
+							client.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						System.exit(0);
+					}
+					else if(signal.equals("CLOSE"))
+						System.exit(0);
+					else if(signal.equals("WIN"))
+						System.exit(0);
+					
+
+					
+					
+					int nEnemy = Integer.parseInt(signal);
+					disegnaCarri(gc, imgNemico, imgCannoneNemico, nEnemy);
+					
+					int nPlayers = Integer.parseInt(receive());					
+					disegnaCarri(gc, imgCarroPlayer, imgCannonePlayer, nPlayers);
+					
+					int nDBoxes = Integer.parseInt(receive());
+					for(int i = 0 ; i < nDBoxes ; i++) {
+						String[] line = receive().split(" ");
+						double x = Double.parseDouble(line[0]);
+						double y = Double.parseDouble(line[1]);
+						
+						gc.drawImage(imgDestructibleBox, x, y);
+					}
+					
+					gc.setFill(Color.RED);
+					int nBullets = Integer.parseInt(receive());
+					for(int i = 0 ; i < nBullets ; i++) {
+						String[] line = receive().split(" ");
+						double x = Double.parseDouble(line[0]);
+						double y = Double.parseDouble(line[1]);
+						int width = Integer.parseInt(line[2]);
+						int height = Integer.parseInt(line[3]);
+						gc.fillOval(x, y, width, height);
+				    }		
+				
 			}
 			
 			void disegnaCarri(GraphicsContext gc, Image imgCarro, Image imgCannone, int N) {

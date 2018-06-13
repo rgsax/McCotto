@@ -8,13 +8,14 @@ public class BouncyBox extends AbstractBox {
 	public BouncyBox(double x, double y) {
 		super(minWidth, minHeight, x, y);
 	}
-
+	
 	@Override
 	public boolean deflect(Bullet b) {
-		if(b.getX() > x && b.getX() + b.getWidth() < x + width && b.getY() > y && b.getY() + b.getHeight() < y + height) {
+		if(bulletIsInsideBox(b)) {
 			b.setReadyToExplode(true);
 		}
 		else if(bulletHasCollidedWithBox(b)){
+			// non so fare di meglio
 			if(Math.abs(b.getVX()) > Math.abs(b.getVY()) && b.getX() > x + width || b.getX() + b.getWidth() < x) {
 				b.rimbalzaX();
 			}
@@ -28,8 +29,7 @@ public class BouncyBox extends AbstractBox {
 					b.rimbalzaX();
 			}
 		}
-		// il proiettile non va mai distrutto dopo un rimbalzo
+		// il proiettile non va mai distrutto dopo un rimbalzo con una BB
 		return false;
 	}
-
 }

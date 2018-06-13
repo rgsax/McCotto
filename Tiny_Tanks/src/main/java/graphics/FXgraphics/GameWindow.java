@@ -258,6 +258,7 @@ public class GameWindow extends GridPane{
 
 					if(enemies.isEmpty()) {
 						System.out.println("Bravo, hai vinto!!!");
+						server.send("WIN");
 						System.exit(0);
 					}
 					
@@ -341,9 +342,11 @@ public class GameWindow extends GridPane{
 				}
 				else if(objs[1].equals("MOVE")){
 						Direction d = Direction.valueOf(objs[2]);
+						System.out.println(d);
 						player.muovi(d);
 				}
 			}
+//			else System.out.println("null");
 		}
 	}
 	

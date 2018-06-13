@@ -30,7 +30,7 @@ public class ServerGame extends Application{
 			}
 		});
 		
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+		scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
 				scene.getRoot().getOnKeyPressed().handle(event);			

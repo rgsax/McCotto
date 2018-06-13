@@ -10,8 +10,13 @@ public abstract class AbstractBox extends Entity {
 	}
 	
 	boolean bulletHasCollidedWithBox(Bullet b) {
-		return (b.getX() + b.getVX() <= x + width && b.getX() + b.getVX() + b.getWidth() >= x) &&
-				(b.getY() + b.getVY() <= y + height && b.getY() + b.getVY() + b.getHeight() >= y);
+		return b.envelope().intersects((this.envelope()));
+		/*return (b.getX() + b.getVX() <= x + width && b.getX() + b.getVX() + b.getWidth() >= x) &&
+				(b.getY() + b.getVY() <= y + height && b.getY() + b.getVY() + b.getHeight() >= y);*/
+	}
+	
+	boolean bulletIsInsideBox(Bullet b) {
+		return this.envelope().contains(b.envelope());
 	}
 	
 	// restituisce True se b va distrutto, False altrimenti
