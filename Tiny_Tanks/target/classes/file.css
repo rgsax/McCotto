@@ -22,3 +22,30 @@
 	-fx-font-size: 72pt;
 	-fx-fill: #ffff00;
 }
+
+.spinner {
+	fx-border-syle: none;
+}
+
+.spinner:hover {
+	-fx-border-style: solid;
+	-fx-border-color: yellow;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+	-fx-body-color: #ffff00;
+}
+
+.spinner .increment-arrow-button:pressed,
+.spinner .decrement-arrow-button:pressed {
+	-fx-body-color: #cccc00;
+}
+
+.spinner .text-field {
+	-fx-opacity: 1.0;
+	-fx-background-color: blue;
+	-fx-text-fill: yellow;
+	-fx-font-size: 14pt;
+	-fx-font-weight: bold;
+}
