@@ -23,6 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 public class Client extends GridPane{
+	static int width = 1000;
+	static int height = 1000;
 	int id;
 	PrintWriter out = null;
 	BufferedReader in;
@@ -84,7 +86,7 @@ public class Client extends GridPane{
 	}
 
 	void initGUI() {
-		canvas = new Canvas(800, 800);
+		canvas = new Canvas(1000, 1000);
 		this.getChildren().add(canvas);		
 		gc = canvas.getGraphicsContext2D();
 
@@ -182,101 +184,6 @@ public class Client extends GridPane{
 	}
 
 	void initTimer() {
-		new Thread() {			
-			@Override
-			public void run() {
-				receiveBouncyBoxes();
-				while(true) {
-					send(mouseCmd);
-					mouseCmd = defaultCmd;
-
-					gc.clearRect(0, 0, 800, 800);
-					gc.setFill(Color.BISQUE);
-					gc.fillRect(0,  0,  800, 800);					
-
-					for(ObjectInfo box : bouncyBoxes)
-						disegnaBox(gc, box, imgBouncyBox);
-
-					String signal = receive();
-					if(signal.equals("EXIT")) {
-						try {
-							client.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						break;
-					}
-					else if(signal.equals("CLOSE"))
-						break;
-
-					int nEnemy = Integer.parseInt(signal);
-					disegnaCarri(gc, imgNemico, imgCannoneNemico, nEnemy);
-
-					int nPlayers = Integer.parseInt(receive());					
-					disegnaCarri(gc, imgCarroPlayer, imgCannonePlayer, nPlayers);
-
-					int nDBoxes = Integer.parseInt(receive());
-					for(int i = 0 ; i < nDBoxes ; i++) {
-						String[] line = receive().split(" ");
-						double x = Double.parseDouble(line[0]);
-						double y = Double.parseDouble(line[1]);
-
-						gc.drawImage(imgDestructibleBox, x, y);
-					}
-
-					gc.setFill(Color.RED);
-					int nBullets = Integer.parseInt(receive());
-					for(int i = 0 ; i < nBullets ; i++) {
-						String[] line = receive().split(" ");
-						double x = Double.parseDouble(line[0]);
-						double y = Double.parseDouble(line[1]);
-						int width = Integer.parseInt(line[2]);
-						int height = Integer.parseInt(line[3]);
-						gc.fillOval(x, y, width, height);
-					}
-
-
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}			
-
-			}
-
-			void disegnaCarri(GraphicsContext gc, Image imgCarro, Image imgCannone, int N) {
-				for(int i = 0 ; i < N ; i++) {
-					String[] carro = receive().split(" ");
-					String[] cannone = receive().split(" ");
-
-					double carroX = Double.parseDouble(carro[0]);
-					double carroY = Double.parseDouble(carro[1]);
-					double pivotXCarro = Double.parseDouble(carro[2]);
-					double pivotYCarro = Double.parseDouble(carro[3]);
-					double angoloCarro = Double.parseDouble(carro[4]);
-
-					double cannoneX = Double.parseDouble(cannone[0]);
-					double cannoneY = Double.parseDouble(cannone[1]);
-					double pivotXCannone = Double.parseDouble(cannone[2]);
-					double pivotYCannone = Double.parseDouble(cannone[3]);
-					double angoloCannone = Double.parseDouble(cannone[4]);
-
-					drawRotatedImage(gc, imgCarro, carroX, carroY, pivotXCarro, pivotYCarro, angoloCarro);
-					drawRotatedImage(gc, imgCannone, cannoneX, cannoneY, pivotXCannone, pivotYCannone, angoloCannone);
-				}
-			}
-
-			void drawRotatedImage(GraphicsContext gc, Image img, double x, double y, double pivotX, double pivotY, double angle) {
-				gc.save();
-				Rotate rotate = new Rotate(angle, pivotX, pivotY);
-				gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
-				gc.drawImage(img, x, y);
-				gc.restore();				
-			}
-		};
-
 		receiveBouncyBoxes();
 
 		new AnimationTimer() {
@@ -286,9 +193,9 @@ public class Client extends GridPane{
 
 				send(generateCmd());
 
-				gc.clearRect(0, 0, 800, 800);
+				gc.clearRect(0, 0, width, height);
 				gc.setFill(Color.BISQUE);
-				gc.fillRect(0,  0,  800, 800);					
+				gc.fillRect(0,  0,  width, height);					
 
 				for(ObjectInfo box : bouncyBoxes)
 					disegnaBox(gc, box, imgBouncyBox);

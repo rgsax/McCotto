@@ -262,10 +262,10 @@ public class GameWindow extends GridPane{
 						System.exit(0);
 					}
 					
-					if(players.size() <= 0) {
+					if(players.size() <= 1) {
 						System.out.println("Qualcuno ha vinto!!!");
 						server.send("WIN");
-						System.exit(0);
+						//System.exit(0);
 					}
 					
 					Direction direction = null;
@@ -334,22 +334,24 @@ public class GameWindow extends GridPane{
 			if(!cmd.equals("null")) {
 				String[] objs = cmd.split("_");
 				CarroArmato player = players.get(new Integer(Integer.parseInt(objs[0])));
-				if(objs[1].equals("CLOSE")) {
-					players.remove(new Integer(Integer.parseInt(objs[0])));
-					server.removeClient(Integer.parseInt(objs[0]));
-				}
-				else if(objs[1].equals("SHOOT")) {
-					mondo.spara(player);
-				}
-				else if(objs[1].equals("ROTATE")) {
-						double mouseX = Double.parseDouble(objs[2]);
-						double mouseY = Double.parseDouble(objs[3]);
-						
-						mondo.orientaCannone(player, mouseX, mouseY);
-				}
-				else if(objs[1].equals("MOVE")){
-						Direction d = Direction.valueOf(objs[2]);
-						player.muovi(d);
+				if(player != null) {
+					if(objs[1].equals("CLOSE")) {
+						players.remove(new Integer(Integer.parseInt(objs[0])));
+						server.removeClient(Integer.parseInt(objs[0]));
+					}
+					else if(objs[1].equals("SHOOT")) {
+						mondo.spara(player);
+					}
+					else if(objs[1].equals("ROTATE")) {
+							double mouseX = Double.parseDouble(objs[2]);
+							double mouseY = Double.parseDouble(objs[3]);
+							
+							mondo.orientaCannone(player, mouseX, mouseY);
+					}
+					else if(objs[1].equals("MOVE")){
+							Direction d = Direction.valueOf(objs[2]);
+							player.muovi(d);
+					}
 				}
 			}
 //			else System.out.println("null");

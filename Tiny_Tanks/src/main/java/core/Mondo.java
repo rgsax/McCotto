@@ -227,6 +227,7 @@ public class Mondo {
 			for(CarroArmato player : players.values()) {
 				if(player.takeHit(b.getDamage())) {
 					System.out.println("qualcuno ha perso!");
+					toDelete.add(player);
 					//System.exit(0);
 				}
 				b.setReadyToExplode(true);
@@ -271,7 +272,7 @@ public class Mondo {
 				//worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
 			}
 			else if(o instanceof CarroArmato) {
-				players.remove(players.remove((CarroArmato)o).getId());
+				players.remove(((CarroArmato)o).getId());
 			}
 		}
 	}

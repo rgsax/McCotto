@@ -247,7 +247,7 @@ public class LevelEditor extends GridPane {
 						level.createNewFile();
 						PrintWriter levelOut = new PrintWriter(level);
 						
-						levelOut.println("800 800");
+						levelOut.println(width + " " + height);
 						
 						levelOut.println(bouncyBoxes.size());
 						for(ObjectInfo bBox : bouncyBoxes)
@@ -321,9 +321,9 @@ public class LevelEditor extends GridPane {
 		new AnimationTimer() {			
 			@Override
 			public void handle(long now) {
-				gc.clearRect(0,  0, 800, 800);
+				gc.clearRect(0,  0, width, height);
 				gc.setFill(Color.BISQUE);
-                gc.fillRect(0, 0, 800, 800);
+                gc.fillRect(0, 0, width, height);
 				
 				for(ObjectInfo bBox : bouncyBoxes) {
 					drawBox(gc, bBox, imgBouncyBox);

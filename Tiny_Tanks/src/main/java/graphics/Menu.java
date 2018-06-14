@@ -55,7 +55,7 @@ public class Menu extends GridPane {
 		multiplayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				windowManager.scene = new Scene(new Client("127.0.0.1", 8182));
+				windowManager.scene = new Scene(new Client("192.168.0.101", 8182));
 				windowManager.initEH();
 				windowManager.stage.setScene(windowManager.scene);
 			}

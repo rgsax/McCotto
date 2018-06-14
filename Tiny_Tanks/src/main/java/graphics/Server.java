@@ -26,7 +26,7 @@ public class Server {
 	
 	public void init(HashMap<Integer, CarroArmato> players, Mondo mondo) {
 		
-		while(clients.size() < 1) { //Mi metto in ascolto e accetto le richieste di connessione
+		while(clients.size() < 3) { //Mi metto in ascolto e accetto le richieste di connessione
 			Socket incoming = null;
 			try {
 				incoming = server.accept();
