@@ -1,6 +1,5 @@
 package graphics;
 
-import graphics.FXgraphics.GameWindow;
 import graphics.levelEditor.LevelEditor;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -55,28 +54,11 @@ public class WindowManager extends Application {
 				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyPressed();
 				if(paneEventHandler != null)
 					paneEventHandler.handle(event);
-				if(event.getCode() == KeyCode.CONTROL)
-					ctrl = true;
-				else if(event.getCode() == KeyCode.R)
-					R = true;
-				else if(event.getCode() == KeyCode.L)
-					L = true;
 				else if(event.getCode() == KeyCode.ESCAPE) {
 					scene = new Scene(new Menu(WindowManager.this));
 					initEH();
 					stage.setScene(scene);
-				}
-				
-				if(ctrl && R) {
-					scene = new Scene(new GameWindow());
-					initEH();
-					stage.setScene(scene);
-				}
-				else if(ctrl && L) {
-					scene = new Scene(new LevelEditor());
-					initEH();
-					stage.setScene(scene);
-				}				
+				}			
 			}
 		});
 		
