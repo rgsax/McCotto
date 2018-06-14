@@ -46,15 +46,17 @@ public class Menu extends GridPane {
 		playButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				/*windowManager.scene = new Scene(new Client("192.168.0.102", 8182));
+				windowManager.startGame(1);
+				windowManager.scene = new Scene(new Client("127.0.0.1", 8182));
 				windowManager.initEH();
-				windowManager.stage.setScene(windowManager.scene);*/
+				windowManager.stage.setScene(windowManager.scene);
 			}
 		});
 		
 		multiplayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				windowManager.startGame(spinner.getValue());
 				windowManager.scene = new Scene(new Client("192.168.0.101", 8182));
 				windowManager.initEH();
 				windowManager.stage.setScene(windowManager.scene);

@@ -20,6 +20,8 @@ public class WindowManager extends Application {
 	Stage stage;
 	Scene scene;
 	
+	ServerGame game = null;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		stage = primaryStage;
@@ -42,7 +44,7 @@ public class WindowManager extends Application {
 				if(scene.getRoot() instanceof Client) {
 					((Client)scene.getRoot()).sendCloseRequest();
 				}
-				System.exit(0);				
+				System.exit(0);
 			}
 		});
 		
@@ -93,6 +95,11 @@ public class WindowManager extends Application {
 					L = false;
 			}
 		});
+	}
+	
+	public void startGame(int numPlayers) {
+		game = new ServerGame(numPlayers);
+		game.start();
 	}
 
 }

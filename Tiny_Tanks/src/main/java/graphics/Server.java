@@ -15,18 +15,20 @@ import core.entities.CarroArmato;
 public class Server {	
 	ServerSocket server = null;
 	ArrayList<Socket> clients = new ArrayList<>();
+	int numPlayers;
 	
-	public Server(int port) {
+	public Server(int port, int numPlayers) {
 		try {
 			server = new ServerSocket(port); //Creo il server
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+		this.numPlayers = numPlayers;
 	}
 	
 	public void init(HashMap<Integer, CarroArmato> players, Mondo mondo) {
 		
-		while(clients.size() < 3) { //Mi metto in ascolto e accetto le richieste di connessione
+		while(clients.size() < numPlayers) { //Mi metto in ascolto e accetto le richieste di connessione
 			Socket incoming = null;
 			try {
 				incoming = server.accept();
@@ -52,6 +54,8 @@ public class Server {
 			out.println(clients.indexOf(incoming)); //Assegno e mando l'id al giocatore
 			out.flush();
 		}
+		
+		mondo.setPlayers(players);
 	}
 	
 	public void removeClient(int i) {

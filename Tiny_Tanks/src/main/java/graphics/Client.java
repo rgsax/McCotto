@@ -210,9 +210,7 @@ public class Client extends GridPane{
 
 					System.exit(0);
 				}
-				else if(signal.equals("CLOSE"))
-					System.exit(0);
-				else if(signal.equals("WIN"))
+				else if(signal.contains("WIN") || signal.contains("CLOSE"))
 					System.exit(0);
 
 
