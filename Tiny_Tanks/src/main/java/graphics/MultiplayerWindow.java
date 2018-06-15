@@ -1,6 +1,10 @@
 package graphics;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -24,6 +28,12 @@ public class MultiplayerWindow extends GridPane {
 	Spinner<Integer> spinner = new Spinner<>(2, 10, 2);
 	
 	public MultiplayerWindow(WindowManager windowManager) {
+		try {
+			defaultIP = NetworkInterface.getNetworkInterfaces().nextElement().getInetAddresses().nextElement().getHostAddress();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		
 		this.windowManager = windowManager;
 		initGUI();
 		initEH();
