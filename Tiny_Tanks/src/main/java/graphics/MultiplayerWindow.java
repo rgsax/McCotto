@@ -1,6 +1,6 @@
 package graphics;
 
-import java.net.Inet4Address;
+import java.net.Inet4Address; 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -23,19 +23,20 @@ public class MultiplayerWindow extends GridPane {
 	Button hostButton = new Button("HOST A GAME");
 	Button joinGameButton = new Button("JOIN GAME");
 	CheckBox useYourIP = new CheckBox("use your IP");
-	String defaultIP = null;
+	String currentIP = null;
 	TextField ipField;
 	Spinner<Integer> spinner = new Spinner<>(2, 10, 2);
 	
 	public MultiplayerWindow(WindowManager windowManager) {
 		this.windowManager = windowManager;
-		defaultIP = getCurrentIP();
+		currentIP = getCurrentIP();
 		initGUI();
 		initEH();
 	}
 	
 	void initGUI() {
-		ipField = new TextField(defaultIP);
+		ipField = new TextField(currentIP);
+		useYourIP.setSelected(true);
 		this.getStylesheets().add("file.css");
 		this.getStyleClass().add("menu");
 		hostButton.getStyleClass().add("menuButton");
@@ -72,7 +73,7 @@ public class MultiplayerWindow extends GridPane {
 			public void handle(MouseEvent event) {
 				if(useYourIP.isSelected()) {
 					ipField.setDisable(true);
-					ipField.setText(defaultIP);
+					ipField.setText(currentIP);
 				}
 				else {
 					ipField.setDisable(false);
