@@ -1,9 +1,9 @@
 package graphics;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import javafx.event.EventHandler;
@@ -23,23 +23,19 @@ public class MultiplayerWindow extends GridPane {
 	Button hostButton = new Button("HOST A GAME");
 	Button joinGameButton = new Button("JOIN GAME");
 	CheckBox useYourIP = new CheckBox("use your IP");
-	String defaultIP = "192.168.0.100";
-	TextField ipField = new TextField(defaultIP);
+	String defaultIP = null;
+	TextField ipField;
 	Spinner<Integer> spinner = new Spinner<>(2, 10, 2);
 	
 	public MultiplayerWindow(WindowManager windowManager) {
-		try {
-			defaultIP = NetworkInterface.getNetworkInterfaces().nextElement().getInetAddresses().nextElement().getHostAddress();
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
-		
 		this.windowManager = windowManager;
+		defaultIP = getCurrentIP();
 		initGUI();
 		initEH();
 	}
 	
 	void initGUI() {
+		ipField = new TextField(defaultIP);
 		this.getStylesheets().add("file.css");
 		this.getStyleClass().add("menu");
 		hostButton.getStyleClass().add("menuButton");
@@ -115,5 +111,32 @@ public class MultiplayerWindow extends GridPane {
 				ipField.deselect();
 			}
 		});
+	}
+	
+	String getCurrentIP() {
+		String ip = "127.0.0.1";
+		Enumeration<NetworkInterface> interfaces = null;
+		try {
+			interfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
+			return ip;
+		}
+		while (interfaces.hasMoreElements()){
+		    NetworkInterface current = interfaces.nextElement();
+		    try {
+				if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
+				Enumeration<InetAddress> addresses = current.getInetAddresses();
+			    while (addresses.hasMoreElements()){
+			        InetAddress current_addr = addresses.nextElement();
+			        if (current_addr.isLoopbackAddress()) continue;
+			        if(current_addr instanceof Inet4Address && !current_addr.getHostAddress().equals("127.0.0.1"))
+			        	return current_addr.getHostAddress();
+			    }
+		    } catch (SocketException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return ip;
 	}
 }
