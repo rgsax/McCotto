@@ -1,3 +1,7 @@
+.menu {
+	-fx-background-color: purple;
+}
+
 .menuButton{
 	-fx-font-size: 50pt;
     -fx-background-color: #0000ff;
@@ -50,12 +54,20 @@
 	-fx-font-weight: bold;
 }
 
-.text-field {
+.ip_field {
 	-fx-opacity: 1.0;
 	-fx-background-color: blue;
 	-fx-text-fill: yellow;
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
+	-fx-background-radius: 20px;
+}
+
+.ip_field:focused {
+	-fx-border-style: solid;
+    -fx-border-color: #ffff00;
+	-fx-border-width: 5px;
+	-fx-border-radius: 15px;
 }
 
 .check-box {
