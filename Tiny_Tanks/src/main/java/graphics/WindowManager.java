@@ -55,7 +55,8 @@ public class WindowManager extends Application {
 				if(paneEventHandler != null)
 					paneEventHandler.handle(event);
 				if(event.getCode() == KeyCode.ESCAPE) {
-					if(game != null) {
+					if(scene.getRoot() instanceof Client) {
+						//((Client)scene.getRoot()).close();
 						game.closeServer();
 					}
 					scene = new Scene(new Menu(WindowManager.this));

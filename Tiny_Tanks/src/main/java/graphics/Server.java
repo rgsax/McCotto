@@ -146,7 +146,7 @@ public class Server {
 	
 	public void close() {
 		try {
-			send("EXIT");
+			send("CLOSE");
 			server.close();
 		} catch (IOException e) {
 			e.printStackTrace();
