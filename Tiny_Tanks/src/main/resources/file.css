@@ -49,3 +49,25 @@
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
 }
+
+.text-field {
+	-fx-opacity: 1.0;
+	-fx-background-color: blue;
+	-fx-text-fill: yellow;
+	-fx-font-size: 14pt;
+	-fx-font-weight: bold;
+}
+
+.check-box {
+	-fx-text-fill: yellow;
+	-fx-font-size: 14pt;
+	-fx-font-weight: bold;
+}
+
+.check-box .box {
+	-fx-body-color: blue;
+}
+
+.check-box:selected .box {
+	-fx-body-color: yellow;
+}
