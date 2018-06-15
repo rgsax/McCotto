@@ -54,7 +54,10 @@ public class WindowManager extends Application {
 				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyPressed();
 				if(paneEventHandler != null)
 					paneEventHandler.handle(event);
-				else if(event.getCode() == KeyCode.ESCAPE) {
+				if(event.getCode() == KeyCode.ESCAPE) {
+					if(game != null) {
+						game.closeServer();
+					}
 					scene = new Scene(new Menu(WindowManager.this));
 					initEH();
 					stage.setScene(scene);
@@ -69,12 +72,6 @@ public class WindowManager extends Application {
 				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyReleased();
 				if(paneEventHandler != null)
 					paneEventHandler.handle(event);
-				if(event.getCode() == KeyCode.CONTROL)
-					ctrl = false;
-				else if(event.getCode() == KeyCode.R)
-					R = false;
-				else if(event.getCode() == KeyCode.L)
-					L = false;
 			}
 		});
 	}

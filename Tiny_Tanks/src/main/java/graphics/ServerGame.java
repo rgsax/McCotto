@@ -232,4 +232,8 @@ public class ServerGame extends Thread{
 		
 		server.send(map);
 	}
+	
+	public void closeServer() {
+		server.close();
+	}
 }

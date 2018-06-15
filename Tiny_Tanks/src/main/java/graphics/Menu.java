@@ -13,10 +13,12 @@ import javafx.scene.text.Text;
 public class Menu extends GridPane {
 	Button playButton = new Button("PLAY");
 	Button levelEditorButton = new Button("LEVEL EDITOR");
+	Button hostButton = new Button("HOST GAME");
 	Button multiplayerButton = new Button("MULTIPLAYER");
 	Text title = new Text("Tiny Tanks");
 	Spinner<Integer> spinner = new Spinner<>(2, 10, 2);
 	WindowManager windowManager;
+	static String defaultIP = "192.168.0.101";
 	
 	public Menu(WindowManager windowManager) {
 		this.windowManager = windowManager;
@@ -31,13 +33,15 @@ public class Menu extends GridPane {
 		this.setVgap(50);
 		this.add(title, 0, 0);
 		this.add(playButton, 0, 1);
-		this.add(multiplayerButton, 0, 3);
-		this.add(levelEditorButton, 0, 5);
+		this.add(hostButton, 0, 3);
+		this.add(multiplayerButton, 0, 5);
+		this.add(levelEditorButton, 0, 7);
 		this.add(spinner, 1, 3);
 		this.setStyle("-fx-background-color: purple;");
 		this.getStylesheets().add("file.css");
 		playButton.getStyleClass().add("menuButton");
 		multiplayerButton.getStyleClass().add("menuButton");
+		hostButton.getStyleClass().add("menuButton");
 		levelEditorButton.getStyleClass().add("menuButton");
 		title.getStyleClass().add("title");
 	}
@@ -53,11 +57,20 @@ public class Menu extends GridPane {
 			}
 		});
 		
-		multiplayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		hostButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				windowManager.startGame(spinner.getValue());
-				windowManager.scene = new Scene(new Client("192.168.0.101", 8182));
+				windowManager.scene = new Scene(new Client(defaultIP, 8182));
+				windowManager.initEH();
+				windowManager.stage.setScene(windowManager.scene);
+			}
+		});
+		
+		multiplayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				windowManager.scene = new Scene(new Client(defaultIP, 8182));
 				windowManager.initEH();
 				windowManager.stage.setScene(windowManager.scene);
 			}
@@ -69,6 +82,13 @@ public class Menu extends GridPane {
 				windowManager.scene = new Scene(new LevelEditor());
 				windowManager.initEH();
 				windowManager.stage.setScene(windowManager.scene);
+			}
+		});
+		
+		hostButton.setOnMouseMoved(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				hostButton.requestFocus();				
 			}
 		});
 
