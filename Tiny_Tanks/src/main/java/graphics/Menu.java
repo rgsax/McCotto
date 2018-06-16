@@ -1,18 +1,9 @@
 package graphics;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-
 import graphics.levelEditor.LevelEditor;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -53,27 +44,21 @@ public class Menu extends GridPane {
 			@Override
 			public void handle(MouseEvent event) {
 				windowManager.startGame(1);
-				windowManager.scene = new Scene(new Client("127.0.0.1", 8182));
-				windowManager.initEH();
-				windowManager.stage.setScene(windowManager.scene);
+				windowManager.gotToScene(new Client("127.0.0.1", 8182, windowManager));
 			}
 		});
 		
 		multiplayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				windowManager.scene = new Scene(new MultiplayerWindow(windowManager));
-				windowManager.initEH();
-				windowManager.stage.setScene(windowManager.scene);
+				windowManager.gotToScene(new MultiplayerWindow(windowManager));
 			}
 		});
 		
 		levelEditorButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				windowManager.scene = new Scene(new LevelEditor());
-				windowManager.initEH();
-				windowManager.stage.setScene(windowManager.scene);
+				windowManager.gotToScene(new LevelEditor());
 			}
 		});
 

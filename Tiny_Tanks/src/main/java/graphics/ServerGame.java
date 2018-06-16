@@ -39,7 +39,9 @@ public class ServerGame extends Thread{
 		int count = 0;
 		
 		while(true) {
-			elabora(server.receiveCommand());
+			boolean exit = elabora(server.receiveCommand());
+			if(exit)
+				break;
 			
 			count++;					
 
@@ -139,9 +141,9 @@ public class ServerGame extends Thread{
 		}
 	}
 	
-	void elabora(String command) {
-		if(command.equals("NO_CLIENTS"))
-			System.exit(0);
+	boolean elabora(String command) {
+		if(command.equals("NO_CLIENTS") || command.equals("CLOSE"))
+			return true;
 		System.out.println(command);
 		String[] in = command.split("\\n");
 		for(String cmd : in) {
@@ -168,8 +170,9 @@ public class ServerGame extends Thread{
 					}
 				}
 			}
-//			else System.out.println("null");
 		}
+		
+		return false;
 	}
 	
 	String getMap() {

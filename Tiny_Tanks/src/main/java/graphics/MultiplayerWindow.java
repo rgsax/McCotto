@@ -1,6 +1,6 @@
 package graphics;
 
-import java.net.Inet4Address; 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -8,7 +8,6 @@ import java.util.Enumeration;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Spinner;
@@ -62,9 +61,7 @@ public class MultiplayerWindow extends GridPane {
 			@Override
 			public void handle(MouseEvent event) {
 				windowManager.startGame(spinner.getValue());
-				windowManager.scene = new Scene(new Client(ipField.getText(), 8182));
-				windowManager.initEH();
-				windowManager.stage.setScene(windowManager.scene);
+				windowManager.gotToScene(new Client(ipField.getText(), 8182, windowManager));
 			}
 		});
 		
@@ -92,9 +89,7 @@ public class MultiplayerWindow extends GridPane {
 		joinGameButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				windowManager.scene = new Scene(new Client(ipField.getText(), 8182));
-				windowManager.initEH();
-				windowManager.stage.setScene(windowManager.scene);
+				windowManager.gotToScene(new Client(ipField.getText(), 8182, windowManager));
 			}
 		});
 		

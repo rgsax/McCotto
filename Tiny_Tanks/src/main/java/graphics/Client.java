@@ -28,6 +28,7 @@ public class Client extends GridPane{
 	int id;
 	PrintWriter out = null;
 	BufferedReader in;
+	WindowManager windowManager = null;
 
 	boolean up = false, down = false, right = false, left = false, shoot = false;
 
@@ -48,7 +49,8 @@ public class Client extends GridPane{
 	Image imgBouncyBox;
 	Image imgDestructibleBox;
 
-	public Client(String address, int port) {
+	public Client(String address, int port, WindowManager windowManager) {
+		this.windowManager = windowManager;
 		try {
 			client = new Socket(address, port);
 			System.out.println("connesso");
@@ -201,46 +203,37 @@ public class Client extends GridPane{
 					disegnaBox(gc, box, imgBouncyBox);
 
 				String signal = receive();
-				if(signal.equals("EXIT")) {
-					try {
-						client.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+				if(signal.contains("WIN") || signal.contains("CLOSE") || signal.contains("EXIT")) {
+					this.stop();
+					windowManager.backToMenu();
+				}
+				else {
+					int nEnemy = Integer.parseInt(signal);
+					disegnaCarri(gc, imgNemico, imgCannoneNemico, nEnemy);
+	
+					int nPlayers = Integer.parseInt(receive());					
+					disegnaCarri(gc, imgCarroPlayer, imgCannonePlayer, nPlayers);
+	
+					int nDBoxes = Integer.parseInt(receive());
+					for(int i = 0 ; i < nDBoxes ; i++) {
+						String[] line = receive().split(" ");
+						double x = Double.parseDouble(line[0]);
+						double y = Double.parseDouble(line[1]);
+	
+						gc.drawImage(imgDestructibleBox, x, y);
 					}
-
-					System.exit(0);
+	
+					gc.setFill(Color.RED);
+					int nBullets = Integer.parseInt(receive());
+					for(int i = 0 ; i < nBullets ; i++) {
+						String[] line = receive().split(" ");
+						double x = Double.parseDouble(line[0]);
+						double y = Double.parseDouble(line[1]);
+						int width = Integer.parseInt(line[2]);
+						int height = Integer.parseInt(line[3]);
+						gc.fillOval(x, y, width, height);
+					}		
 				}
-				else if(signal.contains("WIN") || signal.contains("CLOSE"))
-					System.exit(0);
-
-
-
-
-				int nEnemy = Integer.parseInt(signal);
-				disegnaCarri(gc, imgNemico, imgCannoneNemico, nEnemy);
-
-				int nPlayers = Integer.parseInt(receive());					
-				disegnaCarri(gc, imgCarroPlayer, imgCannonePlayer, nPlayers);
-
-				int nDBoxes = Integer.parseInt(receive());
-				for(int i = 0 ; i < nDBoxes ; i++) {
-					String[] line = receive().split(" ");
-					double x = Double.parseDouble(line[0]);
-					double y = Double.parseDouble(line[1]);
-
-					gc.drawImage(imgDestructibleBox, x, y);
-				}
-
-				gc.setFill(Color.RED);
-				int nBullets = Integer.parseInt(receive());
-				for(int i = 0 ; i < nBullets ; i++) {
-					String[] line = receive().split(" ");
-					double x = Double.parseDouble(line[0]);
-					double y = Double.parseDouble(line[1]);
-					int width = Integer.parseInt(line[2]);
-					int height = Integer.parseInt(line[3]);
-					gc.fillOval(x, y, width, height);
-				}		
 
 			}
 

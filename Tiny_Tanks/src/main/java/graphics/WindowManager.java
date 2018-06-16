@@ -1,8 +1,8 @@
 package graphics;
 
-import graphics.levelEditor.LevelEditor;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -56,12 +56,9 @@ public class WindowManager extends Application {
 					paneEventHandler.handle(event);
 				if(event.getCode() == KeyCode.ESCAPE) {
 					if(scene.getRoot() instanceof Client) {
-						//((Client)scene.getRoot()).close();
 						game.closeServer();
 					}
-					scene = new Scene(new Menu(WindowManager.this));
-					initEH();
-					stage.setScene(scene);
+					backToMenu();
 				}			
 			}
 		});
@@ -80,6 +77,18 @@ public class WindowManager extends Application {
 	public void startGame(int numPlayers) {
 		game = new ServerGame(numPlayers);
 		game.start();
+	}
+
+	public void backToMenu() {
+		scene = new Scene(new Menu(this));
+		initEH();
+		stage.setScene(scene);
+	}
+	
+	public void gotToScene(Parent window) {
+		scene = new Scene(window);
+		initEH();
+		stage.setScene(scene);
 	}
 
 }
