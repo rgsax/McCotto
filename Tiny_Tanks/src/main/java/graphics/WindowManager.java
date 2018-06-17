@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class WindowManager extends Application {
 
@@ -37,40 +36,31 @@ public class WindowManager extends Application {
 	}
 	
 	void initEH() {
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {			
-			@Override
-			public void handle(WindowEvent event) {
+		stage.setOnCloseRequest(event -> {
+			if(scene.getRoot() instanceof Client) {
+				((Client)scene.getRoot()).sendCloseRequest();
+			}
+			System.exit(0);
+		});
+		
+		scene.setOnKeyPressed(event -> {
+			@SuppressWarnings("unchecked")
+			EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyPressed();
+			if(paneEventHandler != null)
+				paneEventHandler.handle(event);
+			if(event.getCode() == KeyCode.ESCAPE) {
 				if(scene.getRoot() instanceof Client) {
-					((Client)scene.getRoot()).sendCloseRequest();
+					game.closeServer();
 				}
-				System.exit(0);
-			}
+				backToMenu();
+			}			
 		});
 		
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				@SuppressWarnings("unchecked")
-				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyPressed();
-				if(paneEventHandler != null)
-					paneEventHandler.handle(event);
-				if(event.getCode() == KeyCode.ESCAPE) {
-					if(scene.getRoot() instanceof Client) {
-						game.closeServer();
-					}
-					backToMenu();
-				}			
-			}
-		});
-		
-		scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				@SuppressWarnings("unchecked")
-				EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyReleased();
-				if(paneEventHandler != null)
-					paneEventHandler.handle(event);
-			}
+		scene.setOnKeyReleased(event -> {
+			@SuppressWarnings("unchecked")
+			EventHandler<KeyEvent> paneEventHandler = (EventHandler<KeyEvent>) scene.getRoot().getOnKeyReleased();
+			if(paneEventHandler != null)
+				paneEventHandler.handle(event);
 		});
 	}
 	

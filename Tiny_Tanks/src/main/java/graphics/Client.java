@@ -11,13 +11,10 @@ import core.entities.AbstractBox;
 import core.parts.Direction;
 import graphics.levelEditor.ObjectInfo;
 import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -129,59 +126,48 @@ public class Client extends GridPane{
 	}
 
 	void initEH() {
-		this.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent e) {
-				if(e.getCode() == KeyCode.D) {
-					right = true;
-					if(left)
-						left = false;
-				}
-				else if(e.getCode() == KeyCode.A) {
-					left = true;
-					if(right)
-						right = false;
-				}
-				else if(e.getCode() == KeyCode.W) {
-					up = true;
-					if(down)
-						down = false;
-				}
-				else if(e.getCode() == KeyCode.S) {
-					down = true;
-					if(up)
-						up = false;
-				}
-				else if(e.getCode() == KeyCode.SPACE) {
-					shoot = true;
-				}
-
-			}
-
-
-		});
-
-		this.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent e) {
-				if(e.getCode() == KeyCode.D)
-					right = false;
-				if(e.getCode() == KeyCode.A)
+		this.setOnKeyPressed(event -> {
+			if(event.getCode() == KeyCode.D) {
+				right = true;
+				if(left)
 					left = false;
-				if(e.getCode() == KeyCode.W)
-					up = false;
-				if(e.getCode() == KeyCode.S)
-					down = false;				
 			}
+			else if(event.getCode() == KeyCode.A) {
+				left = true;
+				if(right)
+					right = false;
+			}
+			else if(event.getCode() == KeyCode.W) {
+				up = true;
+				if(down)
+					down = false;
+			}
+			else if(event.getCode() == KeyCode.S) {
+				down = true;
+				if(up)
+					up = false;
+			}
+			else if(event.getCode() == KeyCode.SPACE) {
+				shoot = true;
+			}
+
 		});
 
-		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				if(mouseCmd == null)
-					mouseCmd = new String();
-				mouseCmd = mouseCmd.concat(id + "_ROTATE_" + e.getX() + "_" + e.getY() + "\n");				
-			}
+		this.setOnKeyReleased(event -> {
+			if(event.getCode() == KeyCode.D)
+				right = false;
+			if(event.getCode() == KeyCode.A)
+				left = false;
+			if(event.getCode() == KeyCode.W)
+				up = false;
+			if(event.getCode() == KeyCode.S)
+				down = false;				
+		});
+
+		this.setOnMouseMoved(event -> {
+			if(mouseCmd == null)
+				mouseCmd = new String();
+			mouseCmd = mouseCmd.concat(id + "_ROTATE_" + event.getX() + "_" + event.getY() + "\n");				
 		});
 	}
 

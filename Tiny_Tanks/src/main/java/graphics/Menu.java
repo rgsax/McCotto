@@ -1,10 +1,8 @@
 package graphics;
 
 import graphics.levelEditor.LevelEditor;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
@@ -40,47 +38,19 @@ public class Menu extends GridPane {
 	}
 	
 	void initEH() {
-		playButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				windowManager.startGame(1);
-				windowManager.gotToScene(new Client("127.0.0.1", 8182, windowManager));
-			}
+		playButton.setOnMouseClicked(event -> {
+			windowManager.startGame(1);
+			windowManager.gotToScene(new Client("127.0.0.1", 8182, windowManager));
 		});
 		
-		multiplayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				windowManager.gotToScene(new MultiplayerWindow(windowManager));
-			}
-		});
+		multiplayerButton.setOnMouseClicked(event -> windowManager.gotToScene(new MultiplayerWindow(windowManager)));
 		
-		levelEditorButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				windowManager.gotToScene(new LevelEditor());
-			}
-		});
+		levelEditorButton.setOnMouseClicked(event -> windowManager.gotToScene(new LevelEditor()));
 
-		playButton.setOnMouseMoved(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				playButton.requestFocus();				
-			}
-		});
+		playButton.setOnMouseMoved(event -> playButton.requestFocus());
 		
-		multiplayerButton.setOnMouseMoved(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				multiplayerButton.requestFocus();				
-			}
-		});
+		multiplayerButton.setOnMouseMoved(event -> multiplayerButton.requestFocus());
 		
-		levelEditorButton.setOnMouseMoved(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				levelEditorButton.requestFocus();				
-			}
-		});
+		levelEditorButton.setOnMouseMoved(event -> levelEditorButton.requestFocus());
 	}
 }
