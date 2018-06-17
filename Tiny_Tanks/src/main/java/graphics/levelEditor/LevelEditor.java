@@ -13,8 +13,10 @@ import core.entities.AbstractBox;
 import core.entities.CarroArmato;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -36,6 +38,12 @@ public class LevelEditor extends GridPane {
 	Image imgBouncyBox;
 	Image imgDestructibleBox;
 	Image imgPlayer;
+	
+	Button playerButton = new  Button();
+	Button enemyButton = new Button();
+	Button bouncyBoxButton = new Button();
+	Button destructibleBoxButton = new Button();
+	Button saveButton = new Button("SAVE");
 	
 	Canvas canvas;
 	GraphicsContext gc;
@@ -165,13 +173,65 @@ public class LevelEditor extends GridPane {
 		};
 		selector = new ObjectSelector(imgs);
 		
-		canvas = new Canvas(width, height);
-		this.getChildren().add(canvas);
+		cursor = imgPlayer;
 		
+		canvas = new Canvas(width, height);
+		this.add(canvas, 1, 0);
+		GridPane pane = new GridPane();
+		pane.getStylesheets().add("levelEditorGraphics.css");
+		playerButton.getStyleClass().add("player");
+		enemyButton.getStyleClass().add("enemy");
+		bouncyBoxButton.getStyleClass().add("bouncyBox");
+		destructibleBoxButton.getStyleClass().add("destructibleBox");
+		saveButton.getStyleClass().add("save");
+		pane.getStyleClass().add("itemSelector");
+		pane.setPadding(new Insets(200, 50, 100, 50));
+		pane.setVgap(50);
+		pane.add(playerButton, 0, 0);
+		pane.add(enemyButton, 0, 1);
+		pane.add(bouncyBoxButton, 0, 2);
+		pane.add(destructibleBoxButton, 0, 3);
+		pane.add(saveButton, 0, 7);
+		this.add(pane, 0, 0);
 		gc = canvas.getGraphicsContext2D();
 	}
 	
 	public void initEH() {
+		saveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				createLevelFile();
+			}
+		});
+		
+		playerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				cursor = imgPlayer;
+			}
+		});
+		
+		enemyButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				cursor = imgEnemy;
+			}
+		});
+		
+		bouncyBoxButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				cursor = imgBouncyBox;
+			}
+		});
+		
+		destructibleBoxButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				cursor = imgDestructibleBox;
+			}
+		});
+		
 		this.setOnScroll(new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent event) {
@@ -182,7 +242,7 @@ public class LevelEditor extends GridPane {
 			}
 		});
 		
-		this.setOnMouseMoved(new EventHandler<MouseEvent>() {
+		canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				mouseX = event.getX();
@@ -238,40 +298,7 @@ public class LevelEditor extends GridPane {
 				
 			}
 
-			void createLevelFile() {
-				if(player == null)
-					System.out.println("Player must be placed");
-				else {
-					File level = new File("src/main/resources/level1.dat");
-					try {
-						level.createNewFile();
-						PrintWriter levelOut = new PrintWriter(level);
-						
-						levelOut.println(width + " " + height);
-						
-						levelOut.println(bouncyBoxes.size());
-						for(ObjectInfo bBox : bouncyBoxes)
-							levelOut.println(bBox.toString());
-						
-						levelOut.println(destructibleBoxes.size());
-						for(ObjectInfo dBox : destructibleBoxes)
-							levelOut.println(dBox.toString());
-						
-						levelOut.println(enemies.size());
-						for(ObjectInfo enemy : enemies) 
-							levelOut.println(enemy.toString());
-						
-						
-						levelOut.println("\n" + player.toString());
-						
-						levelOut.close();
-						
-						System.out.println("file salvato con successo");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}				
-				}
-			}
+			
 		});
 		
 		this.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -315,6 +342,41 @@ public class LevelEditor extends GridPane {
 				}
 			}
 		});
+	}
+	
+	void createLevelFile() {
+		if(player == null)
+			System.out.println("Player must be placed");
+		else {
+			File level = new File("src/main/resources/level1.dat");
+			try {
+				level.createNewFile();
+				PrintWriter levelOut = new PrintWriter(level);
+				
+				levelOut.println(width + " " + height);
+				
+				levelOut.println(bouncyBoxes.size());
+				for(ObjectInfo bBox : bouncyBoxes)
+					levelOut.println(bBox.toString());
+				
+				levelOut.println(destructibleBoxes.size());
+				for(ObjectInfo dBox : destructibleBoxes)
+					levelOut.println(dBox.toString());
+				
+				levelOut.println(enemies.size());
+				for(ObjectInfo enemy : enemies) 
+					levelOut.println(enemy.toString());
+				
+				
+				levelOut.println("\n" + player.toString());
+				
+				levelOut.close();
+				
+				System.out.println("file salvato con successo");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}				
+		}
 	}
 	
 	void initTimers() {

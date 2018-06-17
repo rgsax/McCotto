@@ -1,0 +1,51 @@
+.itemSelector {
+	-fx-background-color: #ccccff;
+}
+
+.button {
+	-fx-background-color: rgba(0,0,0,0);
+	-fx-min-height: 50px;
+	-fx-min-width:50px;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+}
+
+.button:focused {
+	-fx-border-style: solid;
+	-fx-border-color: red;
+	-fx-border-width: 3px;
+}
+
+.save {
+	-fx-background-color: #729fcf;
+	-fx-background-radius: 10px;
+	-fx-text-fill: #fce94f;
+	-fx-font-width: bold;
+	-fx-font-size: 15pt;
+}
+
+.save:pressed {
+	-fx-background-color: #3465a4;
+	-fx-border-style: none;
+}
+
+.save:focused {
+	-fx-border-width: 0px;
+}
+
+.player {
+	-fx-background-image: url("carro.png");
+}
+
+.enemy {
+	-fx-background-image: url("nemico.png");
+}
+
+.bouncyBox {
+	-fx-background-image: url("BouncyBox.png");
+}
+
+.destructibleBox {
+	-fx-background-image: url("DestructibleBox.png");
+}
+
