@@ -32,6 +32,12 @@ public class Server {
 	}
 	
 	public void init(HashMap<Integer, CarroArmato> players, Mondo mondo) {
+		Scanner posIn = null;
+		try {
+			posIn = new Scanner(new File("src/main/resources/" + level + ".pos"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		while(clients.size() < numPlayers) { //Mi metto in ascolto e accetto le richieste di connessione
 			Socket incoming = null;
@@ -54,23 +60,20 @@ public class Server {
 			
 			Integer id = new Integer(clients.indexOf(incoming));
 			
-			Scanner posIn = null;
-			try {
-				posIn = new Scanner(new File("src/main/resources/" + level + ".pos"));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+			int playerWidth = posIn.nextInt();
+			int playersHeight = posIn.nextInt();
+			double playerX = posIn.nextDouble();
+			double playerY = posIn.nextDouble();
 			
-			players.put(id, new CarroArmato(550, 550, mondo, id));
+			players.put(id, new CarroArmato(playerX, playerY, mondo, id));
 			
 			out.println(numPlayers);
 			out.println(clients.indexOf(incoming)); //Assegno e mando l'id al giocatore
 			out.flush();
-			
-			posIn.close();
 		}
 		
 		mondo.setPlayers(players);
+		posIn.close();
 	}
 	
 	public void removeClient(int i) {
