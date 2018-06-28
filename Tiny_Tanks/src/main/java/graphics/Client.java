@@ -1,11 +1,14 @@
 package graphics;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import core.entities.AbstractBox;
 import core.parts.Direction;
@@ -194,6 +197,38 @@ public class Client extends GridPane{
 				String signal = receive();
 				if(signal.contains("WIN") || signal.contains("CLOSE") || signal.contains("EXIT")) {
 					this.stop();
+					String saveName = "src/main/resources/levelCounter";
+					File saveFile = new File(saveName);
+					Scanner inSave = null;
+					try {
+						inSave = new Scanner(saveFile);
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					}
+					
+					int lastLevelAvailable = inSave.nextInt();
+					inSave.close();
+					
+					try {
+						saveFile.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					int currentLevel = Integer.parseInt(windowManager.currentLevel.replace("level", ""));
+					
+					System.out.println(currentLevel + " " + lastLevelAvailable);
+					
+					if(currentLevel + 1 > lastLevelAvailable) {
+						try {
+							PrintWriter outSave = new PrintWriter(saveFile);
+							outSave.println(currentLevel + 1);
+							outSave.close();
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						}
+					}
+					
 					windowManager.goToScene(new EndLevelWindow(windowManager, "WIN", numPlayers));
 				}
 				else {
