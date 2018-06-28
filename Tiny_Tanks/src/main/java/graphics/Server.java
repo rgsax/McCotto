@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Scanner;
 
 import core.Mondo;
@@ -38,6 +39,8 @@ public class Server {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		posIn.useLocale(Locale.US);
 		
 		while(clients.size() < numPlayers) { //Mi metto in ascolto e accetto le richieste di connessione
 			Socket incoming = null;

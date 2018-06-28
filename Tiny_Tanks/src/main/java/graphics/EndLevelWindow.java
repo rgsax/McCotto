@@ -51,7 +51,7 @@ public class EndLevelWindow extends GridPane {
 				windowManager.goToScene(new MultiplayerWindow(windowManager));
 			}
 			else {
-				windowManager.startGame(numPlayers, "" + (Integer.parseInt(windowManager.currentLevel) + 1));
+				windowManager.startGame(numPlayers, "level" + (Integer.parseInt(windowManager.currentLevel.replace("level", "")) + 1));
 			}
 		});
 		

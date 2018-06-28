@@ -49,7 +49,7 @@ public class ServerGame extends Thread{
 			
 			if(players.size() <= 1 && enemies.isEmpty()) {
 				System.out.println("Qualcuno ha vinto!!!");
-				server.send("WIN");
+				server.close();
 				//System.exit(0);
 			}
 			

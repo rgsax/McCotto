@@ -120,6 +120,13 @@ public class MultiplayerWindow extends GridPane {
 				elems.add(file.substring(0, file.lastIndexOf('.')));
 				
 		levels.setItems(FXCollections.observableArrayList(elems));
+		if(!elems.isEmpty()) {
+			levels.getSelectionModel().select(0);
+			if(hostButton.isDisable())
+				hostButton.setDisable(false);
+		}
+		else 
+			hostButton.setDisable(true);
 	}
 	
 	String getCurrentIP() {
