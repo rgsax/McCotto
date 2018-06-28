@@ -16,17 +16,14 @@ import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
-public class LevelEditor extends GridPane {
-	
-	/*public static void main(String[] args) {
-		launch(args);
-	}*/
-	
+public class LevelEditor extends GridPane {	
 	int width, height;
 	double mouseX, mouseY;
 	Image cursor;
@@ -39,7 +36,9 @@ public class LevelEditor extends GridPane {
 	Button enemyButton = new Button();
 	Button bouncyBoxButton = new Button();
 	Button destructibleBoxButton = new Button();
+	TextField levelName = new TextField("level");
 	Button saveButton = new Button("SAVE");
+	CheckBox multiplayer = new CheckBox("multiplayer");
 	
 	Canvas canvas;
 	GraphicsContext gc;
@@ -51,7 +50,7 @@ public class LevelEditor extends GridPane {
 	ArrayList<ObjectInfo> bouncyBoxes = new ArrayList<>();
 	ArrayList<ObjectInfo> destructibleBoxes = new ArrayList<>();
 	ArrayList<ObjectInfo> enemies = new ArrayList<>();
-	ObjectInfo player;
+	ArrayList<ObjectInfo> players = new ArrayList<>();
 	int currentBoxWidth = AbstractBox.minWidth;
 	int currentBoxHeight = AbstractBox.minHeight;
 	
@@ -97,8 +96,10 @@ public class LevelEditor extends GridPane {
 				return true;
 		}
 		
-		if(player != null && collided(o, player))
-			return true;
+		for(ObjectInfo player : players) {
+			if(collided(o, player))
+				return true;
+		}
 		
 		return false;
 	}
@@ -151,7 +152,9 @@ public class LevelEditor extends GridPane {
 			double playerX = fileIn.nextDouble();
 			double playerY = fileIn.nextDouble();
 			
-			player = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, playerX, playerY);
+			ObjectInfo player = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, playerX, playerY);
+			players.add(player);
+			
 			fileIn.close();
 		} 
 		catch (FileNotFoundException e) {
@@ -180,6 +183,15 @@ public class LevelEditor extends GridPane {
 		bouncyBoxButton.getStyleClass().add("bouncyBox");
 		destructibleBoxButton.getStyleClass().add("destructibleBox");
 		saveButton.getStyleClass().add("save");
+		
+		playerButton.setFocusTraversable(false);
+		enemyButton.setFocusTraversable(false);
+		bouncyBoxButton.setFocusTraversable(false);
+		destructibleBoxButton.setFocusTraversable(false);
+		multiplayer.setFocusTraversable(false);
+		levelName.setFocusTraversable(false);
+		saveButton.setFocusTraversable(false);
+		
 		pane.getStyleClass().add("itemSelector");
 		pane.setPadding(new Insets(200, 50, 100, 50));
 		pane.setVgap(50);
@@ -187,8 +199,11 @@ public class LevelEditor extends GridPane {
 		pane.add(enemyButton, 0, 1);
 		pane.add(bouncyBoxButton, 0, 2);
 		pane.add(destructibleBoxButton, 0, 3);
+		pane.add(multiplayer, 0, 5);
+		pane.add(levelName,0, 6);
 		pane.add(saveButton, 0, 7);
 		this.add(pane, 0, 0);
+		
 		gc = canvas.getGraphicsContext2D();
 	}
 	
@@ -203,6 +218,12 @@ public class LevelEditor extends GridPane {
 		
 		destructibleBoxButton.setOnMouseClicked(event -> cursor = imgDestructibleBox);
 		
+		multiplayer.setOnMouseClicked(event -> {
+			if(!multiplayer.isSelected())
+				while(players.size() > 1)
+					players.remove(1);
+		});
+		
 		this.setOnScroll(event -> {
 			if(event.getDeltaY() >= 0)
 				cursor = selector.nextItem();
@@ -211,11 +232,12 @@ public class LevelEditor extends GridPane {
 		});
 		
 		canvas.setOnMouseMoved(event -> {
+			canvas.requestFocus();
 			mouseX = event.getX();
 			mouseY = event.getY();
 		});
 		
-		this.setOnKeyPressed(event -> {				
+		canvas.setOnKeyPressed(event -> {				
 			if(event.getCode() == KeyCode.B) {
 				cursor = imgBouncyBox;
 			}
@@ -291,45 +313,55 @@ public class LevelEditor extends GridPane {
 				}
 				else if(cursor == imgPlayer) {
 					ObjectInfo o4 = new ObjectInfo(CarroArmato.baseWidth, CarroArmato.baseHeight, mouseX, mouseY);
-					if(!findCollision(o4))
-						player = o4;
+					if(!findCollision(o4)) {
+						if(!multiplayer.isSelected()) {
+							players.remove(0);
+							players.add(o4);
+						}
+						else
+							players.add(o4);						
+					}
 				}
 			}
 		});
 	}
 	
 	void createLevelFile() {
-		if(player == null)
-			System.out.println("Player must be placed");
-		else {
-			File level = new File("src/main/resources/level1.dat");
-			try {
-				level.createNewFile();
-				PrintWriter levelOut = new PrintWriter(level);
-				
-				levelOut.println(width + " " + height);
-				
-				levelOut.println(bouncyBoxes.size());
-				for(ObjectInfo bBox : bouncyBoxes)
-					levelOut.println(bBox.toString());
-				
-				levelOut.println(destructibleBoxes.size());
-				for(ObjectInfo dBox : destructibleBoxes)
-					levelOut.println(dBox.toString());
-				
-				levelOut.println(enemies.size());
-				for(ObjectInfo enemy : enemies) 
-					levelOut.println(enemy.toString());
-				
-				
-				levelOut.println("\n" + player.toString());
-				
-				levelOut.close();
-				
-				System.out.println("file salvato con successo");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}				
+		String name = levelName.getText();
+		if(multiplayer.isSelected())
+			name = players.size() + "-" + name;
+		File level = new File("src/main/resources/" + name + ".level");
+		File positions = new File("src/main/resources/" + name + ".pos");
+		try {
+			level.createNewFile();
+			positions.createNewFile();
+			
+			PrintWriter levelOut = new PrintWriter(level);
+			PrintWriter positionsOut = new PrintWriter(positions);
+			
+			levelOut.println(width + " " + height);
+			
+			levelOut.println(bouncyBoxes.size());
+			for(ObjectInfo bBox : bouncyBoxes)
+				levelOut.println(bBox.toString());
+			
+			levelOut.println(destructibleBoxes.size());
+			for(ObjectInfo dBox : destructibleBoxes)
+				levelOut.println(dBox.toString());
+			
+			levelOut.println(enemies.size());
+			for(ObjectInfo enemy : enemies) 
+				levelOut.println(enemy.toString());
+			
+			for(ObjectInfo player : players)
+				positionsOut.println("\n" + player.toString());
+			
+			levelOut.close();
+			positionsOut.close();
+			
+			System.out.println("file salvato con successo");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -353,7 +385,7 @@ public class LevelEditor extends GridPane {
 					gc.drawImage(imgEnemy, enemy.getX(), enemy.getY());
 				}
 				
-				if(player != null)
+				for(ObjectInfo player : players)
 					gc.drawImage(imgPlayer, player.getX(), player.getY());
 				
 				if(cursor != null) {

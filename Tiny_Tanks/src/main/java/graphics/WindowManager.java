@@ -17,6 +17,7 @@ public class WindowManager extends Application {
 	boolean ctrl = false, R = false, L = false;
 	Stage stage;
 	Scene scene;
+	String currentLevel;
 	
 	ServerGame game = null;
 	
@@ -64,8 +65,10 @@ public class WindowManager extends Application {
 		});
 	}
 	
-	public void startGame(int numPlayers) {
-		game = new ServerGame(numPlayers);
+	public void startGame(int numPlayers, String level) {
+		currentLevel = level;
+		
+		game = new ServerGame(numPlayers, level);
 		game.start();
 	}
 
@@ -75,7 +78,7 @@ public class WindowManager extends Application {
 		stage.setScene(scene);
 	}
 	
-	public void gotToScene(Parent window) {
+	public void goToScene(Parent window) {
 		scene = new Scene(window);
 		initEH();
 		stage.setScene(scene);

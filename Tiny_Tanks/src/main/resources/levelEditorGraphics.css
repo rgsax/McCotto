@@ -49,3 +49,8 @@
 	-fx-background-image: url("DestructibleBox.png");
 }
 
+.text-field {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-font-size: 12pt;
+}

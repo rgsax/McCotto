@@ -1,6 +1,8 @@
 package graphics;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -8,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import core.Mondo;
 import core.entities.CarroArmato;
@@ -16,14 +19,16 @@ public class Server {
 	ServerSocket server = null;
 	ArrayList<Socket> clients = new ArrayList<>();
 	int numPlayers;
+	String level;
 	
-	public Server(int port, int numPlayers) {
+	public Server(int port, int numPlayers, String level) {
 		try {
 			server = new ServerSocket(port); //Creo il server
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
 		this.numPlayers = numPlayers;
+		this.level = level;
 	}
 	
 	public void init(HashMap<Integer, CarroArmato> players, Mondo mondo) {
@@ -49,10 +54,20 @@ public class Server {
 			
 			Integer id = new Integer(clients.indexOf(incoming));
 			
+			Scanner posIn = null;
+			try {
+				posIn = new Scanner(new File("src/main/resources/" + level + ".pos"));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			
 			players.put(id, new CarroArmato(550, 550, mondo, id));
 			
+			out.println(numPlayers);
 			out.println(clients.indexOf(incoming)); //Assegno e mando l'id al giocatore
 			out.flush();
+			
+			posIn.close();
 		}
 		
 		mondo.setPlayers(players);
@@ -138,8 +153,6 @@ public class Server {
 				e.printStackTrace();
 			}
 		}
-		
-		System.out.println("sending " + s);
 		
 		return s;
 	}	

@@ -45,6 +45,8 @@ public class Client extends GridPane{
 	Image imgBullet;
 	Image imgBouncyBox;
 	Image imgDestructibleBox;
+	
+	int numPlayers;
 
 	public Client(String address, int port, WindowManager windowManager) {
 		this.windowManager = windowManager;
@@ -76,6 +78,7 @@ public class Client extends GridPane{
 			}
 
 			try {
+				numPlayers = Integer.parseInt(in.readLine());
 				id = Integer.parseInt(in.readLine());
 				System.out.println("with id " + id);
 			} catch (NumberFormatException | IOException e) {
@@ -191,7 +194,7 @@ public class Client extends GridPane{
 				String signal = receive();
 				if(signal.contains("WIN") || signal.contains("CLOSE") || signal.contains("EXIT")) {
 					this.stop();
-					windowManager.backToMenu();
+					windowManager.goToScene(new EndLevelWindow(windowManager, "WIN", numPlayers));
 				}
 				else {
 					int nEnemy = Integer.parseInt(signal);
@@ -256,9 +259,10 @@ public class Client extends GridPane{
 	}
 
 	public void send(String command) {	
-		if(!client.isClosed())
+		if(!client.isClosed()) {
 			out.println(command);
-		out.flush();
+			out.flush();
+		}
 	}
 
 	public void close() {

@@ -25,9 +25,9 @@ public class ServerGame extends Thread{
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	HashMap<Integer, CarroArmato> players = new HashMap<>();
 	
-	public ServerGame(int numPlayers) {
-		server = new Server(8182, numPlayers);
-		loadMap();		
+	public ServerGame(int numPlayers, String level) {
+		server = new Server(8182, numPlayers, level);
+		loadMap(level);		
 	}
 	
 	@Override
@@ -77,8 +77,8 @@ public class ServerGame extends Thread{
 	}
 	
 	@SuppressWarnings("unused")
-	void loadMap() {
-		String level = "src/main/resources/level1.dat";
+	void loadMap(String l) {
+		String level = "src/main/resources/" + l + ".level";
 		try {
 			Scanner fileIn = new Scanner(new FileReader(level));
 			fileIn.useLocale(Locale.US);
@@ -124,27 +124,16 @@ public class ServerGame extends Thread{
 			
 			mondo.setEnemiesList(enemies);
 			
-			int cWidth = fileIn.nextInt();
-			int cHeight = fileIn.nextInt();
-			
-			double playerX = fileIn.nextDouble();
-			double playerY = fileIn.nextDouble();
-			
 			fileIn.close();
 		} 
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-		catch(InputMismatchException e) {
-			System.out.println("Invalid map format");
-			System.exit(0);
 		}
 	}
 	
 	boolean elabora(String command) {
 		if(command.equals("NO_CLIENTS") || command.equals("CLOSE"))
 			return true;
-		System.out.println(command);
 		String[] in = command.split("\\n");
 		for(String cmd : in) {
 			if(!cmd.equals("null")) {

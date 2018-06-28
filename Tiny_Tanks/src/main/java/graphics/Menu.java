@@ -30,7 +30,7 @@ public class Menu extends GridPane {
 		this.add(multiplayerButton, 0, 3);
 		this.add(levelEditorButton, 0, 5);
 		this.getStyleClass().add("menu");
-		this.getStylesheets().add("file.css");
+		this.getStylesheets().add("menuGraphics.css");
 		playButton.getStyleClass().add("menuButton");
 		multiplayerButton.getStyleClass().add("menuButton");
 		levelEditorButton.getStyleClass().add("menuButton");
@@ -39,13 +39,12 @@ public class Menu extends GridPane {
 	
 	void initEH() {
 		playButton.setOnMouseClicked(event -> {
-			windowManager.startGame(1);
-			windowManager.gotToScene(new Client("127.0.0.1", 8182, windowManager));
+			windowManager.goToScene(new LevelWindow(windowManager));
 		});
 		
-		multiplayerButton.setOnMouseClicked(event -> windowManager.gotToScene(new MultiplayerWindow(windowManager)));
+		multiplayerButton.setOnMouseClicked(event -> windowManager.goToScene(new MultiplayerWindow(windowManager)));
 		
-		levelEditorButton.setOnMouseClicked(event -> windowManager.gotToScene(new LevelEditor()));
+		levelEditorButton.setOnMouseClicked(event -> windowManager.goToScene(new LevelEditor()));
 
 		playButton.setOnMouseMoved(event -> playButton.requestFocus());
 		

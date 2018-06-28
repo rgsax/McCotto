@@ -1,14 +1,22 @@
 package graphics;
 
+import java.io.File;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -26,6 +34,7 @@ public class MultiplayerWindow extends GridPane {
 	String currentIP = null;
 	TextField ipField;
 	Spinner<Integer> spinner = new Spinner<>(2, 10, 2);
+	ListView<String> levels = new ListView<>();
 	
 	public MultiplayerWindow(WindowManager windowManager) {
 		this.windowManager = windowManager;
@@ -35,10 +44,12 @@ public class MultiplayerWindow extends GridPane {
 	}
 	
 	void initGUI() {
+		populateLevelList();
+		
 		ipField = new TextField(currentIP);
 		useYourIP.setSelected(true);
 		ipField.setDisable(true);
-		this.getStylesheets().add("file.css");
+		this.getStylesheets().add("menuGraphics.css");
 		this.getStyleClass().add("menu");
 		hostButton.getStyleClass().add("menuButton");
 		joinGameButton.getStyleClass().add("menuButton");
@@ -59,17 +70,21 @@ public class MultiplayerWindow extends GridPane {
 		this.setVgap(50);
 		this.setHgap(50);
 		this.add(title, 0, 0);
+		this.add(levels, 1, 1);
 		this.add(hostButton, 0, 1);
-		this.add(pane, 1, 1);
+		this.add(pane, 1, 2);
 		this.add(ipField, 0, 3);
 		this.add(useYourIP, 1, 3);
 		this.add(joinGameButton, 0, 5);		
 	}
 	
 	void initEH() {
+		
+		spinner.setOnMouseClicked(event -> populateLevelList());
+		
 		hostButton.setOnMouseClicked(event -> {
-			windowManager.startGame(spinner.getValue());
-			windowManager.gotToScene(new Client(ipField.getText(), 8182, windowManager));
+			windowManager.startGame(spinner.getValue(), levels.getSelectionModel().getSelectedItem());
+			windowManager.goToScene(new Client(ipField.getText(), 8182, windowManager));
 		});
 		
 		useYourIP.setOnMouseClicked(event -> {
@@ -85,7 +100,7 @@ public class MultiplayerWindow extends GridPane {
 		
 		hostButton.setOnMouseMoved(event -> hostButton.requestFocus());
 		
-		joinGameButton.setOnMouseClicked(event -> windowManager.gotToScene(new Client(ipField.getText(), 8182, windowManager)));
+		joinGameButton.setOnMouseClicked(event -> windowManager.goToScene(new Client(ipField.getText(), 8182, windowManager)));
 		
 		joinGameButton.setOnMouseMoved(event -> joinGameButton.requestFocus());
 		
@@ -93,6 +108,18 @@ public class MultiplayerWindow extends GridPane {
 			ipField.requestFocus();	
 			ipField.deselect();
 		});
+	}
+	
+	void populateLevelList() {
+		String[] fileNames = new File("src/main/resources").list();
+		
+		ArrayList<String> elems = new ArrayList<>();
+		
+		for(String file : fileNames)
+			if(file.matches("\\d+-.+.\\.level") && Integer.parseInt(file.split("-")[0]) >= spinner.getValue())
+				elems.add(file.substring(0, file.lastIndexOf('.')));
+				
+		levels.setItems(FXCollections.observableArrayList(elems));
 	}
 	
 	String getCurrentIP() {
