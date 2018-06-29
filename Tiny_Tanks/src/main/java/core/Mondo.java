@@ -39,7 +39,8 @@ public class Mondo {
 	}
 	
 	public boolean checkBoxes (CarroArmato c) {
-		Coordinate playerCenter = new Coordinate(carro.getX()+carro.getWidth()/2, carro.getY()+carro.getHeight()/2);
+		CarroArmato target = nearestPlayer(c);
+		Coordinate playerCenter = new Coordinate(target.getX()+target.getWidth()/2, target.getY()+target.getHeight()/2);
 		Coordinate enemyCenter =  new Coordinate(c.getX()+c.getHeight()/2, c.getY()+c.getWidth()/2);
 		
 		for (AbstractBox AB : boxes) {
@@ -57,6 +58,20 @@ public class Mondo {
 		  }*/
 	  
 	  return false;
+	}
+	
+	public CarroArmato nearestPlayer(CarroArmato e) {
+		CarroArmato target = null;
+		double distance = Double.POSITIVE_INFINITY;
+		for (CarroArmato p : players.values()) {
+			double pdistance = Math.hypot(p.getX()-e.getX(), p.getY()-e.getY());
+			if (pdistance < distance) {
+				distance = pdistance;
+				target = p; 
+			}
+		}
+		
+		return target;
 	}
 	
 	public void spara(CarroArmato c) {
@@ -133,7 +148,8 @@ public class Mondo {
 	public void muoviNemici() {
 		for(Enemy c : enemies) {
 		  if (!checkBoxes(c)) {	
-			c.muovitiVerso(carro.getCannone().getcX(), carro.getCannone().getcY());
+			CarroArmato target = nearestPlayer(c);
+			c.muovitiVerso(target.getCannone().getcX(), target.getCannone().getcY());
 		  }
 		  else
 			c.pickRandomDirection();  
@@ -143,7 +159,7 @@ public class Mondo {
 						(c.getY() + c.getHeight() >= e.getY() && c.getY() <= e.getY() + e.getHeight()))*/
 				if (c.intersects(e))
 					c.undo();
-			orientaCannone(c, carro);
+			orientaCannone(c, nearestPlayer(c));
 		}
 	}
 
