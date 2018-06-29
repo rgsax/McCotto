@@ -148,7 +148,11 @@ public class ServerGame extends Thread{
 		for(String cmd : in) {
 			if(!cmd.equals("null")) {
 				String[] objs = cmd.split("_");
-				CarroArmato player = players.get(new Integer(Integer.parseInt(objs[0])));
+				CarroArmato player = null;
+				try {
+					player = players.get(new Integer(Integer.parseInt(objs[0])));
+				}
+				catch (NumberFormatException e) { }
 				//System.out.println(player != null);
 				if(player != null) {
 					if(objs[1].equals("CLOSE")) {

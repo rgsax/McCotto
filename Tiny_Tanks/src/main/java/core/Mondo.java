@@ -46,7 +46,7 @@ public class Mondo {
 
 			for (AbstractBox AB : boxes) {
 				RectangleLineIntersector r = new RectangleLineIntersector(AB.envelope());
-				if (r.intersects(playerCenter, enemyCenter)) return true;
+				if (AB instanceof BouncyBox && r.intersects(playerCenter, enemyCenter)) return true;
 			}
 		}
 

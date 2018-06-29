@@ -228,8 +228,11 @@ public class Client extends GridPane{
 									e.printStackTrace();
 								}
 							}
+							windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
 						}	
-						windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
+						else {
+							windowManager.goToScene(new Menu(windowManager));
+						}
 					}
 					else {
 						windowManager.goToScene(new LevelWindow(windowManager));
