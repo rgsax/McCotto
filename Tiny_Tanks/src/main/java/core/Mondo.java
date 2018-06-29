@@ -198,6 +198,14 @@ public class Mondo {
 			destroyEntities(toDelete);
 	}
 	
+	public HashMap<Integer, CarroArmato> getPlayers() {
+		return players;
+	}
+
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+
 	void checkBorderCollision(Bullet b) {
 		if(b.getX() < 0 || b.getX() > width - b.getWidth()) {
 			b.rimbalzaX();

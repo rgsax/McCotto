@@ -1,5 +1,7 @@
 package core.entities;
 
+import javax.xml.stream.events.EndElement;
+
 import core.Mondo;
 import core.parts.*;
 
@@ -131,6 +133,16 @@ public class CarroArmato extends Entity {
 					newY + height >= box.getY() && newY <= box.getY() + box.getHeight())
 				collision = true;
 		}
+		
+		for(Enemy e : mondo.getEnemies())
+			if(newX + width >= e.getX() && newX <= e.getX() + e.getWidth() &&
+					newY + height >= e.getY() && newY <= e.getY() + e.getHeight())
+				collision = true;
+		
+		for(CarroArmato player : mondo.getPlayers().values())
+			if(!this.equals(player) && newX + width >= player.getX() && newX <= player.getX() + player.getWidth() &&
+				newY + height >= player.getY() && newY <= player.getY() + player.getHeight())
+				collision = true;
 		
 		if(!collision) {
 			direction = d;
