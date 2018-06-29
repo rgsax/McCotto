@@ -1,11 +1,10 @@
 package core.entities;
 
-import javax.xml.stream.events.EndElement;
-
 import core.Mondo;
 import core.parts.*;
 
 public class CarroArmato extends Entity {
+	public static int baseLife = 3;
 	public static int baseWidth = 50;
 	public static int baseHeight = 50;
 	boolean collision = false;
@@ -15,7 +14,7 @@ public class CarroArmato extends Entity {
 	Cannon cannone;
 	Body macchina;
 	int speed = 10;
-	int life = 3;
+	int life = baseLife;
 	
 	int shots = 3;
 	Direction direction = Direction.E;
@@ -135,7 +134,7 @@ public class CarroArmato extends Entity {
 		}
 		
 		for(Enemy e : mondo.getEnemies())
-			if(newX + width >= e.getX() && newX <= e.getX() + e.getWidth() &&
+			if(!this.equals(e) && newX + width >= e.getX() && newX <= e.getX() + e.getWidth() &&
 					newY + height >= e.getY() && newY <= e.getY() + e.getHeight())
 				collision = true;
 		

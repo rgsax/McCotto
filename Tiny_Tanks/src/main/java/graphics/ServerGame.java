@@ -23,9 +23,11 @@ public class ServerGame extends Thread{
 	ArrayList<AbstractBox> boxes = new ArrayList<>();
 	ArrayList<Enemy> enemies = new ArrayList<>();
 	HashMap<Integer, CarroArmato> players = new HashMap<>();
+	int numPlayers;
 	
 	public ServerGame(int numPlayers, String level) {
 		server = new Server(8182, numPlayers, level);
+		this.numPlayers = numPlayers;
 		loadMap(level);		
 	}
 	
@@ -42,7 +44,7 @@ public class ServerGame extends Thread{
 			if(exit)
 				break;
 			
-			count++;					
+			count++;	
 
 			mondo.update();
 			
@@ -55,13 +57,13 @@ public class ServerGame extends Thread{
 			
 			for(Integer i : toRemove)
 				players.remove(i);
-					
 			
-			if(players.size() <= 1 && enemies.isEmpty()) {
+			
+			if((numPlayers == 1 && (players.isEmpty() || enemies.isEmpty())) || (numPlayers > 1 && players.size() <= 1 && enemies.isEmpty())) {
 				server.close();
 			}
 			
-		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
+		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 10	
 			if (count >= 10) {
 				mondo.muoviNemici();
 			}
@@ -191,7 +193,7 @@ public class ServerGame extends Thread{
 		for(CarroArmato player : players.values()) {
 			map = map.concat(player.getX() + " " + player.getY() + " " + 
 					(player.getX() + player.getWidth() / 2.0) + " " + (player.getY() + player.getHeight() / 2.0) + " " + 
-					player.getDirection().getAngle() +"\n");
+					player.getDirection().getAngle() + " " + (player.getLife() * 100 / CarroArmato.baseLife) + "\n");
 			Cannon cannone = player.getCannone();
 			map = map.concat(cannone.getX() + " " + cannone.getY() + " " + 
 					(cannone.getX() + cannone.getHeight() / 2.0) + " " + (cannone.getY() + cannone.getHeight() / 2.0) + " " +

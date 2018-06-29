@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import core.entities.AbstractBox;
+import core.entities.CarroArmato;
 import core.parts.Direction;
 import graphics.levelEditor.ObjectInfo;
 import javafx.animation.AnimationTimer;
@@ -270,6 +271,9 @@ public class Client extends GridPane{
 					double pivotXCarro = Double.parseDouble(carro[2]);
 					double pivotYCarro = Double.parseDouble(carro[3]);
 					double angoloCarro = Double.parseDouble(carro[4]);
+					int vitaCarro = -1;
+					if(carro.length > 5)
+						vitaCarro = Integer.parseInt(carro[5]);
 
 					double cannoneX = Double.parseDouble(cannone[0]);
 					double cannoneY = Double.parseDouble(cannone[1]);
@@ -278,6 +282,12 @@ public class Client extends GridPane{
 					double angoloCannone = Double.parseDouble(cannone[4]);
 
 					drawRotatedImage(gc, imgCarro, carroX, carroY, pivotXCarro, pivotYCarro, angoloCarro);
+					if(vitaCarro != -1) {
+						gc.setFill(Color.RED);
+						gc.fillRect(carroX, carroY + CarroArmato.baseHeight, CarroArmato.baseWidth + 2, 5);
+						gc.setFill(Color.LIGHTGREEN);
+						gc.fillRect(carroX, carroY + CarroArmato.baseHeight, vitaCarro * CarroArmato.baseWidth / 100, 5);
+					}
 					drawRotatedImage(gc, imgCannone, cannoneX, cannoneY, pivotXCannone, pivotYCannone, angoloCannone);
 				}
 			}
