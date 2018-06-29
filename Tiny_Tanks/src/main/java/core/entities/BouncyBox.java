@@ -53,14 +53,6 @@ public class BouncyBox extends AbstractBox {
 			b.rimbalzaX();
 		} else if (right) {
 			b.rimbalzaX();
-		} else {
-			// SFIORA GLI SPIGOLI
-			System.out.println("è successo qualcosa che non sarebbe dovuto accadere");
-			System.out.println("up"+up);
-			System.out.println("down"+down);
-			System.out.println("left"+up);
-			System.out.println("right"+right);
-			
 		}
 		
 		//while (this.intersects(b)) {
