@@ -74,6 +74,8 @@ public class ServerGame extends Thread{
 			}
 			
 			server.send(getMap() + "\n" + diedIDs);
+			for(CarroArmato player : diedPlayers)
+				server.removeClient(player.getId().intValue());
 			
 			try {
 				sleep(50);
