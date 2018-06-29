@@ -257,12 +257,13 @@ public class Client extends GridPane{
 						gc.fillOval(x, y, width, height);
 					}	
 					
+					/*
 					int numDiedPlayers = Integer.parseInt(receive());
 					for(int i = 0 ; i < numDiedPlayers ; ++i) {
 						int diedID = Integer.parseInt(receive());
 						if(diedID == id)
 							died = true;
-					}
+					}*/
 				}
 
 			}

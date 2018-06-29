@@ -68,14 +68,12 @@ public class ServerGame extends Thread{
 			if(count >= 30) {
 				count = 0;
 				for(CarroArmato c : enemies) {
-					mondo.spara(c);
-					
+					mondo.spara(c);	
 				}
 			}
 			
+			server.send(getMap());
 			server.send(getMap() + "\n" + diedIDs);
-			for(CarroArmato player : diedPlayers)
-				server.removeClient(player.getId().intValue());
 			
 			try {
 				sleep(50);
