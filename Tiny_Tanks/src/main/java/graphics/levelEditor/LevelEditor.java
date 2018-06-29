@@ -330,6 +330,8 @@ public class LevelEditor extends GridPane {
 		String name = levelName.getText();
 		if(multiplayer.isSelected())
 			name = players.size() + "-" + name;
+		else
+			name = "custom-" + name;
 		File level = new File("src/main/resources/" + name + ".level");
 		File positions = new File("src/main/resources/" + name + ".pos");
 		try {

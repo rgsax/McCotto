@@ -2,10 +2,13 @@ package graphics;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
@@ -14,14 +17,29 @@ public class LevelWindow extends GridPane{
 	public static final int numLevels = 5;
 	int unlockedLevels;
 	Button[] levels = new Button[numLevels];
+	Button playButton = new Button("PLAY");
+	ListView<String> customLevels = new ListView<>();
 	
 	public LevelWindow(WindowManager windowManager) {
 		this.windowManager = windowManager;
+		populateLevelList();
 		
 		loadSettings();
 		
 		initGUI();
 		initEH();
+	}
+	
+	void populateLevelList() {
+		String[] fileNames = new File("src/main/resources").list();
+		
+		ArrayList<String> elems = new ArrayList<>();
+		
+		for(String file : fileNames)
+			if(file.matches("\\d+-.+.\\.level") || file.matches("custom-.+.\\.level"))
+				elems.add(file.substring(0, file.lastIndexOf('.')));
+				
+		customLevels.setItems(FXCollections.observableArrayList(elems));
 	}
 	
 	void loadSettings() {
@@ -36,6 +54,10 @@ public class LevelWindow extends GridPane{
 	}
 	
 	void initGUI() {
+		playButton.setDisable(true);
+		customLevels.setMaxWidth(200);
+		customLevels.setMaxHeight(200);
+		
 		this.setPadding(new Insets(100));
 		this.setHgap(50);
 		this.getStylesheets().add("menuGraphics.css");
@@ -51,7 +73,14 @@ public class LevelWindow extends GridPane{
 		pane.getStylesheets().add("menuGraphics.css");
 		pane.getStyleClass().add("menu");
 		
+		GridPane custom = new GridPane();
+		custom.setPadding(new Insets(100));
+		custom.setHgap(50);
+		custom.getStylesheets().add("menuGraphics.css");
+		custom.getStyleClass().add("menu");
+		
 		this.add(pane, 0, 1);
+		this.add(custom, 0, 2);
 		
 		for(int i = 0 ; i < numLevels ; ++i) {
 			levels[i] = new Button("" + (i + 1));
@@ -61,6 +90,10 @@ public class LevelWindow extends GridPane{
 			
 			pane.add(levels[i], i, 0);
 		}
+		custom.add(customLevels, 0, 0);
+		custom.add(playButton, 1, 0);
+		
+		playButton.getStyleClass().add("menuButton");
 	}
 	
 	void initEH() {
@@ -71,6 +104,13 @@ public class LevelWindow extends GridPane{
 				windowManager.goToScene(new Client("127.0.0.1", 8182, windowManager));
 			});
 		}
+		
+		playButton.setOnMouseClicked(event -> {
+			windowManager.startGame(1, customLevels.getSelectionModel().getSelectedItem());
+			windowManager.goToScene(new Client("127.0.0.1", 8182, windowManager));
+		});
+		
+		customLevels.setOnMouseClicked(event -> playButton.setDisable(false));
 	}
 
 }
