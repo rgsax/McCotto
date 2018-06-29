@@ -54,6 +54,8 @@ public class ServerGame extends Thread{
 				}
 			}
 			
+			String diedIDs = getDiedIDs(diedPlayers);
+			
 			if(players.size() <= 1 && enemies.isEmpty()) {
 				server.close();
 			}
@@ -72,7 +74,7 @@ public class ServerGame extends Thread{
 			}
 			
 			server.send(getMap());
-			server.send(getDiedIDs(diedPlayers));
+			server.send(diedIDs);
 			
 			try {
 				sleep(50);
