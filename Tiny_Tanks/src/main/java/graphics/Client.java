@@ -364,7 +364,7 @@ public class Client extends GridPane{
 		
 		String cmd = "";
 		
-		if(!died) {		
+		if(!died || true) {		
 			generateKeyboardCmd();
 			
 			if(keyboardCmd != null) {
