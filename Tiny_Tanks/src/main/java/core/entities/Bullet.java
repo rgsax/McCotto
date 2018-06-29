@@ -36,8 +36,8 @@ public class Bullet extends Entity {
 		this.angle = cannon.getAngle();
 		vX = (int) Math.round(Math.cos(Math.toRadians(angle)) * baseSpeed);
 		vY = (int) Math.round(Math.sin(Math.toRadians(angle)) * baseSpeed);
-		x = cannon.getcX() + vX * 2.5;
-		y = cannon.getcY() + vY * 2.5;
+		x = cannon.getcX() + vX * 3.5;
+		y = cannon.getcY() + vY * 3.5;
 	}
 	
 	public double getAngle() {
@@ -66,12 +66,15 @@ public class Bullet extends Entity {
 				y += i*vY;
 			}
 		}
+		
+		updateAngle();
 	}
 	
 	public void undo(double n) {
 		x -= n*vX;
 		y -= n*vY;
-		timer += (int) n; 
+		//timer += (int) n; 
+		updateAngle();
 	}
 	
 	public void rimbalzaY() {

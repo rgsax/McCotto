@@ -7,6 +7,7 @@ import com.vividsolutions.jts.algorithm.RectangleLineIntersector;
 import com.vividsolutions.jts.geom.Coordinate;
 
 import core.entities.AbstractBox;
+import core.entities.BouncyBox;
 import core.entities.Bullet;
 import core.entities.CarroArmato;
 import core.entities.DestructibleBox;
@@ -44,16 +45,16 @@ public class Mondo {
 		for (AbstractBox AB : boxes) {
 			RectangleLineIntersector r = new RectangleLineIntersector(AB.envelope());
 			if (r.intersects(playerCenter, enemyCenter)) return true;
-		  
+		}
 		  /*if (Math.hypot(carro.getCannone().getcX() - c.getCannone().getcX(),
 					  carro.getCannone().getcY() - c.getCannone().getcY()) + AB.getWidth() * AB.getHeight() / 100 >=
 								Math.hypot(carro.getCannone().getcX() - AB.getX(), 
 										carro.getCannone().getcY() - AB.getY()) + 
 								Math.hypot(c.getCannone().getcX() - AB.getX(),  
-			
-		  
-										c.getCannone().getcY() - AB.getY()))*/
-		  }
+										c.getCannone().getcY() - AB.getY())) {
+											return true;
+										}
+		  }*/
 	  
 	  return false;
 	}
@@ -63,7 +64,7 @@ public class Mondo {
 		
 		if (c instanceof Enemy) {
 			for (AbstractBox AB : boxes) { //FARE PROVE MODIFICANDO QUEL +15
-				  if ((AB instanceof DestructibleBox) && checkBoxes(c))
+				  if ((AB instanceof BouncyBox) && checkBoxes(c))
 					  scatolaInMezzo = true;
 			}
 		}	
@@ -209,8 +210,8 @@ public class Mondo {
 	ArrayList<Entity> checkBoxesCollision(Bullet b) {
 		ArrayList<Entity> toDelete = new ArrayList<>();
 		for(AbstractBox box : boxes) {
-			if(box.deflect(b)) {
-				b.setReadyToExplode(true);
+			if(box.intersects(b)) {
+				if (box.deflect(b)) b.setReadyToExplode(true);
 				toDelete.add(box);
 			}
 		}
