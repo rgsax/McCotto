@@ -30,7 +30,7 @@ public class Client extends GridPane{
 	BufferedReader in;
 	WindowManager windowManager = null;
 
-	boolean up = false, down = false, right = false, left = false, shoot = false, died = false;
+	boolean up = false, down = false, right = false, left = false, shoot = false;
 
 	Socket client;
 	Canvas canvas;
@@ -255,15 +255,7 @@ public class Client extends GridPane{
 						int width = Integer.parseInt(line[2]);
 						int height = Integer.parseInt(line[3]);
 						gc.fillOval(x, y, width, height);
-					}	
-					
-					/*
-					int numDiedPlayers = Integer.parseInt(receive());
-					for(int i = 0 ; i < numDiedPlayers ; ++i) {
-						int diedID = Integer.parseInt(receive());
-						if(diedID == id)
-							died = true;
-					}*/
+					}		
 				}
 
 			}
@@ -362,28 +354,25 @@ public class Client extends GridPane{
 	String generateCmd() {
 		int count = 0;
 		
+		generateKeyboardCmd();
+
 		String cmd = "";
+		if(keyboardCmd != null) {
+			++count;
+			cmd = cmd.concat(keyboardCmd);
+			keyboardCmd = null;
+		}
 		
-		if(!died || true) {		
-			generateKeyboardCmd();
-			
-			if(keyboardCmd != null) {
-				++count;
-				cmd = cmd.concat(keyboardCmd);
-				keyboardCmd = null;
-			}
-			
-			if(mouseCmd != null) {
-				++count;
-				cmd = cmd.concat(mouseCmd);
-				mouseCmd = null;
-			}
-			
-			if(shoot) {
-				shoot = false;
-				cmd = cmd.concat(id + "_SHOOT\n");
-				++count;
-			}
+		if(mouseCmd != null) {
+			++count;
+			cmd = cmd.concat(mouseCmd);
+			mouseCmd = null;
+		}
+		
+		if(shoot) {
+			shoot = false;
+			cmd = cmd.concat(id + "_SHOOT\n");
+			++count;
 		}
 		
 		cmd = Integer.toString(count).concat("\n" + cmd);	

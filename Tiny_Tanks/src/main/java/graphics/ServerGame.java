@@ -46,15 +46,16 @@ public class ServerGame extends Thread{
 
 			mondo.update();
 			
-			ArrayList<CarroArmato> diedPlayers = new ArrayList<>();
+			ArrayList<Integer> toRemove = new ArrayList<>();
 			
-			for(CarroArmato player : players.values()) {
+			for(CarroArmato player : players.values())
 				if(player.getLife() <= 0) {
-					diedPlayers.add(player);
+					toRemove.add(player.getId());
 				}
-			}
 			
-			String diedIDs = getDiedIDs(diedPlayers);
+			for(Integer i : toRemove)
+				players.remove(i);
+					
 			
 			if(players.size() <= 1 && enemies.isEmpty()) {
 				server.close();
@@ -68,12 +69,12 @@ public class ServerGame extends Thread{
 			if(count >= 30) {
 				count = 0;
 				for(CarroArmato c : enemies) {
-					mondo.spara(c);	
+					mondo.spara(c);
+					
 				}
 			}
 			
 			server.send(getMap());
-			server.send(getMap() + "\n" + diedIDs);
 			
 			try {
 				sleep(50);
@@ -81,16 +82,6 @@ public class ServerGame extends Thread{
 				e.printStackTrace();
 			}
 		}
-	}
-
-	String getDiedIDs(ArrayList<CarroArmato> diedPlayers) {
-		String diedSend = Integer.toString(diedPlayers.size()) + "\n";
-		for(CarroArmato player : diedPlayers) {
-			diedSend = diedSend.concat(player.getId().toString() + "\n");
-			players.remove(player.getId());
-			System.out.println("removing id " + player.getId().toString());
-		}
-		return diedSend;
 	}
 	
 	@SuppressWarnings("unused")
