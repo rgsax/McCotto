@@ -53,12 +53,15 @@ public class MultiplayerWindow extends GridPane {
 		
 		GridPane pane = new GridPane();
 		Text tPlayers = new Text("players");
-		tPlayers.setFill(Color.YELLOW);
+		tPlayers.setFill(Color.rgb(158, 154, 117));
+		tPlayers.setStyle("-fx-font-family: 'Armalite Rifle';");
 		tPlayers.setFont(Font.font(Font.getDefault().getName(), FontWeight.BOLD, 15));
 		ipField.getStyleClass().add("ip_field");
 		pane.add(tPlayers, 0, 0);
 		pane.add(spinner, 0, 1);
 		pane.setVgap(5);
+		
+		levels.setMaxSize(200, 200);
 		
 		
 		this.setMinSize(800,  800);

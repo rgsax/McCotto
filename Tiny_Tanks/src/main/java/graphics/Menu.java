@@ -21,6 +21,8 @@ public class Menu extends GridPane {
 	}
 	
 	void initGUI() {
+		title.getStyleClass().add("title");
+		
 		this.setMinSize(800,  800);
 		this.setPadding(new Insets(100, 100, 100, 100));
 		this.setVgap(50);
@@ -34,7 +36,6 @@ public class Menu extends GridPane {
 		playButton.getStyleClass().add("menuButton");
 		multiplayerButton.getStyleClass().add("menuButton");
 		levelEditorButton.getStyleClass().add("menuButton");
-		title.getStyleClass().add("title");
 	}
 	
 	void initEH() {

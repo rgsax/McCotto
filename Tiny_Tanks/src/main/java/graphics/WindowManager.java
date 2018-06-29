@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class WindowManager extends Application {
@@ -31,6 +32,8 @@ public class WindowManager extends Application {
 	}
 	
 	void initGUI() {
+		Font.loadFont(this.getClass().getResource("/Colleged.ttf").toExternalForm(), 30);
+		Font.loadFont(this.getClass().getResource("/armalite.ttf").toExternalForm(), 30);
 		stage.setTitle("CLIENT");
 		scene = new Scene(new Menu(this));
 		stage.setScene(scene);

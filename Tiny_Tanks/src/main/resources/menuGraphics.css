@@ -1,11 +1,12 @@
 .menu {
-	-fx-background-color: purple;
+	-fx-background-image: url(/background.png);
+	-fx-font-family: "Armalite Rifle";
 }
 
 .menuButton{
 	-fx-font-size: 50pt;
-    -fx-background-color: #0000ff;
-	-fx-text-fill: #ffff00;
+    -fx-background-color: #604439;
+	-fx-text-fill: #9e9a75;
     -fx-padding: 3 6 6 6;
     -fx-border: none;
 	-fx-background-radius: 20px;
@@ -13,7 +14,7 @@
 
 .menuButton:focused {
     -fx-border-style: solid;
-    -fx-border-color: #ffff00;
+    -fx-border-color: #1c222e;
 	-fx-border-width: 5px;
 	-fx-border-radius: 15px;
 }
@@ -24,7 +25,8 @@
 
 .title {
 	-fx-font-size: 72pt;
-	-fx-fill: #ffff00;
+	-fx-fill: #c7ac1e;
+	-fx-font-family: "Colleged";
 }
 
 .spinner {
@@ -33,31 +35,31 @@
 
 .spinner:hover {
 	-fx-border-style: solid;
-	-fx-border-color: yellow;
+	-fx-border-color: #9e9a75;
 }
 
 .spinner .increment-arrow-button,
 .spinner .decrement-arrow-button {
-	-fx-body-color: #ffff00;
+	-fx-body-color: #9e9a75;
 }
 
 .spinner .increment-arrow-button:pressed,
 .spinner .decrement-arrow-button:pressed {
-	-fx-body-color: #cccc00;
+	-fx-body-color: #9e9a75;
 }
 
 .spinner .text-field {
 	-fx-opacity: 1.0;
-	-fx-background-color: blue;
-	-fx-text-fill: yellow;
+	-fx-background-color: #604439;
+	-fx-text-fill: #9e9a75;
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
 }
 
 .ip_field {
 	-fx-opacity: 1.0;
-	-fx-background-color: blue;
-	-fx-text-fill: yellow;
+	-fx-background-color: #604439;
+	-fx-text-fill: #9e9a75;
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
 	-fx-background-radius: 20px;
@@ -71,15 +73,15 @@
 }
 
 .check-box {
-	-fx-text-fill: yellow;
+	-fx-text-fill: #9e9a75;
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
 }
 
 .check-box .box {
-	-fx-body-color: blue;
+	-fx-body-color: #604439;
 }
 
 .check-box:selected .box {
-	-fx-body-color: yellow;
+	-fx-body-color: #9e9a75;
 }

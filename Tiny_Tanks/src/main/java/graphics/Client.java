@@ -199,37 +199,41 @@ public class Client extends GridPane{
 				if(signal.contains("WIN") || signal.contains("CLOSE") || signal.contains("EXIT")) {
 					this.stop();
 					if(numPlayers == 1) {
-						String saveName = "src/main/resources/levelCounter";
-						File saveFile = new File(saveName);
-						Scanner inSave = null;
-						try {
-							inSave = new Scanner(saveFile);
-						} catch (FileNotFoundException e1) {
-							e1.printStackTrace();
-						}
-						
-						int lastLevelAvailable = inSave.nextInt();
-						inSave.close();
-						
-						try {
-							saveFile.createNewFile();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						
 						int currentLevel = Integer.parseInt(windowManager.currentLevel.replace("level", ""));
-						
-						if(currentLevel + 1 > lastLevelAvailable) {
+						if(currentLevel < 5) {
+							String saveName = "src/main/resources/levelCounter";
+							File saveFile = new File(saveName);
+							Scanner inSave = null;
 							try {
-								PrintWriter outSave = new PrintWriter(saveFile);
-								outSave.println(currentLevel + 1);
-								outSave.close();
-							} catch (FileNotFoundException e) {
+								inSave = new Scanner(saveFile);
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							}
+							
+							int lastLevelAvailable = inSave.nextInt();
+							inSave.close();
+							
+							try {
+								saveFile.createNewFile();
+							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						}
-					}	
-					windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
+							
+							if(currentLevel + 1 > lastLevelAvailable) {
+								try {
+									PrintWriter outSave = new PrintWriter(saveFile);
+									outSave.println(currentLevel + 1);
+									outSave.close();
+								} catch (FileNotFoundException e) {
+									e.printStackTrace();
+								}
+							}
+						}	
+						windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
+					}
+					else {
+						windowManager.goToScene(new LevelWindow(windowManager));
+					}
 				}
 				else {
 					int nEnemy = Integer.parseInt(signal);
