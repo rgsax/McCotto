@@ -147,6 +147,7 @@ public class ServerGame extends Thread{
 			if(!cmd.equals("null")) {
 				String[] objs = cmd.split("_");
 				CarroArmato player = players.get(new Integer(Integer.parseInt(objs[0])));
+				//System.out.println(player != null);
 				if(player != null) {
 					if(objs[1].equals("CLOSE")) {
 						players.remove(new Integer(Integer.parseInt(objs[0])));

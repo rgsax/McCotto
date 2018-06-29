@@ -375,7 +375,7 @@ public class Client extends GridPane{
 			++count;
 		}
 		
-		cmd = Integer.toString(count).concat("\n" + cmd);	
+		cmd = Integer.toString(count).concat("\n" + cmd);
 		return cmd;
 	}
 }

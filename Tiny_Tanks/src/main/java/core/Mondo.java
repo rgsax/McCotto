@@ -219,9 +219,10 @@ public class Mondo {
 		
 	void checkPlayersCollision(Bullet b) {
 			for(CarroArmato player : players.values()) {
-				if (b.envelope().intersects(player.envelope()))
-				player.takeHit(b.getDamage());
-				b.setReadyToExplode(true);
+				if (b.envelope().intersects(player.envelope())) {
+					player.takeHit(b.getDamage());
+					b.setReadyToExplode(true);
+				}
 			}
 	}
 	
