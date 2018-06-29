@@ -73,8 +73,7 @@ public class ServerGame extends Thread{
 				}
 			}
 			
-			server.send(getMap());
-			server.send(diedIDs);
+			server.send(getMap() + "\n" + diedIDs);
 			
 			try {
 				sleep(50);
@@ -89,6 +88,7 @@ public class ServerGame extends Thread{
 		for(CarroArmato player : diedPlayers) {
 			diedSend = diedSend.concat(player.getId().toString() + "\n");
 			players.remove(player.getId());
+			System.out.println("removing id " + player.getId().toString());
 		}
 		return diedSend;
 	}
