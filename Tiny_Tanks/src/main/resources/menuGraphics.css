@@ -35,7 +35,7 @@
 
 .spinner:hover {
 	-fx-border-style: solid;
-	-fx-border-color: #9e9a75;
+	-fx-border-color: #1c222e;
 }
 
 .spinner .increment-arrow-button,
