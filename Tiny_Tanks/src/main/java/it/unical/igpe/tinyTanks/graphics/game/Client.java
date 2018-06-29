@@ -199,7 +199,7 @@ public class Client extends GridPane{
 					disegnaBox(gc, box, imgBouncyBox);
 
 				String signal = receive();
-				if(signal.contains("WIN") || signal.contains("CLOSE") || signal.contains("EXIT")) {
+				if(signal.contains("WIN") || signal.contains("CLOSE") || signal.contains("LOSE")) {
 					this.stop();
 					if(numPlayers == 1) {
 						if(!windowManager.getCurrentLevel().matches("level\\d"))
@@ -242,7 +242,13 @@ public class Client extends GridPane{
 						}
 					}
 					else {
-						windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
+						String winner = "";
+						if(signal.contains("WIN"))
+							winner += signal.split("_")[1] + " IS THE WINNER";
+						else
+							winner += "ALL LOSERS";
+						
+						windowManager.goToScene(new EndLevelWindow(windowManager, winner, numPlayers));
 					}
 				}
 				else {

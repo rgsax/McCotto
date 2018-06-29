@@ -173,4 +173,13 @@ public class Server {
 			e.printStackTrace();
 		}
 	}
+
+	public void close(String msg) {
+		try {
+			send(msg);
+			server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -40,7 +40,7 @@ public class ServerGame extends Thread{
 		
 		if(!plugin.equals(WindowManager.NO_PLUGINS))
 			try {
-				this.plugin = ClassLoader.getSystemClassLoader().loadClass("HardModePlugin");
+				this.plugin = ClassLoader.getSystemClassLoader().loadClass(plugin);
 			} catch (ClassNotFoundException e) { }
 	}
 	
@@ -86,8 +86,14 @@ public class ServerGame extends Thread{
 				players.remove(i);
 			
 			
-			if((numPlayers == 1 && (players.isEmpty() || enemies.isEmpty())) || (numPlayers > 1 && players.size() <= 1 && enemies.isEmpty())) {
+			if((numPlayers == 1 && (players.isEmpty() || enemies.isEmpty()))) {
 				server.close();
+			}
+			else if(numPlayers > 1) {
+				if(players.size() == 1 && enemies.isEmpty())
+					server.close("WIN_" + players.values().toArray()[0]);
+				else if(players.size() == 0)
+					server.close("LOSE");
 			}
 			
 		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 10	
