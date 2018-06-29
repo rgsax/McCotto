@@ -49,8 +49,9 @@ public class ServerGame extends Thread{
 			ArrayList<CarroArmato> diedPlayers = new ArrayList<>();
 			
 			for(CarroArmato player : players.values()) {
-				if(player.getLife() <= 0)
+				if(player.getLife() <= 0) {
 					diedPlayers.add(player);
+				}
 			}
 			
 			if(players.size() <= 1 && enemies.isEmpty()) {
@@ -85,6 +86,7 @@ public class ServerGame extends Thread{
 		String diedSend = Integer.toString(diedPlayers.size()) + "\n";
 		for(CarroArmato player : diedPlayers) {
 			diedSend = diedSend.concat(player.getId().toString() + "\n");
+			players.remove(player.getId());
 		}
 		return diedSend;
 	}
