@@ -283,8 +283,11 @@ public class Client extends GridPane{
 					double pivotYCarro = Double.parseDouble(carro[3]);
 					double angoloCarro = Double.parseDouble(carro[4]);
 					int vitaCarro = -1;
-					if(carro.length > 5)
+					int idPlayer = -1;
+					if(carro.length > 5) {
 						vitaCarro = Integer.parseInt(carro[5]);
+						idPlayer = Integer.parseInt(carro[6]);
+					}
 
 					double cannoneX = Double.parseDouble(cannone[0]);
 					double cannoneY = Double.parseDouble(cannone[1]);
@@ -300,6 +303,10 @@ public class Client extends GridPane{
 						gc.fillRect(carroX, carroY + CarroArmato.baseHeight, vitaCarro * CarroArmato.baseWidth / 100, 5);
 					}
 					drawRotatedImage(gc, imgCannone, cannoneX, cannoneY, pivotXCannone, pivotYCannone, angoloCannone);
+					if(idPlayer != -1) {
+						gc.setFill(Color.BLACK);
+						gc.strokeText(Integer.toString(idPlayer), carroX + CarroArmato.baseWidth / 2, carroY - 10);
+					}
 				}
 			}
 

@@ -197,7 +197,7 @@ public class ServerGame extends Thread{
 		for(CarroArmato player : players.values()) {
 			map = map.concat(player.getX() + " " + player.getY() + " " + 
 					(player.getX() + player.getWidth() / 2.0) + " " + (player.getY() + player.getHeight() / 2.0) + " " + 
-					player.getDirection().getAngle() + " " + (player.getLife() * 100 / CarroArmato.baseLife) + "\n");
+					player.getDirection().getAngle() + " " + (player.getLife() * 100 / CarroArmato.baseLife) + " " + player.getId().toString() + "\n");
 			Cannon cannone = player.getCannone();
 			map = map.concat(cannone.getX() + " " + cannone.getY() + " " + 
 					(cannone.getX() + cannone.getHeight() / 2.0) + " " + (cannone.getY() + cannone.getHeight() / 2.0) + " " +
