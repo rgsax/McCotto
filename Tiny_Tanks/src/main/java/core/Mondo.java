@@ -173,7 +173,7 @@ public class Mondo {
 				checkBulletsCollision(b);
 				
 				toDelete.addAll(checkBoxesCollision(b));
-				toDelete.addAll(checkPlayersCollision(b));
+				checkPlayersCollision(b);
 				toDelete.addAll(checkEnemiesCollision(b));				
 			}
 
@@ -194,8 +194,6 @@ public class Mondo {
 	ArrayList<Entity> checkEnemiesCollision(Bullet b) {
 		ArrayList<Entity> toDelete = new ArrayList<>();
 		for(Enemy c : enemies) {
-			/*if(b.getX() + b.getWidth() >= c.getX() && b.getX() <= c.getX() + c.getMacchina().getWidth() 
-					&& b.getY() + b.getHeight() >= c.getY() && b.getY() <= c.getY() + c.getMacchina().getHeight())*/
 			if (b.intersects(c))
 			{
 				if(c.takeHit(b.getDamage()))
@@ -219,29 +217,16 @@ public class Mondo {
 		return toDelete;
 	}
 		
-	ArrayList<Entity> checkPlayersCollision(Bullet b) {
-		ArrayList<Entity> toDelete = new ArrayList<>();
-		/*if(b.getX() + b.getWidth() >= carro.getX() && b.getX() <= carro.getX() + carro.getMacchina().getWidth() 
-				&& b.getY() + b.getHeight() >= carro.getY() && b.getY() <= carro.getY() + carro.getMacchina().getHeight())*/
-		if (b.envelope().intersects(carro.envelope()))
-		{
+	void checkPlayersCollision(Bullet b) {
 			for(CarroArmato player : players.values()) {
-				if(player.takeHit(b.getDamage())) {
-					System.out.println("qualcuno ha perso!");
-					toDelete.add(player);
-					//System.exit(0);
-				}
+				if (b.envelope().intersects(player.envelope()))
+				player.takeHit(b.getDamage());
 				b.setReadyToExplode(true);
 			}
-		}
-		
-		return toDelete;
 	}
 	
 	void checkBulletsCollision(Bullet b) {
 		for(Bullet bullet : bullets) {
-			/*if(!b.equals(bullet) && b.getX() + b.getWidth() >= bullet.getX() && b.getX() <= bullet.getX() + bullet.getWidth()
-				&& b.getY() + b.getHeight() >= bullet.getY() && b.getY() <= bullet.getY() + bullet.getHeight())*/
 			if (b.intersects(bullet))
 			{
 				bullet.setReadyToExplode(true);
@@ -269,11 +254,7 @@ public class Mondo {
 				esplodiNemico((CarroArmato)o);
 			}
 			else if(o instanceof DestructibleBox) {
-				deletBox((DestructibleBox)o); 
-				//worldMatrix[(int) o.getX()/40][(int) o.getY()/40] = false;
-			}
-			else if(o instanceof CarroArmato) {
-				players.remove(((CarroArmato)o).getId());
+				deletBox((DestructibleBox)o);
 			}
 		}
 	}

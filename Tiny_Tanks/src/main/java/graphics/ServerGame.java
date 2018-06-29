@@ -46,15 +46,20 @@ public class ServerGame extends Thread{
 
 			mondo.update();
 			
+			ArrayList<CarroArmato> diedPlayers = new ArrayList<>();
+			
+			for(CarroArmato player : players.values()) {
+				if(player.getLife() <= 0)
+					diedPlayers.add(player);
+			}
+			
 			if(players.size() <= 1 && enemies.isEmpty()) {
-				System.out.println("Qualcuno ha vinto!!!");
 				server.close();
-				//System.exit(0);
 			}
 			
 		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 20	
 			if (count >= 10) {
-					mondo.muoviNemici();
+				mondo.muoviNemici();
 			}
 						
 			if(count >= 30) {
@@ -66,6 +71,7 @@ public class ServerGame extends Thread{
 			}
 			
 			server.send(getMap());
+			server.send(getDiedIDs(diedPlayers));
 			
 			try {
 				sleep(50);
@@ -73,6 +79,14 @@ public class ServerGame extends Thread{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	String getDiedIDs(ArrayList<CarroArmato> diedPlayers) {
+		String diedSend = Integer.toString(diedPlayers.size()) + "\n";
+		for(CarroArmato player : diedPlayers) {
+			diedSend = diedSend.concat(player.getId().toString() + "\n");
+		}
+		return diedSend;
 	}
 	
 	@SuppressWarnings("unused")

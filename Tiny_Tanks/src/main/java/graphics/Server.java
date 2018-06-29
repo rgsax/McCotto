@@ -32,6 +32,7 @@ public class Server {
 		this.level = level;
 	}
 	
+	@SuppressWarnings("unused")
 	public void init(HashMap<Integer, CarroArmato> players, Mondo mondo) {
 		Scanner posIn = null;
 		try {

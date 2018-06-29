@@ -24,7 +24,6 @@ public class Bullet extends Entity {
 		this.angle = b.angle; 
 		this.vX = b.vX; 
 		this.vY = b.vY; 
-		this.baseSpeed = b.baseSpeed;
 		this.damage = b.damage;
 		x = b.x;
 		y = b.y; 
