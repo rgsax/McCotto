@@ -231,11 +231,11 @@ public class Client extends GridPane{
 							windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
 						}	
 						else {
-							windowManager.goToScene(new Menu(windowManager));
+							windowManager.goToScene(new LevelWindow(windowManager));
 						}
 					}
 					else {
-						windowManager.goToScene(new LevelWindow(windowManager));
+						windowManager.goToScene(new EndLevelWindow(windowManager, "END", numPlayers));
 					}
 				}
 				else {

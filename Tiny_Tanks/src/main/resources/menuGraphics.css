@@ -67,13 +67,13 @@
 
 .ip_field:focused {
 	-fx-border-style: solid;
-    -fx-border-color: #ffff00;
+    -fx-border-color: #1c222e;
 	-fx-border-width: 5px;
 	-fx-border-radius: 15px;
 }
 
 .check-box {
-	-fx-text-fill: #9e9a75;
+	-fx-text-fill: #1c222e;
 	-fx-font-size: 14pt;
 	-fx-font-weight: bold;
 }
