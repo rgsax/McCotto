@@ -313,7 +313,8 @@ public class Client extends GridPane{
 						gc.fillRect(carroX, carroY + CarroArmato.baseHeight, CarroArmato.baseWidth + 2, 5);
 						gc.setFill(Color.LIGHTGREEN);
 						gc.fillRect(carroX, carroY + CarroArmato.baseHeight, vitaCarro * CarroArmato.baseWidth / 100, 5);
-						gc.strokeText("Health: " + vitaCarro, 200, 950);
+						if(idPlayer == id)
+							gc.strokeText("Health: " + vitaCarro, 200, 950);
 					}
 					drawRotatedImage(gc, imgCannone, cannoneX, cannoneY, pivotXCannone, pivotYCannone, angoloCannone);
 					if(idPlayer != -1) {

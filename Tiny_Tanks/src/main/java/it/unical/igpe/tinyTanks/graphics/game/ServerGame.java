@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
@@ -91,9 +93,9 @@ public class ServerGame extends Thread{
 			}
 			else if(numPlayers > 1) {
 				if(players.size() == 1 && enemies.isEmpty())
-					server.close("WIN_" + players.values().toArray()[0]);
-				else if(players.size() == 0)
-					server.close("LOSE");
+					server.close("WIN_" + (players.values().iterator().next().getId().toString()) + "\n");
+				else if(players.isEmpty())
+					server.close("LOSE\n");
 			}
 			
 		//IL NEMICO SI MUOVE QUANDO COUNT ARRIVA A 10	
