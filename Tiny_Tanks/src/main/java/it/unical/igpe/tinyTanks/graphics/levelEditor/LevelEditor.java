@@ -111,7 +111,7 @@ public class LevelEditor extends GridPane {
 	}
 	
 	void loadTemplate() {
-		String level = "src/main/resources/template.dat";
+		String level = "src/main/resources/template.level";
 		System.out.println(level);
 		try {
 			Scanner fileIn = new Scanner(new FileReader(level));

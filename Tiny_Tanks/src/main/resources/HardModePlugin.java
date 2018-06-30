@@ -1,3 +1,5 @@
+//Compila con javac -cp "./plugins.jar" RandomPlugin.java
+
 import plugins.*;
 
 public class HardModePlugin extends Plugin {
